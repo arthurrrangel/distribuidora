@@ -1,111 +1,160 @@
 "use client";
 
-import { Plus, Lock, Check } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useAuth } from '@/contexts/AuthContext';
-import { useCart } from '@/contexts/CartContext';
-import { useState } from 'react';
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Plus, Lock, Check } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 
-interface ProductProps {
-  id?: string;
-  name: string;
+interface ProductCardProps {
+  id: string;
+  productId: string;
+  title: string;
+  handle: string;
   price: number;
   originalPrice?: number;
-  unit: string;
-  image?: string;
-  packageSize?: string;
-  discount?: number;
+  image: string;
+  unit?: string;
 }
 
+export function ProductCard({
+  id,
+  productId,
+  title,
+  handle,
+  price,
+  originalPrice,
+  image,
+  unit = "UN",
+}: ProductCardProps) {
+  const { user } = useAuth();
+  const isLoggedIn = !!user;
 
-export function ProductCard({ id, name, price, originalPrice, unit, image, packageSize, discount }: ProductProps) {
-  const { isLoggedIn, userType } = useAuth();
+  const userType = user?.cnpj ? "cnpj" : "cpf";
+  const finalPrice = userType === "cnpj" ? price * 0.9 : price;
+
+  const discountPercentage =
+    originalPrice && originalPrice > finalPrice
+      ? Math.round(((originalPrice - finalPrice) / originalPrice) * 100)
+      : 0;
+
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
-  
-  // Mock logic: CNPJ gets 10% extra discount
-  const finalPrice = userType === 'cnpj' ? price * 0.9 : price;
 
   const handleAddToCart = (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      addItem({ id, name, price: finalPrice, originalPrice, unit, image });
-      
-      // Feedback animation
-      setAdded(true);
-      setTimeout(() => setAdded(false), 1500);
+    e.preventDefault();
+    e.stopPropagation();
+
+    addItem({
+      id,
+      productId,
+      handle,
+      title,
+      price: finalPrice,
+      originalPrice,
+      image,
+      unit,
+    });
+
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
   };
 
   return (
-    <div className="bg-white p-4 rounded-xl border border-gray-100 hover:shadow-lg transition-shadow duration-300 relative group flex flex-col h-full">
-      <Link href={`/produto/${id || '#'}`} className="absolute inset-0 z-0" aria-label={`Ver detalhes de ${name}`} />
-      
-      {/* Discount Badge */}
-      {discount && isLoggedIn && (
-        <div className="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-md z-10">
-          {discount}% OFF
+    <div className="group relative flex flex-col h-full rounded-xl border border-gray-200 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_14px_rgba(0,0,0,0.10)] transition-all duration-300 max-w-[220px] w-full mx-auto overflow-hidden">
+      <Link
+        href={`/produto/${handle}`}
+        className="absolute inset-0 z-0"
+        aria-label={`Ver detalhes de ${title}`}
+      />
+
+      {discountPercentage > 0 && isLoggedIn && (
+        <div className="absolute top-3 left-3 bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded-md z-10">
+          {discountPercentage}% OFF
         </div>
       )}
 
-      {/* Image Area */}
-      <div className="relative w-full aspect-square mb-4 flex items-center justify-center bg-gray-50 rounded-lg overflow-hidden z-10 pointer-events-none">
+      {/* ÁREA DA IMAGEM (FUNDO BRANCO) */}
+      <div className="relative w-full aspect-square max-h-[200px] flex items-center justify-center bg-white overflow-hidden z-10 pointer-events-none border-b border-gray-100">
         {image ? (
-            <div className="relative w-full h-full">
-                 {/* Placeholder for real image since user asked to stop generating */}
-                 <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-gray-400 text-xs text-center p-2">
-                    Product Image: {name}
-                 </div>
-            </div>
+          <Image
+            src={image}
+            alt={title}
+            fill
+            className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
+            sizes="(max-width: 768px) 140px, 200px"
+          />
         ) : (
-             <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-300">
-                AreL
-             </div>
+          <div className="text-gray-300 font-semibold text-xl">AreL</div>
         )}
       </div>
-        
-      {/* Add Button - Only show if logged in */}
+
       {isLoggedIn && (
-        <button 
-            onClick={handleAddToCart}
-            className={`absolute top-2 right-2 md:top-[45%] md:right-4 md:translate-x-1/2 md:-translate-y-1/2 text-white w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center opacity-100 md:opacity-0 group-hover:opacity-100 transition-all shadow-md z-20 cursor-pointer active:scale-95 ${added ? 'bg-green-500 hover:bg-green-600' : 'bg-[#2563EB] hover:bg-blue-700'}`}
+        <button
+          onClick={handleAddToCart}
+          className={`
+            absolute z-20 top-2 right-2 
+            md:top-[45%] md:right-4 md:translate-x-1/2 md:-translate-y-1/2 
+            w-8 h-8 md:w-10 md:h-10 rounded-full shadow-md 
+            flex items-center justify-center transition-all duration-300
+            active:scale-95
+            ${
+              added
+                ? "bg-green-500 hover:bg-green-600 text-white opacity-100"
+                : "bg-blue-600 hover:bg-blue-700 text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 md:translate-y-2 md:group-hover:translate-y-0"
+            }
+          `}
+          title="Adicionar ao carrinho"
         >
-            {added ? <Check className="w-5 h-5 md:w-6 md:h-6" /> : <Plus className="w-5 h-5 md:w-6 md:h-6" />}
+          {added ? (
+            <Check className="w-4 h-4 md:w-5 md:h-5" />
+          ) : (
+            <Plus className="w-4 h-4 md:w-5 md:h-5" />
+          )}
         </button>
       )}
 
-      {/* Content */}
-      <div className="flex-1 flex flex-col pointer-events-none">
-        {packageSize && (
-            <span className="text-xs text-gray-500 font-medium mb-1 block bg-gray-100 w-fit px-2 py-0.5 rounded-sm">{packageSize}</span>
+      {/* ÁREA DE INFORMAÇÕES (FUNDO CINZA) */}
+      <div className="flex-1 flex flex-col px-3 pb-3 pt-3 bg-gray-100 pointer-events-none">
+        {unit && (
+          <span className="text-[10px] text-gray-600 font-bold mb-1 block bg-gray-200 w-fit px-2 py-0.5 rounded-sm">
+            {unit.toUpperCase()}
+          </span>
         )}
-        
-        <div className="mb-2 min-h-[48px]">
-            {isLoggedIn ? (
-                <>
-                    <div className="flex items-baseline gap-2">
-                        <span className="text-[#166534] text-xl font-bold">R${finalPrice.toFixed(2).replace('.', ',')}</span>
-                        <span className="text-gray-500 text-xs">/{unit}</span>
-                    </div>
-                    {originalPrice && (
-                        <div className="flex items-center gap-2 text-xs">
-                            <span className="text-gray-400 line-through">R${originalPrice.toFixed(2).replace('.', ',')}</span>
-                            {userType === 'cnpj' && <span className="text-blue-600 font-bold ml-1">Preço Atacado</span>}
-                        </div>
-                    )}
-                </>
-            ) : (
-                <div className="flex flex-col justify-center h-full">
-                    <div className="flex items-center gap-1.5 text-orange-600 bg-orange-50 px-2 py-1 rounded text-xs w-fit font-medium">
-                        <Lock className="w-3 h-3" />
-                        <span>Entre para ver o preço</span>
-                    </div>
-                </div>
-            )}
+
+        <div className="mb-2 min-h-[40px]">
+          {isLoggedIn ? (
+            <>
+              {originalPrice && originalPrice > finalPrice && (
+                <span className="block text-[10px] text-gray-400 line-through leading-none mb-0.5">
+                  R$ {originalPrice.toFixed(2).replace(".", ",")}
+                </span>
+              )}
+              <div className="flex items-baseline gap-1 ">
+                <span className="text-gray-900 text-lg font-bold">
+                  R$ {finalPrice.toFixed(2).replace(".", ",")}
+                </span>
+                <span className="text-gray-500 text-[10px]">/{unit}</span>
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col justify-center h-full">
+              <div className="flex items-center gap-1.5 text-orange-600 bg-orange-50 px-2 py-1 rounded border border-orange-100 w-fit">
+                <Lock size={12} />
+                <span className="text-[10px] font-bold">
+                  Entre para ver o preço
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
-        <h3 className="text-gray-700 text-sm font-medium leading-snug line-clamp-2 mt-auto" title={name}>
-          {name}
+        <h3
+          className="text-gray-700 text-xs md:text-sm font-medium leading-snug line-clamp-2 mt-auto group-hover:text-blue-600 transition-colors"
+          title={title}
+        >
+          {title}
         </h3>
       </div>
     </div>

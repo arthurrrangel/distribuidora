@@ -1,68 +1,84 @@
+// src/contexts/CartContext.tsx
 "use client";
 
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 
 export interface CartItem {
-  id: string;
-  name: string;
+  id: string; // ID da variante
+  productId: string; // ID do produto pai
+  handle: string;
+  title: string;
   price: number;
   originalPrice?: number;
   image?: string;
   quantity: number;
-  unit: string;
+  unit?: string;
 }
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (product: any, quantity?: number) => void;
+  addItem: (product: Omit<CartItem, "quantity">, quantity?: number) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   cartCount: number;
   cartTotal: number;
+  isLoading: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Load cart from localStorage on mount
+  // 1. Carregar do localStorage (Apenas no Cliente)
   useEffect(() => {
-    const savedCart = localStorage.getItem('arel_cart');
+    // Se não estiver no navegador, não faz nada
+    if (typeof window === "undefined") return;
+
+    const savedCart = localStorage.getItem("arel_cart");
+
     if (savedCart) {
       try {
-        setItems(JSON.parse(savedCart));
+        const parsedCart = JSON.parse(savedCart);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setItems(parsedCart);
       } catch (e) {
-        console.error("Failed to parse cart", e);
+        console.error("Erro ao ler carrinho:", e);
+        localStorage.removeItem("arel_cart");
       }
     }
-  }, []);
 
-  // Save cart to localStorage whenever it changes
+    setIsLoading(false);
+  }, []); // Executa apenas na montagem
+
+  // 2. Salvar no localStorage sempre que 'items' mudar
   useEffect(() => {
-    localStorage.setItem('arel_cart', JSON.stringify(items));
-  }, [items]);
+    // Só salvamos se o carregamento inicial já tiver terminado (isLoading = false)
+    if (!isLoading && typeof window !== "undefined") {
+      localStorage.setItem("arel_cart", JSON.stringify(items));
+    }
+  }, [items, isLoading]);
 
-  const addItem = (product: any, quantity = 1) => {
+  const addItem = (product: Omit<CartItem, "quantity">, quantity = 1) => {
     setItems((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
+      const existingItemIndex = prev.findIndex(
+        (item) => item.id === product.id,
+      );
+
+      if (existingItemIndex > -1) {
+        const newItems = [...prev];
+        newItems[existingItemIndex].quantity += quantity;
+        return newItems;
       }
-      return [...prev, { 
-        id: product.id, 
-        name: product.name, 
-        price: product.price, 
-        originalPrice: product.originalPrice,
-        image: product.image,
-        unit: product.unit,
-        quantity: quantity 
-      }];
+      return [...prev, { ...product, quantity }];
     });
   };
 
@@ -73,9 +89,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const updateQuantity = (id: string, quantity: number) => {
     if (quantity < 1) return;
     setItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity } : item
-      )
+      prev.map((item) => (item.id === id ? { ...item, quantity } : item)),
     );
   };
 
@@ -84,10 +98,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const cartCount = items.reduce((acc, item) => acc + item.quantity, 0);
-  const cartTotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const cartTotal = items.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0,
+  );
 
   return (
-    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearCart, cartCount, cartTotal }}>
+    <CartContext.Provider
+      value={{
+        items,
+        addItem,
+        removeItem,
+        updateQuantity,
+        clearCart,
+        cartCount,
+        cartTotal,
+        isLoading,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
@@ -95,8 +123,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
 export function useCart() {
   const context = useContext(CartContext);
-  if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
+  if (!context) {
+    throw new Error("useCart deve ser usado dentro de um CartProvider");
   }
   return context;
 }

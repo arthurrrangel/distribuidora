@@ -3,7 +3,14 @@
 import { useState, FormEvent, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, Lock, Mail, User, AlertCircle } from "lucide-react";
+import {
+  ArrowRight,
+  Lock,
+  Mail,
+  User,
+  AlertCircle,
+  CheckCircle2,
+} from "lucide-react";
 
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -16,7 +23,12 @@ import { ShopifyGraphQLResponse, CustomerCreateData } from "@/types/shopify";
 export default function RegisterPage() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+
+  // Estado simples para controlar a mensagem de aviso
+  const [status, setStatus] = useState<{
+    type: "success" | "error" | null;
+    message: string;
+  }>({ type: null, message: "" });
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -32,7 +44,7 @@ export default function RegisterPage() {
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
+    setStatus({ type: null, message: "" }); // Limpa mensagens anteriores
 
     const mutation = `
       mutation customerCreate($input: CustomerCreateInput!) {
@@ -53,7 +65,6 @@ export default function RegisterPage() {
     `;
 
     try {
-      // Chamada tipada ao Axios
       const response = await api.post<
         ShopifyGraphQLResponse<CustomerCreateData>
       >("", {
@@ -69,8 +80,6 @@ export default function RegisterPage() {
       });
 
       const data = response.data.data;
-
-      // Verifica erros de negócio do Shopify (ex: Senha curta, Email duplicado)
       const shopifyError = extractShopifyUserErrors(
         data.customerCreate.customerUserErrors,
       );
@@ -79,18 +88,27 @@ export default function RegisterPage() {
         throw new Error(shopifyError);
       }
 
-      // Sucesso
       if (data.customerCreate.customer?.id) {
-        alert(
-          "Conta criada com sucesso! Você será redirecionado para o login.",
-        );
-        router.push("/login");
+        // SUCESSO: Mostra verde e redireciona
+        setStatus({
+          type: "success",
+          message: "Conta criada! Redirecionando para o login...",
+        });
+
+        // Pequeno delay para o usuário ler a mensagem antes de ir para o login
+        setTimeout(() => {
+          router.push("/login");
+        }, 2000);
       } else {
-        throw new Error("Não foi possível criar a conta. Tente novamente.");
+        throw new Error("Não foi possível criar a conta.");
       }
     } catch (err: unknown) {
       const message = getErrorMessage(err);
-      setError(message);
+      // ERRO: Mostra vermelho
+      setStatus({
+        type: "error",
+        message: message,
+      });
     } finally {
       setLoading(false);
     }
@@ -109,10 +127,21 @@ export default function RegisterPage() {
             Preencha os dados abaixo para se cadastrar.
           </p>
 
-          {error && (
-            <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 flex items-start gap-3 rounded-r-md">
-              <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
-              <p className="text-sm text-red-700">{error}</p>
+          {/* --- ÁREA DE AVISOS SIMPLES --- */}
+          {status.message && (
+            <div
+              className={`mb-6 p-4 rounded-lg flex items-start gap-3 border ${
+                status.type === "success"
+                  ? "bg-green-50 border-green-200 text-green-700"
+                  : "bg-red-50 border-red-200 text-red-700"
+              }`}
+            >
+              {status.type === "success" ? (
+                <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" />
+              ) : (
+                <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+              )}
+              <p className="text-sm font-medium">{status.message}</p>
             </div>
           )}
 

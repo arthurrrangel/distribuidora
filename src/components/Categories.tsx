@@ -1,33 +1,100 @@
-import { Briefcase, Tv, Monitor, Heart, CookingPot, Smartphone } from 'lucide-react';
-import Link from 'next/link';
+import Link from "next/link";
+import api from "@/services/api"; // ✅ Usando seu api.ts
+import {
+  Briefcase,
+  Tv,
+  Monitor,
+  Heart,
+  CookingPot,
+  Smartphone,
+  Package,
+  LucideIcon,
+} from "lucide-react";
 
-export function Categories() {
-  const categories = [
-    { name: "Papelaria & Escritório", icon: Briefcase, slug: "papelaria-e-escritorio" },
-    { name: "Eletrônicos & TVs", icon: Tv, slug: "eletronicos-e-tvs" },
-    { name: "Informática & Acessórios", icon: Monitor, slug: "informatica-e-acessorios" },
-    { name: "Saúde, Nutrição & Bem-Estar", icon: Heart, slug: "saude-nutricao-e-bem-estar" },
-    { name: "Utilidades Domésticas", icon: CookingPot, slug: "utilidades-domesticas" },
-    { name: "Áudio, Vídeo & Mobile", icon: Smartphone, slug: "audio-video-e-mobile" },
-  ];
+// --- 1. Tipagem Estrita (Zero ANY) ---
+
+// Tipo do "nó" da coleção
+interface CollectionNode {
+  id: string;
+  title: string;
+  handle: string;
+}
+
+// Tipo da resposta completa do GraphQL
+interface ShopifyCollectionsResponse {
+  data: {
+    collections: {
+      edges: Array<{
+        node: CollectionNode;
+      }>;
+    };
+  };
+}
+
+// Mapa de ícones
+const iconMap: Record<string, LucideIcon> = {
+  "papelaria-e-escritorio": Briefcase,
+  "eletronicos-e-tvs": Tv,
+  "informatica-e-acessorios": Monitor,
+  "saude-nutricao-e-bem-estar": Heart,
+  "utilidades-domesticas": CookingPot,
+  "audio-video-e-mobile": Smartphone,
+};
+
+export async function Categories() {
+  // --- 2. Query GraphQL ---
+  const query = `
+    query getCollections {
+      collections(first: 10, sortKey: TITLE) {
+        edges {
+          node {
+            id
+            title
+            handle
+          }
+        }
+      }
+    }
+  `;
+
+  // --- 3. Chamada via api.ts ---
+  // O tipo genérico <ShopifyCollectionsResponse> garante que o TS saiba o formato da resposta
+  const response = await api.post<ShopifyCollectionsResponse>("", {
+    query,
+  });
+
+  // Acessamos data.data porque o axios retorna .data e o GraphQL também tem um campo .data
+  const collections =
+    response.data.data.collections.edges.map((edge) => edge.node) || [];
 
   return (
-    <section id="categories" className="pt-0 pb-4 md:py-8 bg-white border-b border-gray-100">
+    <section
+      id="categories"
+      className="pt-0 pb-4 md:py-8 bg-white border-b border-gray-100"
+    >
       <div className="container mx-auto px-4">
         <div className="flex gap-6 overflow-x-auto pb-4 no-scrollbar justify-start md:justify-center">
-            {categories.map((cat, index) => (
-                <Link key={index} href={`/departamento/${cat.slug}`} className="flex flex-col items-center gap-2 group min-w-[90px]">
-                    <div className="w-20 h-20 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 group-hover:border-blue-500 group-hover:text-blue-500 transition-colors shadow-sm">
-                        {/* Fallback for MessageCircleQuestion if it's not imported or just use a generic icon */}
-                        <cat.icon strokeWidth={1.5} className="w-8 h-8" />
-                    </div>
-                    <span className="text-xs font-medium text-gray-600 text-center group-hover:text-[#2563EB] transition-colors leading-tight max-w-[90px]">{cat.name}</span>
-                </Link>
-            ))}
+          {collections.map((cat) => {
+            // Seleciona o ícone ou usa o fallback
+            const IconComponent = iconMap[cat.handle] || Package;
+
+            return (
+              <Link
+                key={cat.id}
+                href={`/departamento/${cat.handle}`}
+                className="flex flex-col items-center gap-2 group min-w-[90px]"
+              >
+                <div className="w-20 h-20 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 group-hover:border-blue-500 group-hover:text-blue-500 transition-colors shadow-sm">
+                  <IconComponent strokeWidth={1.5} className="w-8 h-8" />
+                </div>
+                <span className="text-xs font-medium text-gray-600 text-center group-hover:text-[#2563EB] transition-colors leading-tight max-w-[90px]">
+                  {cat.title}
+                </span>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
-
- 

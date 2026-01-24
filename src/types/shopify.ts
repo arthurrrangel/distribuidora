@@ -11,9 +11,20 @@ export interface Customer {
   firstName: string;
   lastName: string;
   email: string;
+  phone?: string;
+  // Adicionamos aqui para o TypeScript parar de reclamar
+  cnpj?: string;
+  tags?: string[];
+  defaultAddress?: {
+    address1: string;
+    city: string;
+    country: string;
+    zip: string;
+  };
 }
 
-// Resposta da Mutation de Criação de Cliente
+// ... (Resto das interfaces de Auth/Mutation mantidas iguais) ...
+
 export interface CustomerCreatePayload {
   customer: Customer | null;
   customerUserErrors: CustomerUserError[];
@@ -23,7 +34,6 @@ export interface CustomerCreateData {
   customerCreate: CustomerCreatePayload;
 }
 
-// Resposta da Mutation de Login (AccessToken)
 export interface CustomerAccessToken {
   accessToken: string;
   expiresAt: string;
@@ -38,24 +48,61 @@ export interface CustomerLoginData {
   customerAccessTokenCreate: CustomerAccessTokenCreatePayload;
 }
 
-// Estrutura genérica de resposta GraphQL do Shopify
-export interface ShopifyGraphQLResponse<T> {
-  data: T;
-  errors?: Array<{ message: string }>; // Erros de nível superior (ex: sintaxe)
+export interface CustomerData {
+  customer: Customer | null;
 }
 
-export interface CustomerData {
-  customer: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone?: string;
-    defaultAddress?: {
-      address1: string;
-      city: string;
-      country: string;
-      zip: string;
-    };
-  } | null;
+// --- Interfaces de Produto e Coleção ---
+
+export interface MoneyV2 {
+  amount: string;
+  currencyCode: string;
+}
+
+export interface ImageNode {
+  url: string;
+  altText: string | null;
+  width: number;
+  height: number;
+}
+
+export interface ProductVariant {
+  id: string;
+  title: string;
+  price: MoneyV2;
+  compareAtPrice: MoneyV2 | null;
+  availableForSale: boolean;
+}
+
+export interface Product {
+  id: string;
+  title: string;
+  handle: string;
+  description: string;
+  descriptionHtml: string;
+  availableForSale: boolean;
+  priceRange: {
+    minVariantPrice: MoneyV2;
+    maxVariantPrice: MoneyV2;
+  };
+  compareAtPriceRange?: {
+    minVariantPrice: MoneyV2;
+    maxVariantPrice: MoneyV2;
+  };
+  images: {
+    edges: Array<{ node: ImageNode }>;
+  };
+  variants: {
+    edges: Array<{ node: ProductVariant }>;
+  };
+}
+
+// Interface Genérica para Conexões do Shopify (Edges/Nodes)
+export interface Connection<T> {
+  edges: Array<{ node: T }>;
+}
+
+export interface ShopifyGraphQLResponse<T> {
+  data: T;
+  errors?: Array<{ message: string }>;
 }
