@@ -1,28 +1,26 @@
 "use client";
 
 import { useState, FormEvent, ChangeEvent } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { ArrowRight, Lock, Mail, User, AlertCircle } from "lucide-react";
+
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MobileNavigator } from "@/components/MobileNavigator";
-import Link from "next/link";
-import { ArrowRight, Lock, Mail, AlertCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/AuthContext";
+
 import api from "@/services/api";
 import { getErrorMessage, extractShopifyUserErrors } from "@/utils/errorUtils";
-import { ShopifyGraphQLResponse, CustomerLoginData } from "@/types/shopify";
+import { ShopifyGraphQLResponse, CustomerCreateData } from "@/types/shopify";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
-  const { login } = useAuth();
-
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Estado para controlar visualmente se é Varejo ou Atacado
-  const [loginType, setLoginType] = useState<"cpf" | "cnpj">("cpf");
-
   const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
   });
@@ -31,20 +29,23 @@ export default function LoginPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     const mutation = `
-      mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
-        customerAccessTokenCreate(input: $input) {
-          customerAccessToken {
-            accessToken
-            expiresAt
+      mutation customerCreate($input: CustomerCreateInput!) {
+        customerCreate(input: $input) {
+          customer {
+            id
+            email
+            firstName
+            lastName
           }
           customerUserErrors {
             code
+            field
             message
           }
         }
@@ -52,12 +53,15 @@ export default function LoginPage() {
     `;
 
     try {
+      // Chamada tipada ao Axios
       const response = await api.post<
-        ShopifyGraphQLResponse<CustomerLoginData>
+        ShopifyGraphQLResponse<CustomerCreateData>
       >("", {
         query: mutation,
         variables: {
           input: {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
             email: formData.email,
             password: formData.password,
           },
@@ -66,36 +70,26 @@ export default function LoginPage() {
 
       const data = response.data.data;
 
-      // 1. Verifica erros da Shopify
+      // Verifica erros de negócio do Shopify (ex: Senha curta, Email duplicado)
       const shopifyError = extractShopifyUserErrors(
-        data.customerAccessTokenCreate.customerUserErrors,
+        data.customerCreate.customerUserErrors,
       );
 
       if (shopifyError) {
         throw new Error(shopifyError);
       }
 
-      const tokenData = data.customerAccessTokenCreate.customerAccessToken;
-
-      if (tokenData?.accessToken) {
-        // --- CORREÇÃO AQUI ---
-
-        // 1. Opcional: Salvar a preferência do usuário (Varejo/Atacado) localmente
-        localStorage.setItem("userType", loginType);
-
-        // 2. Chama o login do contexto passando os DOIS argumentos exigidos
-        await login(tokenData.accessToken, tokenData.expiresAt);
-
-        // 3. Redireciona
-        router.push("/");
+      // Sucesso
+      if (data.customerCreate.customer?.id) {
+        alert(
+          "Conta criada com sucesso! Você será redirecionado para o login.",
+        );
+        router.push("/login");
       } else {
-        throw new Error("Erro ao gerar token de acesso.");
+        throw new Error("Não foi possível criar a conta. Tente novamente.");
       }
     } catch (err: unknown) {
-      let message = getErrorMessage(err);
-      if (message.includes("Unidentified customer")) {
-        message = "E-mail ou senha incorretos.";
-      }
+      const message = getErrorMessage(err);
       setError(message);
     } finally {
       setLoading(false);
@@ -109,46 +103,56 @@ export default function LoginPage() {
       <div className="container mx-auto px-4 py-12 flex flex-col items-center justify-center flex-1">
         <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-sm border border-gray-100">
           <h1 className="text-2xl font-bold text-[#1e3a8a] mb-2 text-center">
-            Acesse sua conta
+            Crie sua conta
           </h1>
           <p className="text-gray-500 text-sm mb-8 text-center">
-            Entre para acompanhar seus pedidos e facilitar suas compras.
+            Preencha os dados abaixo para se cadastrar.
           </p>
 
-          {/* Seletor de Tipo de Login */}
-          <div className="flex gap-4 mb-6">
-            <button
-              type="button"
-              onClick={() => setLoginType("cpf")}
-              className={`flex-1 py-2 rounded-md font-bold text-sm transition-colors ${
-                loginType === "cpf"
-                  ? "bg-blue-100 text-blue-700 ring-2 ring-blue-500 ring-offset-1"
-                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-              }`}
-            >
-              Entrar como Varejo (CPF)
-            </button>
-            <button
-              type="button"
-              onClick={() => setLoginType("cnpj")}
-              className={`flex-1 py-2 rounded-md font-bold text-sm transition-colors ${
-                loginType === "cnpj"
-                  ? "bg-green-100 text-green-700 ring-2 ring-green-500 ring-offset-1"
-                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-              }`}
-            >
-              Entrar como Atacado (CNPJ)
-            </button>
-          </div>
-
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 flex items-start gap-3 rounded-r-md animate-fadeIn">
+            <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 flex items-start gap-3 rounded-r-md">
               <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
               <p className="text-sm text-red-700">{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleRegister} className="space-y-4">
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Nome
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input
+                    type="text"
+                    name="firstName"
+                    required
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    className="w-full pl-10 pr-4 py-3 rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    placeholder="João"
+                  />
+                </div>
+              </div>
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Sobrenome
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    name="lastName"
+                    required
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    placeholder="Silva"
+                  />
+                </div>
+              </div>
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 E-mail
@@ -177,19 +181,12 @@ export default function LoginPage() {
                   type="password"
                   name="password"
                   required
+                  minLength={5}
                   value={formData.password}
                   onChange={handleChange}
                   className="w-full pl-10 pr-4 py-3 rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  placeholder="********"
+                  placeholder="Mínimo 5 caracteres"
                 />
-              </div>
-              <div className="flex justify-end mt-1">
-                <Link
-                  href="/recuperar-senha"
-                  className="text-xs text-[#2563EB] hover:underline"
-                >
-                  Esqueci minha senha
-                </Link>
               </div>
             </div>
 
@@ -199,19 +196,19 @@ export default function LoginPage() {
                 disabled={loading}
                 className="w-full bg-[#2563EB] text-white py-3 rounded-md font-bold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                {loading ? "Entrando..." : "Entrar"}
+                {loading ? "Criando conta..." : "Criar Conta"}
                 {!loading && <ArrowRight className="w-4 h-4" />}
               </button>
             </div>
           </form>
 
           <div className="mt-8 pt-8 border-t border-gray-100 text-center">
-            <p className="text-sm text-gray-600 mb-4">Ainda não tem conta?</p>
+            <p className="text-sm text-gray-600 mb-4">Já tem uma conta?</p>
             <Link
-              href="/register"
+              href="/login"
               className="inline-block w-full bg-white border border-[#2563EB] text-[#2563EB] py-3 rounded-md font-bold hover:bg-blue-50 transition-colors"
             >
-              Criar conta
+              Fazer Login
             </Link>
           </div>
         </div>

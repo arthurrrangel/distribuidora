@@ -1,41 +1,94 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from 'react';
-
-type UserType = 'cpf' | 'cnpj' | null;
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
+import { useRouter } from "next/navigation";
+import api from "@/services/api";
+import { Customer } from "@/types/shopify";
 
 interface AuthContextType {
-  isLoggedIn: boolean;
-  userType: UserType;
-  login: (type: 'cpf' | 'cnpj') => void;
+  user: Customer | null;
+  loading: boolean;
+  login: (token: string, expiresAt: string) => Promise<void>;
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [userType, setUserType] = useState<UserType>(null);
-  const isLoggedIn = userType !== null;
+  const [user, setUser] = useState<Customer | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  const login = (type: 'cpf' | 'cnpj') => {
-    setUserType(type);
+  // Busca os dados do cliente na Shopify usando o Token
+  const fetchCustomer = async (accessToken: string) => {
+    const query = `
+      query getCustomer($customerAccessToken: String!) {
+        customer(customerAccessToken: $customerAccessToken) {
+          id
+          firstName
+          lastName
+          email
+        }
+      }
+    `;
+
+    try {
+      const response = await api.post("", {
+        query,
+        variables: { customerAccessToken: accessToken },
+      });
+
+      const customerData = response.data.data?.customer;
+
+      if (customerData) {
+        setUser(customerData);
+      } else {
+        // Token inválido ou expirado
+        logout();
+      }
+    } catch (error) {
+      console.error("Erro ao buscar dados do cliente:", error);
+      logout();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Ao iniciar a página, verifica se já existe token salvo
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      fetchCustomer(token);
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  const login = async (token: string, expiresAt: string) => {
+    localStorage.setItem("accessToken", token);
+    localStorage.setItem("tokenExpiresAt", expiresAt);
+    setLoading(true);
+    await fetchCustomer(token);
   };
 
   const logout = () => {
-    setUserType(null);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("tokenExpiresAt");
+    setUser(null);
+    router.push("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, userType, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-}
+export const useAuth = () => useContext(AuthContext);
