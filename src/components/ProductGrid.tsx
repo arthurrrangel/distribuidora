@@ -8,7 +8,7 @@ export async function ProductGrid() {
   if (!products || products.length === 0) return null;
 
   return (
-    <section className="py-12 bg-white">
+    <section className="pt-0 md:pt-4 pb-12 bg-white -mt-2 md:mt-0">
       <div className="container mx-auto px-4">
         {/* Passamos os produtos para o componente Cliente */}
         <ProductCarousel products={products} />

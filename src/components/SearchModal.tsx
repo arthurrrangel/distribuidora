@@ -37,10 +37,11 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
       if (searchQuery.trim().length > 2) {
         setLoading(true);
         try {
-          const products = await searchProducts(searchQuery);
-          setResults(products);
+          const result = await searchProducts(searchQuery);
+          setResults(result.products || []);
         } catch (error) {
           console.error("Erro na busca", error);
+          setResults([]);
         } finally {
           setLoading(false);
         }
@@ -66,7 +67,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
     <div className="fixed inset-0 z-[100] flex flex-col justify-end md:justify-start md:items-center md:pt-24">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity animate-in fade-in"
+        className="absolute inset-0 bg-black/10 transition-opacity animate-in fade-in"
         onClick={onClose}
       ></div>
 

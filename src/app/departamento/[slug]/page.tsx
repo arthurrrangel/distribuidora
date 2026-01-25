@@ -9,8 +9,10 @@ import {
   ProductOptions,
 } from "@/services/productService";
 import { Product } from "@/types/shopify";
-import { PackageX } from "lucide-react";
+import { PackageX, Home, ChevronRight, Star, PenTool, BookOpen, ShoppingBag, Package, LucideIcon } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import api from "@/services/api";
 
 // Helper: Formata slug para Título Legível (ex: materiais-escolares -> Materiais Escolares)
 const formatTitle = (slug: string) => {
@@ -19,6 +21,24 @@ const formatTitle = (slug: string) => {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 };
+
+// Mapa de ícones para subcategorias
+const iconMapByHandle: Record<string, LucideIcon> = {
+  "papelaria-e-escritorio": PenTool,
+  "eletronicos-e-tvs": Package,
+  "informatica-e-acessorios": Package,
+  "saude-nutricao-e-bem-estar": Package,
+  "utilidades-domesticas": Package,
+  "audio-video-e-mobile": Package,
+  "destaques": Star,
+  "papelaria": PenTool,
+  "papelaria-escolar": BookOpen,
+  "principais-produtos": ShoppingBag,
+};
+
+function getIconForCategory(handle: string): LucideIcon {
+  return iconMapByHandle[handle] || Package;
+}
 
 export const dynamic = "force-dynamic";
 
@@ -83,30 +103,21 @@ export default async function DepartmentPage({
   const { products: categoryProducts, pageInfo } =
     await getProductsByCollection(slug, options);
 
-  // 3. Produtos Recomendados ("Veja Também")
-  // Estratégia de performance: Só busca se estiver na primeira página
-  let otherProducts: Product[] = [];
-  if (!cursor && categoryProducts.length > 0) {
-    try {
-      // Tenta buscar da coleção 'destaques'
-      const { products: recProducts } =
-        await getProductsByCollection("destaques");
-
-      // Remove duplicatas (produtos que já estão na lista principal)
-      otherProducts = recProducts
-        .filter((p) => !categoryProducts.find((cp) => cp.id === p.id))
-        .slice(0, 4);
-    } catch (err) {
-      console.warn("Erro ao carregar recomendados:", err);
-      // Falha silenciosa para não quebrar a página inteira
-    }
-  }
-
   return (
-    <main className="min-h-screen bg-gray-50 flex flex-col pb-16 md:pb-0">
+    <main className="min-h-screen bg-white flex flex-col pb-16 md:pb-0">
       <Header />
 
-      <div className="container mx-auto px-4 py-8 flex-1">
+      <div className="container mx-auto px-4 py-6 flex-1">
+        {/* Breadcrumb */}
+        <div className="mb-4 text-sm text-gray-500 flex items-center gap-2">
+          <Link href="/" className="hover:text-[#2563EB] flex items-center gap-1">
+            <Home className="w-4 h-4" />
+            <span>Início</span>
+          </Link>
+          <ChevronRight className="w-4 h-4" />
+          <span className="text-gray-800 font-medium">{categoryName}</span>
+        </div>
+
         {/* Cabeçalho */}
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-[#1e3a8a] mb-2">
@@ -120,9 +131,12 @@ export default async function DepartmentPage({
         {/* Filtros */}
         <FilterBar />
 
-        {/* Lista de Produtos */}
-        {categoryProducts.length > 0 ? (
-          <>
+        {/* Seção Ofertas */}
+        {categoryProducts.length > 0 && (
+          <div className="mt-8">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 tracking-tight mb-6">
+              Ofertas
+            </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {categoryProducts.map((product) => {
                 const firstVariant = product.variants.edges[0]?.node;
@@ -156,8 +170,11 @@ export default async function DepartmentPage({
             <div className="mt-8">
               <Pagination pageInfo={pageInfo} />
             </div>
-          </>
-        ) : (
+          </div>
+        )}
+
+        {/* Estado Vazio */}
+        {categoryProducts.length === 0 && (
           /* Estado Vazio */
           <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl shadow-sm border border-gray-100 text-center">
             <div className="bg-gray-50 p-4 rounded-full mb-4">
@@ -193,39 +210,6 @@ export default async function DepartmentPage({
           </div>
         )}
 
-        {/* Seção Recomendados (Apenas se tiver itens e estiver na pág 1) */}
-        {otherProducts.length > 0 && (
-          <div className="mt-16 pt-8 border-t border-gray-200 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-              Veja também
-              <span className="text-xs font-normal text-gray-400 bg-gray-100 px-2 py-1 rounded-full">
-                Recomendados
-              </span>
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {otherProducts.map((product) => {
-                const firstVariant = product.variants.edges[0]?.node;
-                const price = parseFloat(
-                  product.priceRange.minVariantPrice.amount,
-                );
-                const imageUrl = product.images.edges[0]?.node.url || "";
-
-                return (
-                  <ProductCard
-                    key={product.id}
-                    id={firstVariant?.id || product.id}
-                    productId={product.id}
-                    handle={product.handle}
-                    title={product.title}
-                    price={price}
-                    image={imageUrl}
-                    unit="un"
-                  />
-                );
-              })}
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="mt-auto">

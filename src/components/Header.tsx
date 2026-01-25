@@ -18,6 +18,7 @@ import {
   LogOut,
   Package,
   LucideIcon,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -26,6 +27,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import api from "@/services/api";
 import { SearchModal } from "@/components/SearchModal";
+import { Product } from "@/types/shopify";
 
 // --- TIPAGEM ESTRITA ---
 interface Department {
@@ -67,6 +69,12 @@ export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState("Rio de Janeiro");
   const [departments, setDepartments] = useState<Department[]>([]);
+  const [hoveredDepartment, setHoveredDepartment] = useState<string | null>(null);
+  const [departmentProducts, setDepartmentProducts] = useState<Product[]>([]);
+  const [loadingProducts, setLoadingProducts] = useState(false);
+  const [hoveredNavCategory, setHoveredNavCategory] = useState<string | null>(null);
+  const [navCategoryProducts, setNavCategoryProducts] = useState<Product[]>([]);
+  const [loadingNavProducts, setLoadingNavProducts] = useState(false);
 
   const { user, logout } = useAuth();
   const { cartCount } = useCart();
@@ -113,6 +121,144 @@ export function Header() {
     logout();
   };
 
+  // Buscar produtos quando passar o mouse sobre uma categoria
+  const handleDepartmentHover = async (slug: string) => {
+    setHoveredDepartment(slug);
+    setLoadingProducts(true);
+    
+    try {
+      const query = `
+        query getCollectionProducts($handle: String!) {
+          collection(handle: $handle) {
+            products(first: 6) {
+              edges {
+                node {
+                  id
+                  title
+                  handle
+                  priceRange {
+                    minVariantPrice {
+                      amount
+                      currencyCode
+                    }
+                  }
+                  images(first: 1) {
+                    edges {
+                      node {
+                        url
+                        altText
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      const response = await api.post<{
+        data: {
+          collection: {
+            products: {
+              edges: Array<{
+                node: Product;
+              }>;
+            };
+          } | null;
+        };
+      }>("", {
+        query,
+        variables: { handle: slug },
+      });
+
+      const products = response.data.data.collection?.products.edges.map(
+        (edge) => edge.node
+      ) || [];
+      
+      setDepartmentProducts(products);
+    } catch (error) {
+      console.error("Erro ao buscar produtos:", error);
+      setDepartmentProducts([]);
+    } finally {
+      setLoadingProducts(false);
+    }
+  };
+
+  const handleDepartmentLeave = () => {
+    setHoveredDepartment(null);
+    setDepartmentProducts([]);
+  };
+
+  // Buscar produtos quando passar o mouse sobre uma categoria na barra horizontal
+  const handleNavCategoryHover = async (slug: string) => {
+    setHoveredNavCategory(slug);
+    setLoadingNavProducts(true);
+    
+    try {
+      const query = `
+        query getCollectionProducts($handle: String!) {
+          collection(handle: $handle) {
+            products(first: 6) {
+              edges {
+                node {
+                  id
+                  title
+                  handle
+                  priceRange {
+                    minVariantPrice {
+                      amount
+                      currencyCode
+                    }
+                  }
+                  images(first: 1) {
+                    edges {
+                      node {
+                        url
+                        altText
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      const response = await api.post<{
+        data: {
+          collection: {
+            products: {
+              edges: Array<{
+                node: Product;
+              }>;
+            };
+          } | null;
+        };
+      }>("", {
+        query,
+        variables: { handle: slug },
+      });
+
+      const products = response.data.data.collection?.products.edges.map(
+        (edge) => edge.node
+      ) || [];
+      
+      setNavCategoryProducts(products);
+    } catch (error) {
+      console.error("Erro ao buscar produtos:", error);
+      setNavCategoryProducts([]);
+    } finally {
+      setLoadingNavProducts(false);
+    }
+  };
+
+  const handleNavCategoryLeave = () => {
+    setHoveredNavCategory(null);
+    setNavCategoryProducts([]);
+  };
+
   return (
     <div className="w-full relative">
       <div className="fixed top-0 left-0 right-0 z-50 md:relative w-full">
@@ -154,20 +300,29 @@ export function Header() {
         </div>
 
         {/* Main Header - MUDANÇA AQUI: bg-white e text-[#2563EB] */}
-        <header className="bg-white text-[#2563EB] py-4 px-4 h-[76px] border-b border-gray-100">
-          <div className="container mx-auto flex items-center justify-between gap-8 h-full">
+        <header className="bg-white text-[#2563EB] py-2 md:py-4 px-3 md:px-4 border-b border-gray-100">
+          <div className="container mx-auto flex items-center justify-between gap-3 md:gap-8 h-full">
+            {/* Menu Mobile */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden p-2 text-[#2563EB] hover:bg-blue-50 rounded-lg transition-colors"
+              aria-label="Menu"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+
             {/* Logo */}
             <div className="flex-1 flex justify-center md:justify-start md:flex-none">
               <Link
                 href="/"
-                className="flex items-center gap-2 group bg-white p-1.5 md:p-2 rounded-lg"
+                className="flex items-center gap-2 group bg-white p-1 md:p-1.5 md:p-2 rounded-lg"
               >
                 <Image
                   src="/arel-logo-padrao.svg"
                   alt="Arel Distribuidora"
                   width={150}
                   height={50}
-                  className="h-8 md:h-12 w-auto object-contain"
+                  className="h-7 md:h-12 w-auto object-contain"
                   priority
                 />
               </Link>
@@ -191,7 +346,27 @@ export function Header() {
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-4 md:gap-6">
+            <div className="flex items-center gap-2 md:gap-6">
+              {/* User Mobile */}
+              {!user ? (
+                <Link
+                  href="/login"
+                  className="md:hidden p-2 text-[#2563EB] hover:bg-blue-50 rounded-lg transition-colors"
+                  aria-label="Login"
+                >
+                  <User className="w-6 h-6" />
+                </Link>
+              ) : (
+                <Link
+                  href="/minha-conta"
+                  className="md:hidden p-2 text-[#2563EB] hover:bg-blue-50 rounded-lg transition-colors"
+                  aria-label="Minha Conta"
+                >
+                  <User className="w-6 h-6" />
+                </Link>
+              )}
+
+              {/* User Desktop */}
               {!user ? (
                 <Link
                   href="/login"
@@ -257,14 +432,14 @@ export function Header() {
                 </div>
               )}
 
+              {/* Carrinho */}
               <Link
                 href="/carrinho"
-                // Ícone do carrinho atualizado para a cor solicitada
-                className="relative p-2 hover:bg-blue-50 rounded-full transition-colors hidden md:block text-[#2563EB]"
+                className="relative p-2 hover:bg-blue-50 rounded-full transition-colors text-[#2563EB]"
               >
                 <ShoppingCart className="w-6 h-6" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
                     {cartCount}
                   </span>
                 )}
@@ -274,27 +449,33 @@ export function Header() {
         </header>
       </div>
 
-      <div className="h-[104px] md:hidden"></div>
+      <div className="h-[88px] md:hidden"></div>
 
       {/* Search Mobile - CLICÁVEL PARA ABRIR O MODAL */}
-      <div className="bg-[#2563EB] px-4 pb-4 md:hidden">
+      <div className="bg-[#2563EB] px-3 md:px-4 py-3 md:hidden">
         <div className="relative" onClick={() => setIsSearchOpen(true)}>
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/80" />
           <input
             type="text"
             readOnly
             placeholder="Pesquisar produtos..."
-            className="w-full py-3 pl-10 pr-4 rounded-md bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none ring-0 border-none shadow-sm text-base"
+            className="w-full py-2.5 pl-10 pr-4 rounded-lg bg-white/95 text-gray-900 placeholder:text-gray-500 focus:outline-none ring-0 border-none shadow-md text-sm"
           />
         </div>
       </div>
 
       <nav className="bg-white border-b border-gray-100 shadow-sm hidden md:block sticky top-0 z-40">
-        <div className="container mx-auto flex items-center relative">
+        <div className="container mx-auto flex items-center relative" onMouseLeave={() => {
+          setIsMenuOpen(false);
+          handleDepartmentLeave();
+        }}>
           <div
             className="relative"
             onMouseEnter={() => setIsMenuOpen(true)}
-            onMouseLeave={() => setIsMenuOpen(false)}
+            onMouseLeave={() => {
+              setIsMenuOpen(false);
+              handleDepartmentLeave();
+            }}
           >
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -308,36 +489,114 @@ export function Header() {
             </button>
 
             {isMenuOpen && (
-              <div className="absolute top-full left-0 w-72 bg-white shadow-xl rounded-b-md border border-gray-100 py-2 z-50">
-                {departments.map((dept) => (
-                  <Link
-                    key={dept.id}
-                    href={`/departamento/${dept.slug}`}
-                    className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-[#2563EB] transition-colors group"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <dept.icon className="w-5 h-5 text-gray-400 group-hover:text-[#2563EB]" />
-                    <span className="font-medium text-sm flex-1">
-                      {dept.name}
-                    </span>
-                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#2563EB]" />
-                  </Link>
-                ))}
-                {departments.length === 0 && (
-                  <div className="px-4 py-3 text-sm text-gray-400">
-                    Carregando...
+              <div className="absolute top-full left-0 flex bg-white shadow-xl rounded-b-md border border-gray-100 z-50">
+                {/* Menu de Categorias */}
+                <div className="w-72 py-2">
+                  {departments.map((dept) => (
+                    <div
+                      key={dept.id}
+                      className="relative"
+                      onMouseEnter={() => handleDepartmentHover(dept.slug)}
+                    >
+                      <Link
+                        href={`/departamento/${dept.slug}`}
+                        className={`flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-[#2563EB] transition-colors group ${
+                          hoveredDepartment === dept.slug ? "bg-gray-50 text-[#2563EB]" : ""
+                        }`}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <dept.icon className="w-5 h-5 text-gray-400 group-hover:text-[#2563EB]" />
+                        <span className="font-medium text-sm flex-1">
+                          {dept.name}
+                        </span>
+                        <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#2563EB]" />
+                      </Link>
+                    </div>
+                  ))}
+                  {departments.length === 0 && (
+                    <div className="px-4 py-3 text-sm text-gray-400">
+                      Carregando...
+                    </div>
+                  )}
+                </div>
+
+                {/* Painel de Produtos */}
+                {hoveredDepartment && (
+                  <div className="w-96 border-l border-gray-200 py-4 px-4 max-h-[600px] overflow-y-auto">
+                    {loadingProducts ? (
+                      <div className="flex items-center justify-center py-8">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2563EB]"></div>
+                      </div>
+                    ) : departmentProducts.length > 0 ? (
+                      <>
+                        <h3 className="font-semibold text-gray-900 mb-3 text-sm">
+                          Produtos em Destaque
+                        </h3>
+                        <div className="space-y-2">
+                          {departmentProducts.map((product) => {
+                            const image = product.images.edges[0]?.node;
+                            const price = parseFloat(
+                              product.priceRange.minVariantPrice.amount
+                            );
+
+                            return (
+                              <Link
+                                key={product.id}
+                                href={`/produto/${product.handle}`}
+                                className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors group"
+                                onClick={() => setIsMenuOpen(false)}
+                              >
+                                <div className="w-16 h-16 bg-white rounded-md shrink-0 relative overflow-hidden border border-gray-100 flex items-center justify-center">
+                                  {image ? (
+                                    <Image
+                                      src={image.url}
+                                      alt={image.altText || product.title}
+                                      fill
+                                      className="object-contain p-1"
+                                    />
+                                  ) : (
+                                    <Package className="w-6 h-6 text-gray-300" />
+                                  )}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <h4 className="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-[#2563EB] transition-colors">
+                                    {product.title}
+                                  </h4>
+                                  <span className="text-[#166534] font-bold text-sm">
+                                    R$ {price.toFixed(2).replace(".", ",")}
+                                  </span>
+                                </div>
+                                <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#2563EB] shrink-0" />
+                              </Link>
+                            );
+                          })}
+                        </div>
+                        <Link
+                          href={`/departamento/${hoveredDepartment}`}
+                          className="block mt-4 text-center py-2 text-sm text-[#2563EB] font-medium hover:bg-blue-50 rounded-lg transition-colors"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Ver todos os produtos →
+                        </Link>
+                      </>
+                    ) : (
+                      <div className="text-center py-8 text-gray-400 text-sm">
+                        Nenhum produto encontrado
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
             )}
           </div>
 
-          <div className="flex items-center overflow-x-auto no-scrollbar mask-gradient">
+          <div className="flex items-center overflow-x-auto no-scrollbar mask-gradient pr-12 md:pr-16 relative">
             {departments.slice(0, 5).map((item) => (
               <Link
                 key={item.id}
                 href={`/departamento/${item.slug}`}
-                className="px-4 py-3 text-gray-500 hover:text-[#2563EB] text-sm font-medium whitespace-nowrap transition-colors"
+                prefetch={false}
+                className="px-4 py-3 text-gray-500 hover:text-[#2563EB] text-sm font-medium whitespace-nowrap"
               >
                 {item.name}
               </Link>
@@ -346,11 +605,44 @@ export function Header() {
         </div>
       </nav>
 
+      {/* Menu Mobile */}
       {isMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black/20 z-30 top-[170px]"
-          onClick={() => setIsMenuOpen(false)}
-        ></div>
+        <>
+          <div
+            className="fixed inset-0 bg-black/30 z-40 md:hidden"
+            onClick={() => setIsMenuOpen(false)}
+          ></div>
+          <div className="fixed top-[88px] left-0 right-0 bg-white z-50 md:hidden shadow-lg border-b border-gray-200 max-h-[calc(100vh-88px)] overflow-y-auto animate-slide-up">
+            <div className="px-4 py-2 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white">
+              <h2 className="font-bold text-lg text-[#1e3a8a]">Departamentos</h2>
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="p-2 text-gray-500 hover:text-[#2563EB] rounded-lg"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="py-2">
+              {departments.map((dept) => (
+                <Link
+                  key={dept.id}
+                  href={`/departamento/${dept.slug}`}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-[#2563EB] transition-colors border-b border-gray-50 last:border-0"
+                >
+                  <dept.icon className="w-5 h-5 text-gray-400" />
+                  <span className="font-medium text-sm flex-1">{dept.name}</span>
+                  <ChevronRight className="w-4 h-4 text-gray-300" />
+                </Link>
+              ))}
+              {departments.length === 0 && (
+                <div className="px-4 py-8 text-sm text-gray-400 text-center">
+                  Carregando...
+                </div>
+              )}
+            </div>
+          </div>
+        </>
       )}
 
       <SearchModal

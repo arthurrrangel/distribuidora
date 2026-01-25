@@ -22,11 +22,11 @@ export function ProductCarousel({ products }: ProductCarouselProps) {
   };
 
   return (
-    <section className="relative py-12">
+    <section className="relative pt-0 md:pt-4 pb-12">
       {/* HEADER */}
-      <div className="flex items-center justify-between mb-8 px-4 sm:px-6 lg:px-8">
+      <div className="flex items-center justify-between mb-4 md:mb-8 px-4 sm:px-6 lg:px-8">
         <div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 tracking-tight">
             Ofertas da Semana
           </h2>
           <p className="text-sm text-gray-500 mt-1">
