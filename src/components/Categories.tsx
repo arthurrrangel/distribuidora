@@ -118,7 +118,7 @@ export async function Categories() {
   return (
     <section
       id="categories"
-      className="pt-0 pb-0 bg-white border-b border-gray-100"
+      className="pt-2 md:pt-0 pb-0 bg-white border-b border-gray-100"
     >
       <div className="container mx-auto px-2 md:px-4">
         <div className="flex gap-3 md:gap-4 overflow-x-auto pb-0 no-scrollbar justify-start md:justify-center pr-8 md:pr-12">

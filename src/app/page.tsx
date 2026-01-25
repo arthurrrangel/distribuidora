@@ -11,7 +11,7 @@ export default function Home() {
       <Header />
       <Hero />
       <ProductGrid />
-      <div className="bg-white py-4 shadow-sm relative">
+      <div className="bg-white py-0 md:py-4 shadow-sm relative">
         <Categories />
       </div>
       <div className="mt-auto">

@@ -22,7 +22,7 @@ export function ProductCarousel({ products }: ProductCarouselProps) {
   };
 
   return (
-    <section className="relative pt-0 md:pt-4 pb-12">
+    <section className="relative pt-0 md:pt-4 pb-0 md:pb-12">
       {/* HEADER */}
       <div className="flex items-center justify-between mb-4 md:mb-8 px-4 sm:px-6 lg:px-8">
         <div>
