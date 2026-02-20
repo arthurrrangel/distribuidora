@@ -10,10 +10,10 @@ export default function Home() {
     <main className="min-h-screen bg-gray-50 flex flex-col pb-16 md:pb-0">
       <Header />
       <Hero />
-      <div className="bg-white py-4 shadow-sm relative">
+      <ProductGrid />
+      <div className="bg-white py-0 md:py-4 shadow-sm relative">
         <Categories />
       </div>
-      <ProductGrid />
       <div className="mt-auto">
         <Footer />
       </div>

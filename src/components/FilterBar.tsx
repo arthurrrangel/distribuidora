@@ -7,7 +7,7 @@ import {
   usePathname,
   useParams,
 } from "next/navigation";
-import { Filter, Plus, X, Search, Tag as TagIcon } from "lucide-react";
+import { Filter, Plus, X, Search, Tag as TagIcon, ChevronRight } from "lucide-react";
 import api from "@/services/api";
 
 // --- Tipagem ---
@@ -149,80 +149,91 @@ export function FilterBar() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-4 md:p-6 mb-4">
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-        {/* Barra superior de filtros (Igual ao seu exemplo) */}
-        <div className="flex flex-col md:flex-row items-center gap-3">
+    <div className="w-full mb-4">
+      <div className="bg-white rounded-lg shadow-sm p-3 md:p-4 w-full">
+        {/* Barra superior de filtros */}
+        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-3">
           {/* Select Departamento */}
-          <select
-            value={currentDepartment}
-            onChange={(e) => handleDepartmentChange(e.target.value)}
-            className="flex-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-          >
-            <option value="">Todos os Departamentos</option>
-            {collections.map((c) => (
-              <option key={c.id} value={c.handle}>
-                {c.title}
-              </option>
-            ))}
-          </select>
+          <div className="relative flex-1">
+            <select
+              value={currentDepartment}
+              onChange={(e) => handleDepartmentChange(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 text-sm transition-all hover:border-gray-400 cursor-pointer appearance-none"
+            >
+              <option value="">Todos os Departamentos</option>
+              {collections.map((c) => (
+                <option key={c.id} value={c.handle}>
+                  {c.title}
+                </option>
+              ))}
+            </select>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+              <ChevronRight className="w-4 h-4 text-gray-400 rotate-90" />
+            </div>
+          </div>
 
           {/* Select Ordenação */}
-          <select
-            value={currentSort}
-            onChange={(e) => updateUrl({ sort: e.target.value })}
-            className="flex-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-          >
-            <option value="">Ordenar por</option>
-            <option value="price-asc">Menor preço</option>
-            <option value="price-desc">Maior preço</option>
-            <option value="created-desc">Novidades</option>
-            <option value="title-asc">Nome (A-Z)</option>
-            <option value="title-desc">Nome (Z-A)</option>
-          </select>
+          <div className="relative flex-1">
+            <select
+              value={currentSort}
+              onChange={(e) => updateUrl({ sort: e.target.value })}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 text-sm transition-all hover:border-gray-400 cursor-pointer appearance-none"
+            >
+              <option value="">Ordenar por</option>
+              <option value="price-asc">Menor preço</option>
+              <option value="price-desc">Maior preço</option>
+              <option value="created-desc">Novidades</option>
+              <option value="title-asc">Nome (A-Z)</option>
+              <option value="title-desc">Nome (Z-A)</option>
+            </select>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+              <ChevronRight className="w-4 h-4 text-gray-400 rotate-90" />
+            </div>
+          </div>
 
           {/* Botão Toggle */}
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`p-2 px-4 rounded-lg transition-colors flex items-center gap-2 ${
+            className={`px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm font-medium ${
               showFilters
-                ? "bg-blue-500 text-white"
+                ? "bg-blue-500 text-white hover:bg-blue-600"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
-            <Filter size={20} />
-            <span className="md:hidden font-medium">Refinar</span>
+            <Filter size={18} />
+            <span className="hidden md:inline">Refinar</span>
+            <span className="md:hidden">Filtros</span>
           </button>
         </div>
 
         {/* Filtros expandidos */}
         {showFilters && (
-          <div className="mt-4 pt-4 border-t border-gray-200 space-y-4 animate-in slide-in-from-top-2">
+          <div className="mt-3 pt-3 space-y-3 animate-in slide-in-from-top-2 duration-200">
             {/* Input Tipo de Produto */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-gray-700">
                 Tipo de Produto
               </label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
-                  key={initialType} // TRUQUE: Reseta o input se a URL mudar externamente
+                  key={initialType}
                   type="text"
                   defaultValue={productType}
-                  placeholder="Ex: Caderno, Smartphone..."
+                  placeholder="Ex: Caderno, Smartphone, Notebook..."
                   onBlur={(e) => updateUrl({ type: e.target.value })}
                   onKeyDown={(e) =>
                     e.key === "Enter" &&
                     updateUrl({ type: e.currentTarget.value })
                   }
-                  className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 placeholder-gray-400 text-sm transition-all"
                 />
               </div>
             </div>
 
             {/* Input Tags */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-gray-700">
                 Tags / Marcadores
               </label>
               <div className="flex gap-2">
@@ -233,31 +244,31 @@ export function FilterBar() {
                     value={newTag}
                     onChange={(e) => setNewTag(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && addTag()}
-                    placeholder="Adicionar tag (ex: Oferta)"
-                    className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Adicionar tag (ex: Oferta, Promoção)"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 placeholder-gray-400 text-sm transition-all"
                   />
                 </div>
                 <button
                   onClick={addTag}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2 text-sm font-medium"
                 >
                   <Plus size={18} />
-                  Adicionar
+                  <span className="hidden sm:inline">Adicionar</span>
                 </button>
               </div>
 
               {/* Lista de Tags ATIVAS (Vindo da URL) */}
               {activeTags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-3">
+                <div className="flex flex-wrap gap-2 mt-2">
                   {activeTags.map((tag, index) => (
                     <span
                       key={index}
-                      className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm"
+                      className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"
                     >
                       {tag}
                       <button
                         onClick={() => removeTag(tag)}
-                        className="hover:bg-blue-200 rounded-full p-0.5"
+                        className="hover:bg-blue-200 rounded-full p-0.5 transition-colors"
                       >
                         <X size={14} />
                       </button>
@@ -272,18 +283,19 @@ export function FilterBar() {
         {/* Chips de Filtros Aplicados (Resumo) */}
         {(activeFiltersList.length > 0 || activeTags.length > 0) &&
           !showFilters && (
-            <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="mt-3 pt-3">
               <div className="flex flex-wrap gap-2">
                 {activeFiltersList.map((filter) => (
                   <span
                     key={filter.key}
                     className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm"
                   >
-                    <span className="font-semibold">{filter.label}:</span>{" "}
-                    {filter.value}
+                    <span className="font-semibold">{filter.label}:</span>
+                    <span>{filter.value}</span>
                     <button
                       onClick={() => clearFilter(filter.key)}
-                      className="hover:bg-gray-200 rounded-full p-0.5"
+                      className="hover:bg-gray-200 rounded-full p-0.5 transition-colors"
+                      aria-label={`Remover filtro ${filter.label}`}
                     >
                       <X size={14} />
                     </button>
@@ -291,11 +303,12 @@ export function FilterBar() {
                 ))}
                 {activeTags.length > 0 && (
                   <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm">
-                    <span className="font-semibold">Tags:</span>{" "}
-                    {activeTags.length} ativos
+                    <span className="font-semibold">Tags:</span>
+                    <span>{activeTags.length} {activeTags.length === 1 ? 'ativa' : 'ativas'}</span>
                     <button
                       onClick={() => updateUrl({ tag: null })}
-                      className="hover:bg-gray-200 rounded-full p-0.5"
+                      className="hover:bg-gray-200 rounded-full p-0.5 transition-colors"
+                      aria-label="Remover todas as tags"
                     >
                       <X size={14} />
                     </button>

@@ -10,6 +10,17 @@ import {
   Smartphone,
   Package,
   LucideIcon,
+  Star,
+  PenTool,
+  BookOpen,
+  ShoppingBag,
+  Laptop,
+  Headphones,
+  Home,
+  UtensilsCrossed,
+  Dumbbell,
+  Shirt,
+  Gamepad2,
 } from "lucide-react";
 
 // --- 1. Tipagem Estrita (Zero ANY) ---
@@ -39,15 +50,52 @@ interface ShopifyCollectionsResponse {
   };
 }
 
-// Mapa de ícones
-const iconMap: Record<string, LucideIcon> = {
-  "papelaria-e-escritorio": Briefcase,
+// Mapa de ícones por handle
+const iconMapByHandle: Record<string, LucideIcon> = {
+  "papelaria-e-escritorio": PenTool,
   "eletronicos-e-tvs": Tv,
-  "informatica-e-acessorios": Monitor,
+  "informatica-e-acessorios": Laptop,
   "saude-nutricao-e-bem-estar": Heart,
-  "utilidades-domesticas": CookingPot,
-  "audio-video-e-mobile": Smartphone,
+  "utilidades-domesticas": Home,
+  "audio-video-e-mobile": Headphones,
+  destaques: Star,
+  papelaria: PenTool,
+  "papelaria-escolar": BookOpen,
+  "principais-produtos": ShoppingBag,
 };
+
+// Mapa de ícones por título (fallback)
+const iconMapByTitle: Record<string, LucideIcon> = {
+  Destaques: Star,
+  Papelaria: PenTool,
+  "Papelaria Escolar": BookOpen,
+  "Principais Produtos": ShoppingBag,
+  Eletrônicos: Tv,
+  Informática: Laptop,
+  "Áudio e Vídeo": Headphones,
+  Saúde: Heart,
+  Casa: Home,
+  Cozinha: UtensilsCrossed,
+  Esportes: Dumbbell,
+  Roupas: Shirt,
+  Games: Gamepad2,
+};
+
+// Função para obter o ícone apropriado
+function getIconForCategory(handle: string, title: string): LucideIcon {
+  // Primeiro tenta pelo handle
+  if (iconMapByHandle[handle]) {
+    return iconMapByHandle[handle];
+  }
+
+  // Depois tenta pelo título
+  if (iconMapByTitle[title]) {
+    return iconMapByTitle[title];
+  }
+
+  // Fallback padrão
+  return Package;
+}
 
 export async function Categories() {
   // --- 2. Query GraphQL ---
@@ -86,22 +134,22 @@ export async function Categories() {
   return (
     <section
       id="categories"
-      className="pt-0 pb-4 md:py-8 bg-white border-b border-gray-100"
+      className="pt-2 md:pt-0 pb-0 bg-white border-b border-gray-100"
     >
-      <div className="container mx-auto px-4">
-        <div className="flex gap-6 overflow-x-auto pb-4 no-scrollbar justify-start md:justify-center">
+      <div className="container mx-auto px-2 md:px-4">
+        <div className="flex gap-3 md:gap-4 overflow-x-auto pb-0 no-scrollbar justify-start md:justify-center pr-8 md:pr-12">
           {filteredCollections.map((cat) => {
-            // Seleciona o ícone ou usa o fallback
-            const IconComponent = iconMap[cat.handle] || Package;
+            // Seleciona o ícone apropriado
+            const IconComponent = getIconForCategory(cat.handle, cat.title);
             const hasImage = cat.image?.url;
 
             return (
               <Link
                 key={cat.id}
                 href={`/departamento/${cat.handle}`}
-                className="flex flex-col items-center gap-2 group min-w-[90px]"
+                className="flex flex-col items-center gap-1.5 group min-w-[80px]"
               >
-                <div className="w-20 h-20 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 group-hover:border-blue-500 group-hover:text-blue-500 transition-colors shadow-sm overflow-hidden">
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 group-hover:border-blue-500 group-hover:text-blue-500 transition-colors shadow-sm overflow-hidden">
                   {hasImage ? (
                     <Image
                       src={cat.image!.url}
@@ -111,10 +159,13 @@ export async function Categories() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <IconComponent strokeWidth={1.5} className="w-8 h-8" />
+                    <IconComponent
+                      strokeWidth={1.5}
+                      className="w-6 h-6 md:w-8 md:h-8"
+                    />
                   )}
                 </div>
-                <span className="text-xs font-medium text-gray-600 text-center group-hover:text-[#2563EB] transition-colors leading-tight max-w-[90px]">
+                <span className="text-xs font-medium text-gray-600 text-center group-hover:text-[#2563EB] transition-colors leading-tight max-w-[80px]">
                   {cat.title}
                 </span>
               </Link>
