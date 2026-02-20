@@ -347,14 +347,14 @@ export function Header() {
       <div className="h-[88px] md:hidden"></div>
 
       {/* Search Mobile - CLICÁVEL PARA ABRIR O MODAL */}
-      <div className="bg-[#2563EB] px-4 pb-4 md:hidden">
+      <div className="bg-white px-4 pb-4 mt-4 md:hidden">
         <div className="relative" onClick={() => setIsSearchOpen(true)}>
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input
             type="text"
             readOnly
             placeholder="Pesquisar produtos..."
-            className="w-full py-3 pl-10 pr-4 rounded-md bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none ring-0 border-none shadow-sm text-base"
+            className="w-full py-3 pl-10 pr-4 rounded-md bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none ring-0 border border-gray-200 shadow-sm text-base"
           />
         </div>
       </div>
