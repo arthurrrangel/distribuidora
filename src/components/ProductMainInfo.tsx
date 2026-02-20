@@ -29,14 +29,14 @@ export function ProductMainInfo({
 }: ProductMainInfoProps) {
   const { user } = useAuth();
   const isLoggedIn = !!user;
-  const userType = user?.cnpj ? "cnpj" : "cpf";
+  // Sempre CNPJ
 
   const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
 
-  // Aplica desconto mockado se for atacado
-  const finalPrice = userType === "cnpj" ? price * 0.9 : price;
+  // Sempre aplicar desconto de CNPJ
+  const finalPrice = price * 0.9;
 
   const handleIncrement = () => setQuantity((q) => q + 1);
   const handleDecrement = () => setQuantity((q) => Math.max(1, q - 1));
@@ -76,11 +76,9 @@ export function ProductMainInfo({
               R$ {finalPrice.toFixed(2).replace(".", ",")}
             </span>
             <span className="text-gray-500 mb-2 font-medium">/{unit}</span>
-            {userType === "cnpj" && (
-              <span className="mb-2 ml-2 bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded inline-block">
-                Atacado
-              </span>
-            )}
+            <span className="mb-2 ml-2 bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded inline-block">
+              Atacado
+            </span>
           </div>
         ) : (
           <div className="flex items-center gap-2 py-2">

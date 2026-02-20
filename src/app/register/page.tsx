@@ -20,8 +20,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MobileNavigator } from "@/components/MobileNavigator";
 
-import api from "@/services/api";
-import { getErrorMessage, extractShopifyUserErrors } from "@/utils/errorUtils";
+import { getErrorMessage } from "@/utils/errorUtils";
 import {
   validateRequired,
   validateEmail,
@@ -33,12 +32,7 @@ import {
   formatPhone,
   formatCEP,
 } from "@/utils/validations";
-import {
-  ShopifyGraphQLResponse,
-  CustomerCreateData,
-  CompanyRegistrationData,
-  FormErrors,
-} from "@/types/shopify";
+import { CompanyRegistrationData, FormErrors } from "@/types/shopify";
 
 // Estado inicial do formulário
 const initialFormData: CompanyRegistrationData = {
@@ -62,6 +56,63 @@ const initialFormData: CompanyRegistrationData = {
   },
 };
 
+// Componente de campo de input isolado para não perder o foco
+const InputField = ({
+  label,
+  name,
+  type = "text",
+  placeholder,
+  value,
+  onChange,
+  error,
+  icon: Icon,
+  required = true,
+  disabled = false,
+  maxLength,
+}: {
+  label: string;
+  name: string;
+  type?: string;
+  placeholder?: string;
+  value: string;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  error?: string;
+  icon?: typeof Building2;
+  required?: boolean;
+  disabled?: boolean;
+  maxLength?: number;
+}) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">
+      {label} {required && <span className="text-red-500">*</span>}
+    </label>
+    <div className="relative">
+      {Icon && (
+        <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+      )}
+      <input
+        type={type}
+        name={name}
+        required={required}
+        value={value}
+        onChange={onChange}
+        disabled={disabled}
+        maxLength={maxLength}
+        className={`w-full ${Icon ? "pl-10" : "px-4"} pr-4 py-3 rounded-md border ${
+          error ? "border-red-300 bg-red-50" : "border-gray-200"
+        } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 disabled:bg-gray-100 disabled:cursor-not-allowed`}
+        placeholder={placeholder}
+      />
+    </div>
+    {error && (
+      <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+        <AlertCircle className="w-4 h-4" />
+        {error}
+      </p>
+    )}
+  </div>
+);
+
 export default function RegisterPage() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
@@ -76,25 +127,33 @@ export default function RegisterPage() {
     useState<CompanyRegistrationData>(initialFormData);
   const [errors, setErrors] = useState<FormErrors>({});
 
-  // Handler genérico para campos simples
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
 
-    if (name.startsWith("endereco.")) {
-      const field = name.split(".")[1];
-      setFormData((prev) => ({
-        ...prev,
-        endereco: {
-          ...prev.endereco,
-          [field]: value,
-        },
-      }));
-    } else if (type === "checkbox") {
+    if (name.includes(".")) {
+      const [parent, child] = name.split(".");
+
+      if (parent === "endereco") {
+        setFormData((prev) => ({
+          ...prev,
+          endereco: {
+            ...prev.endereco,
+            [child]: value,
+          },
+        }));
+      }
+
+      if (errors[name]) {
+        setErrors((prev) => ({ ...prev, [name]: "" }));
+      }
+      return;
+    }
+
+    if (type === "checkbox") {
       setFormData((prev) => ({ ...prev, [name]: checked }));
-      // Limpa IE se marcar isento
       if (name === "ieIsento" && checked) {
         setFormData((prev) => ({ ...prev, inscricaoEstadual: "" }));
         setErrors((prev) => ({ ...prev, inscricaoEstadual: "" }));
@@ -103,13 +162,11 @@ export default function RegisterPage() {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
 
-    // Limpa erro do campo ao editar
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
-  // Handlers com formatação
   const handleCNPJChange = (e: ChangeEvent<HTMLInputElement>) => {
     const formatted = formatCNPJ(e.target.value);
     setFormData((prev) => ({ ...prev, cnpj: formatted }));
@@ -131,7 +188,6 @@ export default function RegisterPage() {
     if (errors["endereco.cep"])
       setErrors((prev) => ({ ...prev, "endereco.cep": "" }));
 
-    // Busca automática de endereço via ViaCEP
     const cleanCEP = formatted.replace(/[^\d]/g, "");
     if (cleanCEP.length === 8) {
       setLoadingCEP(true);
@@ -153,18 +209,16 @@ export default function RegisterPage() {
           }));
         }
       } catch {
-        // Silencioso - usuário pode preencher manualmente
+        // Silencioso
       } finally {
         setLoadingCEP(false);
       }
     }
   };
 
-  // Validação do formulário
   const validateForm = useCallback((): boolean => {
     const newErrors: FormErrors = {};
 
-    // Dados da empresa
     if (!validateRequired(formData.razaoSocial)) {
       newErrors.razaoSocial = "Razão Social é obrigatória";
     }
@@ -184,7 +238,6 @@ export default function RegisterPage() {
       newErrors.inscricaoEstadual = "Inscrição Estadual inválida";
     }
 
-    // Dados do responsável
     if (!validateRequired(formData.nomeResponsavel)) {
       newErrors.nomeResponsavel = "Nome do responsável é obrigatório";
     }
@@ -204,7 +257,6 @@ export default function RegisterPage() {
       newErrors.senha = "Senha deve ter no mínimo 5 caracteres";
     }
 
-    // Endereço
     if (!validateRequired(formData.endereco.cep)) {
       newErrors["endereco.cep"] = "CEP é obrigatório";
     } else if (!validateCEP(formData.endereco.cep)) {
@@ -244,117 +296,60 @@ export default function RegisterPage() {
     setLoading(true);
     setStatus({ type: null, message: "" });
 
-    // Separa o nome do responsável em primeiro nome e sobrenome
-    const nameParts = formData.nomeResponsavel.trim().split(" ");
-    const firstName = nameParts[0];
-    const lastName = nameParts.slice(1).join(" ") || firstName;
-
-    // Limpa CNPJ e telefone para armazenamento
     const cleanCNPJ = formData.cnpj.replace(/[^\d]/g, "");
     const cleanPhone = formData.whatsapp.replace(/[^\d]/g, "");
     const cleanCEP = formData.endereco.cep.replace(/[^\d]/g, "");
 
-    // Determina valor da IE
     const ieValue = formData.ieIsento
       ? "ISENTO"
       : formData.inscricaoEstadual || "";
 
-    // Monta endereço formatado
-    const address1 = `${formData.endereco.rua}, ${formData.endereco.numero}`;
-    const address2 = formData.endereco.complemento || "";
-
-    const mutation = `
-      mutation customerCreate($input: CustomerCreateInput!) {
-        customerCreate(input: $input) {
-          customer {
-            id
-            email
-            firstName
-            lastName
-          }
-          customerUserErrors {
-            code
-            field
-            message
-          }
-        }
-      }
-    `;
+    // Montando o payload para a sua rota interna (API do Next.js)
+    const payload = {
+      razaoSocial: formData.razaoSocial,
+      nomeFantasia: formData.nomeFantasia,
+      cnpj: cleanCNPJ,
+      inscricaoEstadual: ieValue,
+      nomeResponsavel: formData.nomeResponsavel,
+      whatsapp: cleanPhone,
+      email: formData.email,
+      senha: formData.senha,
+      endereco: {
+        cep: cleanCEP,
+        rua: formData.endereco.rua,
+        numero: formData.endereco.numero,
+        complemento: formData.endereco.complemento,
+        bairro: formData.endereco.bairro,
+        cidade: formData.endereco.cidade,
+        uf: formData.endereco.uf,
+      },
+    };
 
     try {
-      const response = await api.post<
-        ShopifyGraphQLResponse<CustomerCreateData>
-      >("", {
-        query: mutation,
-        variables: {
-          input: {
-            firstName: firstName,
-            lastName: lastName,
-            email: formData.email,
-            password: formData.senha,
-            phone: `+55${cleanPhone}`,
-            acceptsMarketing: true,
-            addresses: [
-              {
-                address1: address1,
-                address2: address2,
-                city: formData.endereco.cidade,
-                province: formData.endereco.uf,
-                country: "BR",
-                zip: cleanCEP,
-                firstName: firstName,
-                lastName: lastName,
-                phone: `+55${cleanPhone}`,
-              },
-            ],
-          },
+      // Fazendo o fetch para a nossa própria rota API (/api/create-customer)
+      const response = await fetch("/api/create-customer", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify(payload),
       });
 
-      const data = response.data.data;
-      const shopifyError = extractShopifyUserErrors(
-        data.customerCreate.customerUserErrors,
-      );
+      const data = await response.json();
 
-      if (shopifyError) {
-        throw new Error(shopifyError);
+      if (!response.ok) {
+        throw new Error(data.error || "Não foi possível criar a conta.");
       }
 
-      if (data.customerCreate.customer?.id) {
-        // Cliente criado com sucesso!
-        // Nota: Os metafields precisam ser salvos via Admin API (backend)
-        // Por segurança, você deve criar uma API Route ou Serverless Function
-        // que receba esses dados e salve via Admin API
+      // Tudo deu certo via Admin API!
+      setStatus({
+        type: "success",
+        message: "Conta criada com sucesso! Redirecionando para o login...",
+      });
 
-        // Salva dados adicionais no localStorage temporariamente
-        // para serem enviados ao backend após login
-        const metafieldsData = {
-          customerId: data.customerCreate.customer.id,
-          razaoSocial: formData.razaoSocial,
-          nomeFantasia: formData.nomeFantasia,
-          cnpj: cleanCNPJ,
-          inscricaoEstadual: ieValue,
-          nomeResponsavel: formData.nomeResponsavel,
-          whatsapp: cleanPhone,
-          bairro: formData.endereco.bairro,
-        };
-
-        localStorage.setItem(
-          "pendingMetafields",
-          JSON.stringify(metafieldsData),
-        );
-
-        setStatus({
-          type: "success",
-          message: "Conta criada com sucesso! Redirecionando para o login...",
-        });
-
-        setTimeout(() => {
-          router.push("/login");
-        }, 2000);
-      } else {
-        throw new Error("Não foi possível criar a conta.");
-      }
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
     } catch (err: unknown) {
       const message = getErrorMessage(err);
       setStatus({
@@ -365,63 +360,6 @@ export default function RegisterPage() {
       setLoading(false);
     }
   };
-
-  // Componente de campo de input reutilizável
-  const InputField = ({
-    label,
-    name,
-    type = "text",
-    placeholder,
-    value,
-    onChange,
-    error,
-    icon: Icon,
-    required = true,
-    disabled = false,
-    maxLength,
-  }: {
-    label: string;
-    name: string;
-    type?: string;
-    placeholder?: string;
-    value: string;
-    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-    error?: string;
-    icon?: typeof Building2;
-    required?: boolean;
-    disabled?: boolean;
-    maxLength?: number;
-  }) => (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
-      <div className="relative">
-        {Icon && (
-          <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-        )}
-        <input
-          type={type}
-          name={name}
-          required={required}
-          value={value}
-          onChange={onChange}
-          disabled={disabled}
-          maxLength={maxLength}
-          className={`w-full ${Icon ? "pl-10" : "px-4"} pr-4 py-3 rounded-md border ${
-            error ? "border-red-300 bg-red-50" : "border-gray-200"
-          } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 disabled:bg-gray-100 disabled:cursor-not-allowed`}
-          placeholder={placeholder}
-        />
-      </div>
-      {error && (
-        <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-          <AlertCircle className="w-4 h-4" />
-          {error}
-        </p>
-      )}
-    </div>
-  );
 
   const estados = [
     "AC",
@@ -466,7 +404,6 @@ export default function RegisterPage() {
             Preencha os dados abaixo para criar sua conta empresarial.
           </p>
 
-          {/* Área de avisos */}
           {status.message && (
             <div
               className={`mb-6 p-4 rounded-lg flex items-start gap-3 border ${
@@ -485,7 +422,6 @@ export default function RegisterPage() {
           )}
 
           <form onSubmit={handleRegister} className="space-y-8">
-            {/* Seção: Dados da Empresa */}
             <section>
               <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                 <Building2 className="w-5 h-5 text-blue-600" />
@@ -553,7 +489,6 @@ export default function RegisterPage() {
               </div>
             </section>
 
-            {/* Seção: Dados do Responsável */}
             <section>
               <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                 <User className="w-5 h-5 text-blue-600" />
@@ -607,7 +542,6 @@ export default function RegisterPage() {
               </div>
             </section>
 
-            {/* Seção: Endereço de Entrega */}
             <section>
               <h2 className="mt-4 text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-blue-600" />
@@ -716,7 +650,6 @@ export default function RegisterPage() {
               </div>
             </section>
 
-            {/* Botão de envio */}
             <div className="pt-4">
               <button
                 type="submit"

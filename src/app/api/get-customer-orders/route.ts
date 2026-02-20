@@ -20,9 +20,7 @@ interface DraftOrder {
       node: {
         title: string;
         quantity: number;
-        image: {
-          url: string;
-        } | null;
+        image: { url: string } | null;
         originalUnitPrice: string;
       };
     }>;
@@ -35,10 +33,7 @@ interface Order {
   displayFinancialStatus: string;
   displayFulfillmentStatus: string;
   totalPriceSet: {
-    shopMoney: {
-      amount: string;
-      currencyCode: string;
-    };
+    shopMoney: { amount: string; currencyCode: string };
   };
   createdAt: string;
   customer: {
@@ -50,43 +45,22 @@ interface Order {
       node: {
         title: string;
         quantity: number;
-        image: {
-          url: string;
-        } | null;
-        originalUnitPriceSet: {
-          shopMoney: {
-            amount: string;
-          };
-        };
+        image: { url: string } | null;
+        originalUnitPriceSet: { shopMoney: { amount: string } };
       };
     }>;
   };
 }
 
-interface ShopifyDraftOrdersResponse {
-  data: {
-    draftOrders: {
-      edges: Array<{
-        node: DraftOrder;
-      }>;
-    };
-  };
-  errors?: Array<{ message: string }>;
-}
-
 interface ShopifyOrdersResponse {
   data: {
-    orders: {
-      edges: Array<{
-        node: Order;
-      }>;
-    };
+    draftOrders: { edges: Array<{ node: DraftOrder }> };
+    orders: { edges: Array<{ node: Order }> };
   };
   errors?: Array<{ message: string }>;
 }
 
 export async function POST(request: NextRequest) {
-  // Validar configuração
   if (!SHOPIFY_STORE_DOMAIN || !SHOPIFY_ADMIN_TOKEN) {
     return NextResponse.json(
       { error: "Configuração do Shopify não encontrada" },
@@ -96,19 +70,30 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { customerId, customerEmail } = body;
+    const { customerId } = body;
 
-    if (!customerId && !customerEmail) {
+    // Validação estrita do ID
+    if (!customerId) {
       return NextResponse.json(
-        { error: "customerId ou customerEmail é obrigatório" },
+        { error: "O ID do usuário é obrigatório para buscar pedidos." },
         { status: 400 },
       );
     }
 
-    // Query para Draft Orders
-    const draftOrdersQuery = `
-      query getDraftOrders($query: String!) {
-        draftOrders(first: 50, query: $query, sortKey: UPDATED_AT, reverse: true) {
+    // A API de busca (query) do Shopify exige o ID numérico puro
+    // Se vier no formato gid://shopify/Customer/123456, pegamos só os números
+    const numericId = customerId.includes("/")
+      ? customerId.split("/").pop()
+      : customerId;
+
+    // Sintaxe exata para garantir que a Shopify filtre corretamente
+    const draftQuery = `customer_id:${numericId} AND status:open`;
+    const ordersQuery = `customer_id:${numericId}`;
+
+    // Juntamos tudo em UMA ÚNICA QUERY GraphQL
+    const combinedQuery = `
+      query getCustomerOrders($draftQuery: String!, $ordersQuery: String!) {
+        draftOrders(first: 50, query: $draftQuery, sortKey: UPDATED_AT, reverse: true) {
           edges {
             node {
               id
@@ -116,18 +101,13 @@ export async function POST(request: NextRequest) {
               status
               totalPrice
               createdAt
-              customer {
-                id
-                email
-              }
+              customer { id email }
               lineItems(first: 10) {
                 edges {
                   node {
                     title
                     quantity
-                    image {
-                      url
-                    }
+                    image { url }
                     originalUnitPrice
                   }
                 }
@@ -135,43 +115,23 @@ export async function POST(request: NextRequest) {
             }
           }
         }
-      }
-    `;
-
-    // Query para Orders
-    const ordersQuery = `
-      query getOrders($query: String!) {
-        orders(first: 50, query: $query, sortKey: CREATED_AT, reverse: true) {
+        orders(first: 50, query: $ordersQuery, sortKey: CREATED_AT, reverse: true) {
           edges {
             node {
               id
               name
               displayFinancialStatus
               displayFulfillmentStatus
-              totalPriceSet {
-                shopMoney {
-                  amount
-                  currencyCode
-                }
-              }
+              totalPriceSet { shopMoney { amount currencyCode } }
               createdAt
-              customer {
-                id
-                email
-              }
+              customer { id email }
               lineItems(first: 10) {
                 edges {
                   node {
                     title
                     quantity
-                    image {
-                      url
-                    }
-                    originalUnitPriceSet {
-                      shopMoney {
-                        amount
-                      }
-                    }
+                    image { url }
+                    originalUnitPriceSet { shopMoney { amount } }
                   }
                 }
               }
@@ -181,76 +141,45 @@ export async function POST(request: NextRequest) {
       }
     `;
 
-    // Montar query string para Shopify
-    // Usar email como busca principal (mais confiável)
-    let searchQuery = "";
-    if (customerEmail) {
-      searchQuery = `email:${customerEmail}`;
-    } else if (customerId) {
-      const numericId = customerId.split("/").pop();
-      searchQuery = `customer_id:${numericId}`;
-    }
-
-    // Query para draft orders abertos
-    const draftQuery = `${searchQuery} status:open`;
-
-    console.log("Draft query:", draftQuery);
-    console.log("Orders query:", searchQuery);
-
-    // Fazer requests em paralelo
-    const [draftOrdersResponse, ordersResponse] = await Promise.all([
-      fetch(
-        `https://${SHOPIFY_STORE_DOMAIN}/admin/api/${API_VERSION}/graphql.json`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Shopify-Access-Token": SHOPIFY_ADMIN_TOKEN,
-          },
-          body: JSON.stringify({
-            query: draftOrdersQuery,
-            variables: { query: draftQuery },
-          }),
+    // Apenas um fetch
+    const response = await fetch(
+      `https://${SHOPIFY_STORE_DOMAIN}/admin/api/${API_VERSION}/graphql.json`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Shopify-Access-Token": SHOPIFY_ADMIN_TOKEN,
         },
-      ),
-      fetch(
-        `https://${SHOPIFY_STORE_DOMAIN}/admin/api/${API_VERSION}/graphql.json`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Shopify-Access-Token": SHOPIFY_ADMIN_TOKEN,
+        body: JSON.stringify({
+          query: combinedQuery,
+          variables: {
+            draftQuery: draftQuery,
+            ordersQuery: ordersQuery,
           },
-          body: JSON.stringify({
-            query: ordersQuery,
-            variables: { query: searchQuery },
-          }),
-        },
-      ),
-    ]);
+        }),
+      },
+    );
 
-    if (!draftOrdersResponse.ok || !ordersResponse.ok) {
-      console.error("Shopify API error");
+    if (!response.ok) {
+      console.error("Shopify API HTTP error:", response.status);
       return NextResponse.json(
         { error: "Erro ao comunicar com Shopify" },
         { status: 502 },
       );
     }
 
-    const draftOrdersData: ShopifyDraftOrdersResponse =
-      await draftOrdersResponse.json();
-    const ordersData: ShopifyOrdersResponse = await ordersResponse.json();
+    const responseData: ShopifyOrdersResponse = await response.json();
 
-    // Verificar erros
-    if (draftOrdersData.errors) {
-      console.error("Draft orders errors:", draftOrdersData.errors);
-    }
-    if (ordersData.errors) {
-      console.error("Orders errors:", ordersData.errors);
+    if (responseData.errors) {
+      console.error("GraphQL errors:", responseData.errors);
+      return NextResponse.json(
+        { error: "Erro na consulta de pedidos" },
+        { status: 400 },
+      );
     }
 
     // Formatar draft orders
-    const drafts = (draftOrdersData.data?.draftOrders?.edges || []).map(
+    const drafts = (responseData.data?.draftOrders?.edges || []).map(
       ({ node }) => ({
         id: node.id,
         name: node.name,
@@ -268,7 +197,7 @@ export async function POST(request: NextRequest) {
     );
 
     // Formatar orders
-    const orders = (ordersData.data?.orders?.edges || []).map(({ node }) => ({
+    const orders = (responseData.data?.orders?.edges || []).map(({ node }) => ({
       id: node.id,
       name: node.name,
       status: node.displayFinancialStatus,

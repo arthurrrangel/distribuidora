@@ -31,8 +31,8 @@ export function ProductCard({
   const { user } = useAuth();
   const isLoggedIn = !!user;
 
-  const userType = user?.cnpj ? "cnpj" : "cpf";
-  const finalPrice = userType === "cnpj" ? price * 0.9 : price;
+  // Sempre aplicar desconto de CNPJ
+  const finalPrice = price * 0.9;
 
   const discountPercentage =
     originalPrice && originalPrice > finalPrice
@@ -45,51 +45,55 @@ export function ProductCard({
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-
     addItem({
       id,
       productId,
       handle,
       title,
       price: finalPrice,
-      originalPrice,
       image,
       unit,
     });
-
     setAdded(true);
-    setTimeout(() => setAdded(false), 1500);
+    setTimeout(() => setAdded(false), 1200);
   };
 
   return (
-    <div className="group relative flex flex-col h-full rounded-xl border border-gray-200 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_14px_rgba(0,0,0,0.10)] transition-all duration-300 max-w-[220px] w-full mx-auto overflow-hidden">
-      <Link
-        href={`/produto/${handle}`}
-        className="absolute inset-0 z-0"
-        aria-label={`Ver detalhes de ${title}`}
-      />
-
-      {discountPercentage > 0 && isLoggedIn && (
-        <div className="absolute top-3 left-3 bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded-md z-10">
-          {discountPercentage}% OFF
-        </div>
-      )}
-
-      {/* ÁREA DA IMAGEM (FUNDO BRANCO) */}
-      <div className="relative w-full aspect-square max-h-[200px] flex items-center justify-center bg-white overflow-hidden z-10 pointer-events-none border-b border-gray-100">
-        {image ? (
+    <div className="rounded-lg border border-gray-200 bg-white shadow-sm flex flex-col transition-all duration-200 hover:shadow-lg hover:border-gray-400">
+      <Link href={`/produto/${handle}`} className="flex-1 flex flex-col">
+        <div className="relative w-full h-48">
           <Image
             src={image}
             alt={title}
             fill
-            className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
-            sizes="(max-width: 768px) 140px, 200px"
+            className="object-contain p-4"
+            sizes="(max-width: 768px) 100vw, 33vw"
           />
-        ) : (
-          <div className="text-gray-300 font-semibold text-xl">AreL</div>
-        )}
-      </div>
-
+        </div>
+        <div className="flex-1 flex flex-col p-4 gap-2">
+          <h3 className="font-semibold text-lg line-clamp-2 min-h-[48px]">
+            {title}
+          </h3>
+          {isLoggedIn && (
+            <div className="flex items-center gap-2">
+              {originalPrice && originalPrice > finalPrice && (
+                <span className="text-sm text-gray-400 line-through">
+                  R$ {originalPrice.toFixed(2)}
+                </span>
+              )}
+              <span className="text-xl font-bold text-primary">
+                R$ {finalPrice.toFixed(2)}
+              </span>
+              {discountPercentage > 0 && (
+                <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+                  -{discountPercentage}%
+                </span>
+              )}
+            </div>
+          )}
+          <span className="text-xs text-gray-500">Unidade: {unit}</span>
+        </div>
+      </Link>
       {isLoggedIn && (
         <button
           onClick={handleAddToCart}
@@ -114,7 +118,6 @@ export function ProductCard({
           )}
         </button>
       )}
-
       {/* ÁREA DE INFORMAÇÕES (FUNDO CINZA) */}
       <div className="flex-1 flex flex-col px-3 pb-3 pt-3 bg-gray-100 pointer-events-none">
         {unit && (
@@ -122,7 +125,6 @@ export function ProductCard({
             {unit.toUpperCase()}
           </span>
         )}
-
         <div className="mb-2 min-h-[40px]">
           {isLoggedIn ? (
             <>
@@ -149,7 +151,6 @@ export function ProductCard({
             </div>
           )}
         </div>
-
         <h3
           className="text-gray-700 text-xs md:text-sm font-medium leading-snug line-clamp-2 mt-auto group-hover:text-blue-600 transition-colors"
           title={title}

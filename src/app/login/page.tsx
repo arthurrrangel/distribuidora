@@ -19,8 +19,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Estado para controlar visualmente se é Varejo ou Atacado
-  const [loginType, setLoginType] = useState<"cpf" | "cnpj">("cpf");
+  // Login apenas por CNPJ
 
   const [formData, setFormData] = useState({
     email: "",
@@ -78,15 +77,7 @@ export default function LoginPage() {
       const tokenData = data.customerAccessTokenCreate.customerAccessToken;
 
       if (tokenData?.accessToken) {
-        // --- CORREÇÃO AQUI ---
-
-        // 1. Opcional: Salvar a preferência do usuário (Varejo/Atacado) localmente
-        localStorage.setItem("userType", loginType);
-
-        // 2. Chama o login do contexto passando os DOIS argumentos exigidos
         await login(tokenData.accessToken, tokenData.expiresAt);
-
-        // 3. Redireciona
         router.push("/");
       } else {
         throw new Error("Erro ao gerar token de acesso.");
@@ -115,30 +106,11 @@ export default function LoginPage() {
             Entre para acompanhar seus pedidos e facilitar suas compras.
           </p>
 
-          {/* Seletor de Tipo de Login */}
-          <div className="flex gap-4 mb-6">
-            <button
-              type="button"
-              onClick={() => setLoginType("cpf")}
-              className={`flex-1 py-2 rounded-md font-bold text-sm transition-colors ${
-                loginType === "cpf"
-                  ? "bg-blue-100 text-blue-700 ring-2 ring-blue-500 ring-offset-1"
-                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-              }`}
-            >
-              Entrar como Varejo (CPF)
-            </button>
-            <button
-              type="button"
-              onClick={() => setLoginType("cnpj")}
-              className={`flex-1 py-2 rounded-md font-bold text-sm transition-colors ${
-                loginType === "cnpj"
-                  ? "bg-green-100 text-green-700 ring-2 ring-green-500 ring-offset-1"
-                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-              }`}
-            >
+          {/* Login apenas para Atacado (CNPJ) */}
+          <div className="mb-6">
+            <div className="flex-1 py-2 rounded-md font-bold text-sm bg-green-100 text-green-700 ring-2 ring-green-500 ring-offset-1 text-center">
               Entrar como Atacado (CNPJ)
-            </button>
+            </div>
           </div>
 
           {error && (
