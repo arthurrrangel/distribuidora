@@ -18,6 +18,7 @@ import {
   LogOut,
   Package,
   LucideIcon,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -62,6 +63,7 @@ const iconMap: Record<string, LucideIcon> = {
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isRegionOpen, setIsRegionOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -70,6 +72,29 @@ export function Header() {
 
   const { user, logout } = useAuth();
   const { cartCount } = useCart();
+
+  // Fecha o menu mobile ao redimensionar para desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Impede scroll quando menu mobile está aberto
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     async function fetchDepartments() {
@@ -110,7 +135,12 @@ export function Header() {
 
   const handleLogout = () => {
     setIsUserMenuOpen(false);
+    setIsMobileMenuOpen(false);
     logout();
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -153,21 +183,34 @@ export function Header() {
           )}
         </div>
 
-        {/* Main Header - MUDANÇA AQUI: bg-white e text-[#2563EB] */}
-        <header className="bg-white text-[#2563EB] py-4 px-4 h-[76px] border-b border-gray-100">
-          <div className="container mx-auto flex items-center justify-between gap-8 h-full">
+        {/* Main Header */}
+        <header className="bg-white text-[#2563EB] py-2 md:py-4 px-4 h-[60px] md:h-[76px] border-b border-gray-100">
+          <div className="container mx-auto flex items-center justify-between gap-2 md:gap-8 h-full">
+            {/* Menu Hamburger Mobile */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 hover:bg-blue-50 rounded-md transition-colors text-[#2563EB]"
+              aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+
             {/* Logo */}
             <div className="flex-1 flex justify-center md:justify-start md:flex-none">
               <Link
                 href="/"
-                className="flex items-center gap-2 group bg-white p-1.5 md:p-2 rounded-lg"
+                className="flex items-center gap-2 group bg-white p-1 rounded-lg"
               >
                 <Image
-                  src="/arel-logo-padrao.svg"
-                  alt="Arel Distribuidora"
-                  width={150}
-                  height={50}
-                  className="h-8 md:h-12 w-auto object-contain"
+                  src="/repon-logo.svg"
+                  alt="Repon Distribuidora"
+                  width={100}
+                  height={32}
+                  className="h-8 w-auto object-contain"
                   priority
                 />
               </Link>
@@ -180,7 +223,6 @@ export function Header() {
                 onClick={() => setIsSearchOpen(true)}
               >
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-[#2563EB] transition-colors" />
-                {/* Adicionei uma borda suave no input para não sumir no fundo branco */}
                 <input
                   type="text"
                   readOnly
@@ -191,11 +233,20 @@ export function Header() {
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-4 md:gap-6">
+            <div className="flex items-center gap-1 md:gap-4">
+              {/* Desktop: Link de Pedidos - Sempre visível */}
+              <Link
+                href={user ? "/meus-pedidos" : "/login"}
+                className="hidden md:flex items-center gap-2 text-[#2563EB] hover:bg-blue-50 px-3 py-2 rounded-md transition-colors"
+              >
+                <Package className="w-5 h-5" />
+                <span className="text-sm font-medium">Pedidos</span>
+              </Link>
+
+              {/* Desktop: Login/Cadastro ou Menu do Usuário */}
               {!user ? (
                 <Link
                   href="/login"
-                  // Botão de login mantido com contraste
                   className="hidden md:flex items-center gap-3 bg-[#facc15] text-[#1e3a8a] px-3 py-2 md:px-4 md:py-2 rounded-md font-medium hover:bg-[#ffe066] transition-colors"
                 >
                   <User className="w-5 h-5" />
@@ -210,7 +261,6 @@ export function Header() {
                   onMouseEnter={() => setIsUserMenuOpen(true)}
                   onMouseLeave={() => setIsUserMenuOpen(false)}
                 >
-                  {/* Botão de usuário logado - Cores atualizadas */}
                   <button className="flex items-center gap-3 text-[#2563EB] hover:bg-blue-50 px-3 py-2 rounded-md transition-colors">
                     <div className="bg-blue-50 p-1.5 rounded-full">
                       <User className="w-5 h-5" />
@@ -257,12 +307,31 @@ export function Header() {
                 </div>
               )}
 
+              {/* Mobile: Ícone de Pedidos */}
+              <Link
+                href={user ? "/meus-pedidos" : "/login"}
+                className="md:hidden p-2 hover:bg-blue-50 rounded-full transition-colors text-[#2563EB]"
+                aria-label="Meus Pedidos"
+              >
+                <Package className="w-5 h-5" />
+              </Link>
+
+              {/* Mobile: Ícone de Usuário */}
+              <Link
+                href={user ? "/minha-conta" : "/login"}
+                className="md:hidden p-2 hover:bg-blue-50 rounded-full transition-colors text-[#2563EB]"
+                aria-label={user ? "Minha conta" : "Login"}
+              >
+                <User className="w-5 h-5" />
+              </Link>
+
+              {/* Carrinho - Visível em todas as telas */}
               <Link
                 href="/carrinho"
-                // Ícone do carrinho atualizado para a cor solicitada
-                className="relative p-2 hover:bg-blue-50 rounded-full transition-colors hidden md:block text-[#2563EB]"
+                className="relative p-2 hover:bg-blue-50 rounded-full transition-colors text-[#2563EB]"
+                aria-label="Carrinho"
               >
-                <ShoppingCart className="w-6 h-6" />
+                <ShoppingCart className="w-5 h-5 md:w-6 md:h-6" />
                 {cartCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                     {cartCount}
@@ -274,7 +343,8 @@ export function Header() {
         </header>
       </div>
 
-      <div className="h-[104px] md:hidden"></div>
+      {/* Spacer para compensar header fixo no mobile (28px topbar + 60px header) */}
+      <div className="h-[88px] md:hidden"></div>
 
       {/* Search Mobile - CLICÁVEL PARA ABRIR O MODAL */}
       <div className="bg-[#2563EB] px-4 pb-4 md:hidden">
@@ -289,6 +359,131 @@ export function Header() {
         </div>
       </div>
 
+      {/* Menu Mobile Drawer */}
+      {isMobileMenuOpen && (
+        <>
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 bg-black/50 z-[100] md:hidden"
+            onClick={closeMobileMenu}
+          />
+
+          {/* Drawer */}
+          <div className="fixed top-0 left-0 h-full w-[85%] max-w-[320px] bg-white z-[110] md:hidden shadow-2xl animate-in slide-in-from-left duration-300">
+            {/* Header do Drawer */}
+            <div className="bg-[#1e3a8a] text-white p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {user ? (
+                  <>
+                    <div className="bg-white/20 p-2 rounded-full">
+                      <User className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold">
+                        Olá, {user.firstName || "Cliente"}
+                      </p>
+                      <p className="text-xs text-blue-200 truncate max-w-[150px]">
+                        {user.email}
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="bg-white/20 p-2 rounded-full">
+                      <User className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold">Bem-vindo!</p>
+                      <Link
+                        href="/login"
+                        onClick={closeMobileMenu}
+                        className="text-xs text-blue-200 hover:text-white"
+                      >
+                        Faça login ou cadastre-se
+                      </Link>
+                    </div>
+                  </>
+                )}
+              </div>
+              <button
+                onClick={closeMobileMenu}
+                className="p-2 hover:bg-white/10 rounded-md transition-colors"
+                aria-label="Fechar menu"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Conteúdo do Drawer */}
+            <div className="overflow-y-auto h-[calc(100%-72px)]">
+              {/* Links da Conta (se logado) */}
+              {user && (
+                <div className="border-b border-gray-100">
+                  <Link
+                    href="/minha-conta"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-[#2563EB] transition-colors"
+                  >
+                    <User className="w-5 h-5 text-gray-400" />
+                    <span className="font-medium text-sm">Meus Dados</span>
+                    <ChevronRight className="w-4 h-4 text-gray-300 ml-auto" />
+                  </Link>
+                  <Link
+                    href="/meus-pedidos"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-[#2563EB] transition-colors"
+                  >
+                    <Package className="w-5 h-5 text-gray-400" />
+                    <span className="font-medium text-sm">Meus Pedidos</span>
+                    <ChevronRight className="w-4 h-4 text-gray-300 ml-auto" />
+                  </Link>
+                </div>
+              )}
+
+              {/* Departamentos */}
+              <div className="py-2">
+                <p className="px-4 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                  Departamentos
+                </p>
+                {departments.map((dept) => (
+                  <Link
+                    key={dept.id}
+                    href={`/departamento/${dept.slug}`}
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-[#2563EB] transition-colors"
+                  >
+                    <dept.icon className="w-5 h-5 text-gray-400" />
+                    <span className="font-medium text-sm flex-1">
+                      {dept.name}
+                    </span>
+                    <ChevronRight className="w-4 h-4 text-gray-300" />
+                  </Link>
+                ))}
+                {departments.length === 0 && (
+                  <div className="px-4 py-3 text-sm text-gray-400">
+                    Carregando departamentos...
+                  </div>
+                )}
+              </div>
+
+              {/* Logout (se logado) */}
+              {user && (
+                <div className="border-t border-gray-100 mt-2">
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 w-full transition-colors"
+                  >
+                    <LogOut className="w-5 h-5" />
+                    <span className="font-medium text-sm">Sair da conta</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Nav Desktop */}
       <nav className="bg-white border-b border-gray-100 shadow-sm hidden md:block sticky top-0 z-40">
         <div className="container mx-auto flex items-center relative">
           <div
@@ -348,7 +543,7 @@ export function Header() {
 
       {isMenuOpen && (
         <div
-          className="fixed inset-0 bg-black/20 z-30 top-[170px]"
+          className="fixed inset-0 bg-black/20 z-30 top-[170px] hidden md:block"
           onClick={() => setIsMenuOpen(false)}
         ></div>
       )}

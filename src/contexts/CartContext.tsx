@@ -43,7 +43,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     // Se não estiver no navegador, não faz nada
     if (typeof window === "undefined") return;
 
-    const savedCart = localStorage.getItem("arel_cart");
+    const savedCart = localStorage.getItem("repon_cart");
 
     if (savedCart) {
       try {
@@ -52,7 +52,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setItems(parsedCart);
       } catch (e) {
         console.error("Erro ao ler carrinho:", e);
-        localStorage.removeItem("arel_cart");
+        localStorage.removeItem("repon_cart");
       }
     }
 
@@ -63,7 +63,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Só salvamos se o carregamento inicial já tiver terminado (isLoading = false)
     if (!isLoading && typeof window !== "undefined") {
-      localStorage.setItem("arel_cart", JSON.stringify(items));
+      localStorage.setItem("repon_cart", JSON.stringify(items));
     }
   }, [items, isLoading]);
 

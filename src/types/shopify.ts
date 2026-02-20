@@ -12,15 +12,42 @@ export interface Customer {
   lastName: string;
   email: string;
   phone?: string;
-  // Adicionamos aqui para o TypeScript parar de reclamar
-  cnpj?: string;
   tags?: string[];
   defaultAddress?: {
     address1: string;
+    address2?: string;
     city: string;
+    province?: string;
     country: string;
     zip: string;
   };
+}
+
+// Interface para dados de cadastro de empresa (B2B)
+export interface CompanyRegistrationData {
+  razaoSocial: string;
+  nomeFantasia: string;
+  cnpj: string;
+  inscricaoEstadual: string;
+  ieIsento: boolean;
+  nomeResponsavel: string;
+  whatsapp: string;
+  email: string;
+  senha: string;
+  endereco: {
+    cep: string;
+    rua: string;
+    numero: string;
+    complemento: string;
+    bairro: string;
+    cidade: string;
+    uf: string;
+  };
+}
+
+// Interface para erros de formulário
+export interface FormErrors {
+  [key: string]: string;
 }
 
 // ... (Resto das interfaces de Auth/Mutation mantidas iguais) ...

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import api from "@/services/api"; // ✅ Usando seu api.ts
 import {
   Briefcase,
@@ -13,11 +14,18 @@ import {
 
 // --- 1. Tipagem Estrita (Zero ANY) ---
 
+// Tipo da imagem da coleção
+interface CollectionImage {
+  url: string;
+  altText: string | null;
+}
+
 // Tipo do "nó" da coleção
 interface CollectionNode {
   id: string;
   title: string;
   handle: string;
+  image: CollectionImage | null;
 }
 
 // Tipo da resposta completa do GraphQL
@@ -51,6 +59,10 @@ export async function Categories() {
             id
             title
             handle
+            image {
+              url
+              altText
+            }
           }
         }
       }
@@ -66,6 +78,10 @@ export async function Categories() {
   // Acessamos data.data porque o axios retorna .data e o GraphQL também tem um campo .data
   const collections =
     response.data.data.collections.edges.map((edge) => edge.node) || [];
+  // Filtra para remover 'Destaques' e pega só os 5 primeiros
+  const filteredCollections = collections
+    .filter((cat) => cat.title !== "Destaques")
+    .slice(0, 5);
 
   return (
     <section
@@ -74,9 +90,10 @@ export async function Categories() {
     >
       <div className="container mx-auto px-4">
         <div className="flex gap-6 overflow-x-auto pb-4 no-scrollbar justify-start md:justify-center">
-          {collections.map((cat) => {
+          {filteredCollections.map((cat) => {
             // Seleciona o ícone ou usa o fallback
             const IconComponent = iconMap[cat.handle] || Package;
+            const hasImage = cat.image?.url;
 
             return (
               <Link
@@ -84,8 +101,18 @@ export async function Categories() {
                 href={`/departamento/${cat.handle}`}
                 className="flex flex-col items-center gap-2 group min-w-[90px]"
               >
-                <div className="w-20 h-20 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 group-hover:border-blue-500 group-hover:text-blue-500 transition-colors shadow-sm">
-                  <IconComponent strokeWidth={1.5} className="w-8 h-8" />
+                <div className="w-20 h-20 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 group-hover:border-blue-500 group-hover:text-blue-500 transition-colors shadow-sm overflow-hidden">
+                  {hasImage ? (
+                    <Image
+                      src={cat.image!.url}
+                      alt={cat.image!.altText || cat.title}
+                      width={80}
+                      height={80}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <IconComponent strokeWidth={1.5} className="w-8 h-8" />
+                  )}
                 </div>
                 <span className="text-xs font-medium text-gray-600 text-center group-hover:text-[#2563EB] transition-colors leading-tight max-w-[90px]">
                   {cat.title}

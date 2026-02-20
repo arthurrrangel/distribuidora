@@ -8,8 +8,9 @@ import { CartProvider } from "@/contexts/CartContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Arel Distribuidora | Abasteça seu negócio",
-  description: "A melhor forma de abastecer o seu negócio.",
+  title: "Repon Distribuidora | Abasteça seu negócio",
+  description:
+    "A melhor forma de abastecer o seu negócio. Distribuidora B2B com os melhores preços.",
 };
 
 export default function RootLayout({
@@ -21,9 +22,7 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body className={`${inter.className} bg-gray-50`}>
         <AuthProvider>
-            <CartProvider>
-                {children}
-            </CartProvider>
+          <CartProvider>{children}</CartProvider>
         </AuthProvider>
       </body>
     </html>

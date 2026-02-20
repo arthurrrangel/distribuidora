@@ -1,35 +1,115 @@
 "use client";
 
-import { useState } from "react"; // <--- Importe o useState
+import { useState } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MobileNavigator } from "@/components/MobileNavigator";
-import { ShoppingCart, Trash2, ArrowRight, Loader2 } from "lucide-react"; // <--- Loader2
+import {
+  ShoppingCart,
+  Trash2,
+  ArrowRight,
+  Loader2,
+  AlertCircle,
+} from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/contexts/CartContext";
-import { createCheckout } from "@/services/checkout"; // <--- Importe o serviço
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function CartPage() {
-  const { items, removeItem, updateQuantity, cartTotal, cartCount } = useCart();
+  const { items, removeItem, updateQuantity, cartTotal, cartCount, clearCart } =
+    useCart();
+  const { user } = useAuth();
 
-  // Estado para controlar o carregamento do botão
+  // Estados
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const shipping = 0;
   const total = cartTotal + shipping;
 
-  // Função que chama o Shopify
+  // Número do WhatsApp
+  const whatsappNumber = "5581992361167";
+
+  // Função para criar Draft Order na Shopify
+  const createDraftOrder = async () => {
+    const lineItems = items.map((item) => ({
+      variantId: item.id,
+      quantity: item.quantity,
+      title: item.title,
+      price: item.price,
+    }));
+
+    const response = await fetch("/api/create-draft-order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        lineItems,
+        customerId: user?.id,
+        customer: user
+          ? {
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+            }
+          : undefined,
+        note: "Pedido via WhatsApp - Pagamento: Pix/Boleto",
+      }),
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error || "Erro ao criar pedido");
+    }
+
+    return response.json();
+  };
+
+  // Função para abrir WhatsApp com dados do pedido
+  const openWhatsApp = (orderName: string, orderTotal: string) => {
+    const itemsList = items
+      .map(
+        (item, index) =>
+          `${index + 1}. *${item.title}*\n   Qtd: ${item.quantity} ${item.unit || "un"} | R$ ${item.price.toFixed(2).replace(".", ",")} cada\n   Subtotal: R$ ${(item.price * item.quantity).toFixed(2).replace(".", ",")}`,
+      )
+      .join("\n\n");
+
+    const message = `🛒 *NOVO PEDIDO - Repon Distribuidora*\n\n📋 *Pedido: ${orderName}*\n\n${itemsList}\n\n────────────────────\n💰 *TOTAL: R$ ${parseFloat(orderTotal).toFixed(2).replace(".", ",")}*\n────────────────────\n\n📦 Forma de pagamento: *Pix ou Boleto*\n\nAguardo confirmação para envio dos dados de pagamento.`;
+
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+    window.open(whatsappUrl, "_blank");
+  };
+
+  // Função principal de checkout
   const handleCheckout = async () => {
     setIsCheckingOut(true);
+    setError(null);
 
-    // Chama o serviço criado anteriormente
-    const checkoutUrl = await createCheckout(items);
+    try {
+      // 1. Criar Draft Order na Shopify
+      const result = await createDraftOrder();
 
-    if (checkoutUrl) {
-      // Redireciona o usuário para o checkout seguro do Shopify
-      window.location.href = checkoutUrl;
-    } else {
+      if (result.success && result.draftOrder) {
+        // 2. Abrir WhatsApp com dados do pedido
+        openWhatsApp(result.draftOrder.name, result.draftOrder.totalPrice);
+
+        // 3. Limpar carrinho apenas após sucesso
+        clearCart();
+      } else {
+        throw new Error("Erro ao criar pedido");
+      }
+    } catch (err) {
+      console.error("Erro no checkout:", err);
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Erro ao finalizar pedido. Tente novamente.",
+      );
+    } finally {
       setIsCheckingOut(false);
     }
   };
@@ -43,6 +123,13 @@ export default function CartPage() {
           <ShoppingCart className="w-6 h-6" />
           Meu Carrinho ({cartCount})
         </h1>
+
+        {error && (
+          <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3 text-red-700">
+            <AlertCircle className="w-5 h-5 shrink-0" />
+            <p>{error}</p>
+          </div>
+        )}
 
         {items.length === 0 ? (
           <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 text-center">
@@ -168,16 +255,16 @@ export default function CartPage() {
                 <button
                   onClick={handleCheckout}
                   disabled={isCheckingOut}
-                  className="w-full bg-[#2563EB] text-white py-3.5 rounded-md font-bold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-blue-900/10 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="w-full bg-[#25D366] text-white py-3.5 rounded-md font-bold hover:bg-[#1da851] transition-colors flex items-center justify-center gap-2 shadow-lg shadow-green-900/10 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {isCheckingOut ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Redirecionando...
+                      Enviando...
                     </>
                   ) : (
                     <>
-                      Finalizar Compra
+                      Enviar Pedido via WhatsApp
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
