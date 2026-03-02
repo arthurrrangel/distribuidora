@@ -11,7 +11,11 @@ export async function ProductGrid() {
     <section className="pt-0 md:pt-4 pb-0 md:pb-12 -mt-2 md:mt-0">
       <div className="container mx-auto px-4">
         {/* Passamos os produtos para o componente Cliente */}
-        <ProductCarousel products={products} />
+        <ProductCarousel
+          products={products}
+          title="Destaques"
+          collection="destaques"
+        />
       </div>
     </section>
   );
