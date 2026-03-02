@@ -1,0 +1,61 @@
+[
+  {
+    "id": "gid://shopify/Product/9219795353820",
+    "title": "Papel Sulfite A4, 75g, 210mmx297mm, Caixa com 10 resmas - 5000 Folhas, Chamex CX 5000 FL",
+    "handle": "papel-sulfite-a4-75g-210mmx297mm-caixa-com-10-resmas-5000-folhas-chamex-cx-5000-fl",
+    "description": "Características do Produto Com as canetas esferográficas Spiro da Cis seus textos vão ficar muito mais coloridos. A sua ponta de 0,7mm é ideal para fazer anotações, traçados e até mesmo lettering.Ideal para o uso escolar e em escritórios, com um corpo plástico flexível com uma ponta tipo agulha que proporciona um traço preciso. Especificações Caneta esferográfica Spiro Cor da tinta: Azul Traço fino de 0,7mm Corpo plástico Ponta tipo agulha; Esfera de aço inoxidável",
+    "descriptionHtml": "<p><b>Características do Produto</b></p>\n<p>Com as canetas esferográficas Spiro da Cis seus textos vão ficar muito mais coloridos.</p>\n<p>A sua ponta de 0,7mm é ideal para fazer anotações, traçados e até mesmo lettering.<br>Ideal para o uso escolar e em escritórios, com um corpo plástico flexível com uma ponta tipo agulha que proporciona um traço preciso.</p>\n<hr>\n<p><strong>Especificações</strong></p>\n<ul>\n<li>Caneta esferográfica Spiro</li>\n<li>Cor da tinta: Azul</li>\n<li>Traço fino de 0,7mm</li>\n<li>Corpo plástico</li>\n<li>Ponta tipo agulha; Esfera de aço inoxidável</li>\n</ul>",
+    "availableForSale": true,
+    "priceRange": {
+      "minVariantPrice": {
+        "amount": "297.0",
+        "currencyCode": "BRL"
+      },
+      "maxVariantPrice": {
+        "amount": "297.0",
+        "currencyCode": "BRL"
+      }
+    },
+    "compareAtPriceRange": {
+      "minVariantPrice": {
+        "amount": "310.0",
+        "currencyCode": "BRL"
+      },
+      "maxVariantPrice": {
+        "amount": "310.0",
+        "currencyCode": "BRL"
+      }
+    },
+    "images": {
+      "edges": [
+        {
+          "node": {
+            "url": "https://cdn.shopify.com/s/files/1/0806/5433/6220/files/996102z.jpg?v=1769289394",
+            "altText": null,
+            "width": 1000,
+            "height": 1000
+          }
+        }
+      ]
+    },
+    "variants": {
+      "edges": [
+        {
+          "node": {
+            "id": "gid://shopify/ProductVariant/47486389715164",
+            "title": "Default Title",
+            "availableForSale": true,
+            "price": {
+              "amount": "297.0",
+              "currencyCode": "BRL"
+            },
+            "compareAtPrice": {
+              "amount": "310.0",
+              "currencyCode": "BRL"
+            }
+          }
+        }
+      ]
+    }
+  }
+]

@@ -494,9 +494,10 @@ export default function MeusPedidosPage() {
             </h2>
             <div className="space-y-4">
               {paginatedDrafts.map((draft) => (
-                <div
+                <Link
                   key={draft.id}
-                  className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgb(37,99,235,0.12)] hover:border-blue-400 hover:-translate-y-2 relative"
+                  href={`/meus-pedidos/draft-${draft.id.split("/").pop()}`}
+                  className="block bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgb(37,99,235,0.12)] hover:border-blue-400 hover:-translate-y-2 relative cursor-pointer"
                 >
                   {/* Header do Draft */}
                   <div className="bg-gradient-to-r from-gray-50 to-white px-4 md:px-6 py-4 border-b border-gray-100">
@@ -584,7 +585,7 @@ export default function MeusPedidosPage() {
                       </span>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
 
@@ -711,9 +712,10 @@ export default function MeusPedidosPage() {
                   const FulfillmentIcon = fulfillmentStatus.icon;
 
                   return (
-                    <div
+                    <Link
                       key={order.id}
-                      className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgb(37,99,235,0.12)] hover:border-blue-400 hover:-translate-y-2 relative"
+                      href={`/meus-pedidos/order-${order.id.split("/").pop()}`}
+                      className="block bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgb(37,99,235,0.12)] hover:border-blue-400 hover:-translate-y-2 relative cursor-pointer"
                     >
                       {/* Header do Pedido */}
                       <div className="bg-gradient-to-r from-gray-50 to-white px-4 md:px-6 py-4 border-b border-gray-100">
@@ -803,7 +805,7 @@ export default function MeusPedidosPage() {
                           </span>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   );
                 })}
               </div>

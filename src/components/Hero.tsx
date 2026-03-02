@@ -9,8 +9,8 @@ export function Hero() {
   const { user, loading } = useAuth();
 
   return (
-    <div className="bg-white pt-4 pb-6 md:py-12 relative overflow-hidden">
-      <div className="container mx-auto px-4 flex flex-col md:flex-row items-start md:items-center justify-between relative z-10 gap-6 md:gap-8">
+    <div className="pt-4 mb-5 md:py-18 relative overflow-hidden">
+      <div className="container mx-auto px-4 flex flex-col md:flex-row items-start md:items-center justify-center relative z-10 gap-6 md:gap-16">
         <div className="md:w-1/2 mb-4 md:mb-0 z-20 flex flex-col w-full">
           <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#1e3a8a] tracking-tight mb-4 md:mb-6 text-left">
             A melhor forma de abastecer o seu negócio.
@@ -128,8 +128,8 @@ export function Hero() {
                 {user ? (
                   /* Usuário Logado: Botão único de ação */
                   <Link
-                    href="#categories"
-                    className="bg-[#2563EB] text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 transition-colors shadow-md w-full md:w-auto flex items-center justify-center gap-2 text-sm"
+                    href="/produtos"
+                    className="bg-[#2563EB] text-white px-6 py-3 rounded-lg font-bold hover:bg-[#1d4ed8] transition-colors shadow-md w-full md:w-auto flex items-center justify-center gap-2 text-sm"
                   >
                     Começar a Comprar
                     <ArrowRight className="w-5 h-5" />
@@ -163,15 +163,21 @@ export function Hero() {
         </div>
 
         <div className="md:w-2/5 hidden md:block relative w-full px-4 md:px-0">
-          <div className="relative w-full aspect-4/3 rounded-2xl md:rounded-tl-[80px] md:rounded-br-[80px] overflow-hidden shadow-xl md:shadow-2xl md:skew-y-3 md:transform md:rotate-2 border-4 border-white">
+          <div
+            className="relative w-full aspect-4/3 overflow-hidden"
+            style={{
+              maskImage:
+                "linear-gradient(to right, transparent, black 25%, black 75%, transparent), linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)",
+              maskComposite: "intersect",
+            }}
+          >
             <Image
-              src="/hero_stationery.png"
+              src="/covers/repon-principal.png"
               alt="Equipe Arel conferindo estoque de papelaria - Atacado e Varejo"
               fill
               className="object-cover"
               priority
             />
-            <div className="absolute inset-0 bg-linear-to-t from-blue-900/40 to-transparent"></div>
           </div>
         </div>
       </div>

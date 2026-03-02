@@ -3,10 +3,9 @@ import api from "./api";
 import { Product, ShopifyGraphQLResponse } from "@/types/shopify";
 
 // --- CONFIGURAÇÃO ---
-// Altere aqui para mudar a quantidade de produtos por página em todo o site
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 40;
 
-// --- FRAGMENTOS (Reutilização de campos) ---
+// --- FRAGMENTOS ---
 
 const PRODUCT_FRAGMENT = `
   id
@@ -44,6 +43,9 @@ const PRODUCT_FRAGMENT = `
       }
     }
   }
+  coverInfo: metafield(namespace: "custom", key: "cover_info") {
+    value
+  }
 `;
 
 const PAGE_INFO_FRAGMENT = `
@@ -57,7 +59,6 @@ const PAGE_INFO_FRAGMENT = `
 
 // --- TIPAGEM ---
 
-// Chaves de ordenação
 export type SortKeyType =
   | "TITLE"
   | "PRICE"
@@ -67,7 +68,6 @@ export type SortKeyType =
   | "RELEVANCE"
   | "CREATED_AT";
 
-// Opções de filtro/paginação
 export interface ProductOptions {
   sortKey?: SortKeyType;
   reverse?: boolean;
@@ -76,7 +76,6 @@ export interface ProductOptions {
   direction?: "next" | "prev";
 }
 
-// Interface de PageInfo
 interface PageInfo {
   hasNextPage: boolean;
   hasPreviousPage: boolean;
@@ -84,15 +83,19 @@ interface PageInfo {
   endCursor: string | null;
 }
 
-// Interface de Resultado Paginado
 export interface PaginatedResult {
   products: Product[];
   pageInfo: PageInfo;
 }
 
-type ShopifyFilter = Record<string, unknown>;
+export interface CollectionInfo {
+  handle: string;
+  title: string;
+  description: string;
+  image: { url: string; altText: string | null } | null;
+}
 
-// --- Interfaces de Resposta da API (Internas) ---
+type ShopifyFilter = Record<string, unknown>;
 
 interface ConnectionWithPageInfo {
   edges: { node: Product }[];
@@ -112,9 +115,11 @@ interface GetProductByHandleResponse {
 }
 
 interface GetCollectionProductsResponse {
-  collection: {
-    products: ConnectionWithPageInfo;
-  } | null;
+  collection: { products: ConnectionWithPageInfo } | null;
+}
+
+interface GetCollectionInfoResponse {
+  collection: CollectionInfo | null;
 }
 
 interface SearchProductsResponse {
@@ -123,15 +128,13 @@ interface SearchProductsResponse {
 
 // --- FUNÇÕES ---
 
-// 1. Buscar produtos para Home/Destaques (Sem cursor, apenas quantidade)
+// 1. Buscar produtos para Home/Destaques
 export async function getProducts(first = PAGE_SIZE): Promise<Product[]> {
   const query = `
     query GetProducts($first: Int!) {
       products(first: $first) {
         edges {
-          node {
-            ${PRODUCT_FRAGMENT}
-          }
+          node { ${PRODUCT_FRAGMENT} }
         }
       }
     }
@@ -144,16 +147,14 @@ export async function getProducts(first = PAGE_SIZE): Promise<Product[]> {
       query,
       variables: { first },
     });
-
-    const edges = response.data.data.products.edges;
-    return edges.map((edge) => edge.node);
+    return response.data.data.products.edges.map((edge) => edge.node);
   } catch (error) {
     console.error("Erro ao buscar produtos:", error);
     return [];
   }
 }
 
-// 2. Buscar produto único (Página de Detalhes)
+// 2. Buscar produto único
 export async function getProductByHandle(
   handle: string,
 ): Promise<Product | null> {
@@ -172,7 +173,6 @@ export async function getProductByHandle(
       query,
       variables: { handle },
     });
-
     return response.data.data.productByHandle;
   } catch (error) {
     console.error(`Erro ao buscar produto ${handle}:`, error);
@@ -180,7 +180,97 @@ export async function getProductByHandle(
   }
 }
 
-// 3. Buscar produtos por Coleção (COM PAGINAÇÃO)
+// 3. Buscar info de uma coleção (título, imagem, descrição)
+export async function getCollectionInfo(
+  handle: string,
+): Promise<CollectionInfo | null> {
+  const query = `
+    query GetCollectionInfo($handle: String!) {
+      collection(handle: $handle) {
+        handle
+        title
+        description
+        image {
+          url
+          altText
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await api.post<
+      ShopifyGraphQLResponse<GetCollectionInfoResponse>
+    >("", {
+      query,
+      variables: { handle },
+    });
+    return response.data.data.collection;
+  } catch (error) {
+    console.error(`Erro ao buscar info da coleção ${handle}:`, error);
+    return null;
+  }
+}
+
+// 4. Buscar subcoleções de uma coleção pai via metafield parent_collection
+
+interface RawCollectionNode {
+  handle: string;
+  title: string;
+  description: string;
+  image: { url: string; altText: string | null } | null;
+  parentCollection: { value: string } | null;
+}
+
+interface GetAllCollectionsResponse {
+  collections: {
+    edges: { node: RawCollectionNode }[];
+  };
+}
+
+export async function getSubcollections(
+  parentHandle: string,
+): Promise<CollectionInfo[]> {
+  const query = `
+    query GetAllCollections {
+      collections(first: 100) {
+        edges {
+          node {
+            handle
+            title
+            description
+            image { url altText }
+            parentCollection: metafield(namespace: "custom", key: "parent_collection") {
+              value
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await api.post<
+      ShopifyGraphQLResponse<GetAllCollectionsResponse>
+    >("", { query });
+    const edges = response.data.data.collections.edges;
+
+    return edges
+      .map((e) => e.node)
+      .filter((c) => c.parentCollection?.value === parentHandle)
+      .map((c) => ({
+        handle: c.handle,
+        title: c.title,
+        description: c.description,
+        image: c.image ?? null,
+      }));
+  } catch (error) {
+    console.error(`Erro ao buscar subcoleções de ${parentHandle}:`, error);
+    return [];
+  }
+}
+
+// 5. Buscar produtos por Coleção (COM PAGINAÇÃO)
 export async function getProductsByCollection(
   handle: string,
   options: ProductOptions = {},
@@ -193,7 +283,6 @@ export async function getProductsByCollection(
     direction = "next",
   } = options;
 
-  // Filtros
   const filters: ShopifyFilter[] = [];
   filters.push({ available: true });
 
@@ -210,7 +299,6 @@ export async function getProductsByCollection(
     });
   }
 
-  // Paginação usando a constante PAGE_SIZE (12)
   const paginationArgs =
     direction === "prev" && cursor
       ? `last: ${PAGE_SIZE}, before: "${cursor}"`
@@ -221,9 +309,7 @@ export async function getProductsByCollection(
       collection(handle: $handle) {
         products(${paginationArgs}, sortKey: $sortKey, reverse: $reverse, filters: $filters) {
           edges {
-            node {
-              ${PRODUCT_FRAGMENT}
-            }
+            node { ${PRODUCT_FRAGMENT} }
           }
           ${PAGE_INFO_FRAGMENT}
         }
@@ -276,7 +362,7 @@ export async function getProductsByCollection(
   }
 }
 
-// 4. Buscar produtos por termo (Busca Global) (COM PAGINAÇÃO)
+// 6. Buscar produtos por termo (Busca Global) (COM PAGINAÇÃO)
 export async function searchProducts(
   term: string,
   options: ProductOptions = {},
@@ -304,7 +390,6 @@ export async function searchProducts(
     if (searchSortKey === "RELEVANCE") searchSortKey = "TITLE";
   }
 
-  // Paginação usando a constante PAGE_SIZE (12)
   const paginationArgs =
     direction === "prev" && cursor
       ? `last: ${PAGE_SIZE}, before: "${cursor}"`
@@ -314,9 +399,7 @@ export async function searchProducts(
     query SearchProducts($query: String!, $sortKey: ProductSortKeys, $reverse: Boolean) {
       products(${paginationArgs}, query: $query, sortKey: $sortKey, reverse: $reverse) {
         edges {
-          node {
-            ${PRODUCT_FRAGMENT}
-          }
+          node { ${PRODUCT_FRAGMENT} }
         }
         ${PAGE_INFO_FRAGMENT}
       }
@@ -328,15 +411,10 @@ export async function searchProducts(
       ShopifyGraphQLResponse<SearchProductsResponse>
     >("", {
       query,
-      variables: {
-        query: finalQueryString,
-        sortKey: searchSortKey,
-        reverse,
-      },
+      variables: { query: finalQueryString, sortKey: searchSortKey, reverse },
     });
 
     const data = response.data.data.products;
-
     return {
       products: data.edges.map((edge) => edge.node),
       pageInfo: data.pageInfo,
@@ -352,5 +430,39 @@ export async function searchProducts(
         endCursor: null,
       },
     };
+  }
+}
+
+// 7. Buscar todas as marcas (vendors) dos produtos
+export async function getProductVendors(): Promise<string[]> {
+  const query = `
+    query GetProductVendors {
+      shop {
+        productVendors(first: 100) {
+          edges {
+            node
+          }
+        }
+      }
+    }
+  `;
+
+  interface GetVendorsResponse {
+    shop: {
+      productVendors: {
+        edges: { node: string }[];
+      };
+    };
+  }
+
+  try {
+    const response = await api.post<ShopifyGraphQLResponse<GetVendorsResponse>>(
+      "",
+      { query },
+    );
+    return response.data.data.shop.productVendors.edges.map((e) => e.node);
+  } catch (error) {
+    console.error("Erro ao buscar marcas:", error);
+    return [];
   }
 }

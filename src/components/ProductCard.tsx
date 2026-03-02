@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Plus, Lock, Check } from "lucide-react";
+import { Plus, Lock, Check, Package } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 
@@ -14,8 +14,9 @@ interface ProductCardProps {
   handle: string;
   price: number;
   originalPrice?: number;
-  image: string;
+  image: string | null;
   unit?: string;
+  coverInfo?: string;
 }
 
 export function ProductCard({
@@ -27,11 +28,11 @@ export function ProductCard({
   originalPrice,
   image,
   unit = "UN",
+  coverInfo,
 }: ProductCardProps) {
   const { user } = useAuth();
   const isLoggedIn = !!user;
 
-  // Sempre aplicar desconto de CNPJ
   const finalPrice = price * 0.9;
 
   const discountPercentage =
@@ -45,119 +46,121 @@ export function ProductCard({
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addItem({
-      id,
-      productId,
-      handle,
-      title,
-      price: finalPrice,
-      image,
-      unit,
-    });
+    addItem({ id, productId, handle, title, price: finalPrice, image, unit });
     setAdded(true);
     setTimeout(() => setAdded(false), 1200);
   };
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white shadow-sm flex flex-col transition-all duration-200 hover:shadow-lg hover:border-gray-400">
-      <Link href={`/produto/${handle}`} className="flex-1 flex flex-col">
-        <div className="relative w-full h-48">
-          <Image
-            src={image}
-            alt={title}
-            fill
-            className="object-contain p-4"
-            sizes="(max-width: 768px) 100vw, 33vw"
-          />
-        </div>
-        <div className="flex-1 flex flex-col p-4 gap-2">
-          <h3 className="font-semibold text-lg line-clamp-2 min-h-[48px]">
-            {title}
-          </h3>
-          {isLoggedIn && (
-            <div className="flex items-center gap-2">
-              {originalPrice && originalPrice > finalPrice && (
-                <span className="text-sm text-gray-400 line-through">
-                  R$ {originalPrice.toFixed(2)}
-                </span>
-              )}
-              <span className="text-xl font-bold text-primary">
-                R$ {finalPrice.toFixed(2)}
-              </span>
-              {discountPercentage > 0 && (
-                <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
-                  -{discountPercentage}%
-                </span>
-              )}
+    <div className="group relative w-full rounded-2xl bg-white shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-200 overflow-hidden flex flex-col">
+      {/* Discount Badge */}
+      {discountPercentage > 0 && isLoggedIn && (
+        <span className="absolute top-2.5 left-2.5 z-10 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow">
+          -{discountPercentage}% OFF
+        </span>
+      )}
+
+      {/* Image Area */}
+      <Link href={`/produto/${handle}`} className="block">
+        <div className="relative w-full h-44 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
+          {image ? (
+            <Image
+              src={image}
+              alt={title}
+              fill
+              className="object-contain p-4"
+              sizes="200px"
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center gap-2 text-blue-300">
+              <Package className="w-12 h-12" />
             </div>
           )}
-          <span className="text-xs text-gray-500">Unidade: {unit}</span>
+
+          {/* Cover Info Badge */}
+          {coverInfo && (
+            <span className="absolute bottom-2 left-2 z-10 bg-white text-gray-800 text-[11px] font-semibold px-2 py-0.5 rounded shadow-sm">
+              {coverInfo}
+            </span>
+          )}
+
+          {/* Add to Cart Button */}
+          {isLoggedIn && (
+            <button
+              onClick={handleAddToCart}
+              title="Adicionar ao carrinho"
+              className={`
+                absolute bottom-2 right-2 z-20
+                group/btn h-8 rounded-full border-none cursor-pointer
+                flex items-center justify-center
+                overflow-hidden
+                shadow-md transition-all duration-300 active:scale-95
+                ${
+                  added
+                    ? "bg-green-500 text-white w-[100px] px-3"
+                    : "bg-blue-600 hover:bg-blue-700 text-white w-8 hover:w-[105px] hover:px-3"
+                }
+              `}
+            >
+              {added ? (
+                <>
+                  <Check className="w-4 h-4 shrink-0" />
+                  <span className="text-xs font-semibold whitespace-nowrap">
+                    Adicionado!
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Plus className="w-4 h-4 shrink-0" />
+                  <span className="text-xs font-semibold whitespace-nowrap opacity-0 group-hover/btn:opacity-100 transition-opacity duration-200 max-w-0 group-hover/btn:max-w-[80px] overflow-hidden group-hover/btn:ml-1.5">
+                    Adicionar
+                  </span>
+                </>
+              )}
+            </button>
+          )}
         </div>
       </Link>
-      {isLoggedIn && (
-        <button
-          onClick={handleAddToCart}
-          className={`
-            absolute z-20 top-2 right-2 
-            md:top-[45%] md:right-4 md:translate-x-1/2 md:-translate-y-1/2 
-            w-8 h-8 md:w-10 md:h-10 rounded-full shadow-md 
-            flex items-center justify-center transition-all duration-300
-            active:scale-95
-            ${
-              added
-                ? "bg-green-500 hover:bg-green-600 text-white opacity-100"
-                : "bg-blue-600 hover:bg-blue-700 text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 md:translate-y-2 md:group-hover:translate-y-0"
-            }
-          `}
-          title="Adicionar ao carrinho"
-        >
-          {added ? (
-            <Check className="w-4 h-4 md:w-5 md:h-5" />
-          ) : (
-            <Plus className="w-4 h-4 md:w-5 md:h-5" />
-          )}
-        </button>
-      )}
-      {/* ÁREA DE INFORMAÇÕES (FUNDO CINZA) */}
-      <div className="flex-1 flex flex-col px-3 pb-3 pt-3 bg-gray-100 pointer-events-none">
-        {unit && (
-          <span className="text-[10px] text-gray-600 font-bold mb-1 block bg-gray-200 w-fit px-2 py-0.5 rounded-sm">
-            {unit.toUpperCase()}
-          </span>
-        )}
-        <div className="mb-2 min-h-[40px]">
+
+      {/* Content Area */}
+      <Link
+        href={`/produto/${handle}`}
+        className="flex flex-col px-3 pb-3 pt-2.5 bg-gray-50 flex-1"
+      >
+        {/* Price Block */}
+        <div className="mb-1.5 min-h-[42px] flex flex-col justify-center">
           {isLoggedIn ? (
             <>
-              {originalPrice && originalPrice > finalPrice && (
+              {!!originalPrice && originalPrice > finalPrice && (
                 <span className="block text-[10px] text-gray-400 line-through leading-none mb-0.5">
                   R$ {originalPrice.toFixed(2).replace(".", ",")}
                 </span>
               )}
-              <div className="flex items-baseline gap-1 ">
-                <span className="text-gray-900 text-lg font-bold">
+              <div className="flex items-baseline gap-1">
+                <span className="text-gray-900 text-lg font-extrabold tracking-tight">
                   R$ {finalPrice.toFixed(2).replace(".", ",")}
                 </span>
-                <span className="text-gray-500 text-[10px]">/{unit}</span>
+                <span className="text-gray-400 text-[10px]">/{unit}</span>
               </div>
             </>
           ) : (
-            <div className="flex flex-col justify-center h-full">
-              <div className="flex items-center gap-1.5 text-orange-600 bg-orange-50 px-2 py-1 rounded border border-orange-100 w-fit">
-                <Lock size={12} />
-                <span className="text-[10px] font-bold">
-                  Entre para ver o preço
-                </span>
-              </div>
+            <div className="flex items-center gap-1.5 text-orange-600 bg-orange-50 px-2 py-1.5 rounded-lg border border-orange-100 w-fit">
+              <Lock size={11} />
+              <span className="text-[10px] font-bold">
+                Entre para ver o preço
+              </span>
             </div>
           )}
         </div>
-        <h3
-          className="text-gray-700 text-xs md:text-sm font-medium leading-snug line-clamp-2 mt-auto group-hover:text-blue-600 transition-colors"
+
+        {/* Title */}
+        <p
+          className="text-gray-700 text-xs font-medium leading-snug line-clamp-2 mt-auto group-hover:text-blue-600 transition-colors"
           title={title}
         >
           {title}
-        </h3>
-      </div>
+        </p>
+      </Link>
     </div>
   );
 }

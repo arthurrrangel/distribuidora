@@ -4,8 +4,9 @@ import "./globals.css";
 
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
@@ -24,9 +25,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${inter.className} bg-gray-50`}>
+      <body className={`${inter.className} bg-white`}>
         <AuthProvider>
-          <CartProvider>{children}</CartProvider>
+          <CartProvider>
+            {children}
+            <WhatsAppButton />
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>

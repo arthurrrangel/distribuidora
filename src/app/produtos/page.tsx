@@ -76,7 +76,7 @@ export default async function AllProductsPage({
 
       <div className="container mx-auto px-4 py-8 flex-1">
         {/* Cabeçalho Simples */}
-        <div className="mb-8">
+        <div className="mb-8 text-center md:text-left">
           <h1 className="text-3xl font-bold text-[#1e3a8a] mb-2">
             Todos os Produtos
           </h1>
@@ -85,61 +85,64 @@ export default async function AllProductsPage({
           </p>
         </div>
 
-        {/* Barra de Filtros */}
-        <FilterBar />
+        {/* Layout: Filtros na lateral + Produtos */}
+        <div className="flex flex-col md:flex-row gap-6 items-start">
+          <FilterBar />
+          <div className="flex-1 min-w-0">
+            {/* Grid de Produtos */}
+            {products.length > 0 ? (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                  {products.map((product) => {
+                    const firstVariant = product.variants.edges[0]?.node;
+                    const price = parseFloat(
+                      product.priceRange.minVariantPrice.amount,
+                    );
+                    const originalPrice = product.compareAtPriceRange
+                      ? parseFloat(
+                          product.compareAtPriceRange.minVariantPrice.amount,
+                        )
+                      : undefined;
+                    const imageUrl = product.images.edges[0]?.node.url || "";
 
-        {/* Grid de Produtos */}
-        {products.length > 0 ? (
-          <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {products.map((product) => {
-                const firstVariant = product.variants.edges[0]?.node;
-                const price = parseFloat(
-                  product.priceRange.minVariantPrice.amount,
-                );
-                const originalPrice = product.compareAtPriceRange
-                  ? parseFloat(
-                      product.compareAtPriceRange.minVariantPrice.amount,
-                    )
-                  : undefined;
-                const imageUrl = product.images.edges[0]?.node.url || "";
+                    return (
+                      <ProductCard
+                        key={product.id}
+                        id={firstVariant?.id || product.id}
+                        productId={product.id}
+                        handle={product.handle}
+                        title={product.title}
+                        price={price}
+                        originalPrice={originalPrice}
+                        image={imageUrl}
+                        coverInfo={product.coverInfo?.value}
+                      />
+                    );
+                  })}
+                </div>
 
-                return (
-                  <ProductCard
-                    key={product.id}
-                    id={firstVariant?.id || product.id}
-                    productId={product.id}
-                    handle={product.handle}
-                    title={product.title}
-                    price={price}
-                    originalPrice={originalPrice}
-                    image={imageUrl}
-                    unit="un"
-                  />
-                );
-              })}
-            </div>
-
-            {/* Paginação */}
-            <div className="mt-8">
-              <Pagination pageInfo={pageInfo} />
-            </div>
-          </>
-        ) : (
-          /* Estado Vazio */
-          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl shadow-sm border border-gray-100 text-center">
-            <div className="bg-gray-50 p-4 rounded-full mb-4">
-              <Package className="w-12 h-12 text-gray-400" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2">
-              Nenhum produto encontrado
-            </h3>
-            <p className="text-gray-500 max-w-md mx-auto">
-              Não encontramos produtos com os filtros selecionados (Tipo:{" "}
-              {type || "Todos"}, Tag: {tag || "Todas"}).
-            </p>
+                {/* Paginação */}
+                <div className="mt-8">
+                  <Pagination pageInfo={pageInfo} />
+                </div>
+              </>
+            ) : (
+              /* Estado Vazio */
+              <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl shadow-sm border border-gray-100 text-center">
+                <div className="bg-gray-50 p-4 rounded-full mb-4">
+                  <Package className="w-12 h-12 text-gray-400" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-800 mb-2">
+                  Nenhum produto encontrado
+                </h3>
+                <p className="text-gray-500 max-w-md mx-auto">
+                  Não encontramos produtos com os filtros selecionados (Tipo:{" "}
+                  {type || "Todos"}, Tag: {tag || "Todas"}).
+                </p>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       <div className="mt-auto">

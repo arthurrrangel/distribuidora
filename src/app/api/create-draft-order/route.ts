@@ -19,11 +19,18 @@ interface CustomerInfo {
   phone?: string;
 }
 
+interface AppliedDiscount {
+  title: string;
+  value: number;
+  valueType: "PERCENTAGE" | "FIXED_AMOUNT";
+}
+
 interface DraftOrderInput {
   lineItems: LineItem[];
   customer?: CustomerInfo;
   customerId?: string;
   note?: string;
+  appliedDiscount?: AppliedDiscount;
 }
 
 interface ShopifyResponse {
@@ -98,6 +105,15 @@ export async function POST(request: NextRequest) {
       note: body.note || "Pedido via WhatsApp - Pagamento: Pix/Boleto",
       tags: ["whatsapp", "pix-boleto"],
     };
+
+    // Adicionar desconto/cupom se fornecido
+    if (body.appliedDiscount) {
+      input.appliedDiscount = {
+        title: body.appliedDiscount.title,
+        value: body.appliedDiscount.value,
+        valueType: body.appliedDiscount.valueType,
+      };
+    }
 
     // Adicionar cliente se fornecido
     if (body.customerId) {

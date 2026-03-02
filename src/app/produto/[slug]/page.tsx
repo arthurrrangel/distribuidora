@@ -57,7 +57,7 @@ export default async function ProductPage({
 
       {/* Breadcrumb */}
       <div className="bg-gray-50 py-3 border-b border-gray-100 hidden md:block">
-        <div className="container mx-auto px-4 text-xs text-gray-500 flex items-center gap-2">
+        <div className="container mx-auto px-4 md:px-8 text-xs text-gray-500 flex items-center gap-2">
           <Link href="/" className="hover:text-blue-600">
             Início
           </Link>
@@ -68,7 +68,7 @@ export default async function ProductPage({
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 md:px-8">
         <div className="flex flex-col md:flex-row gap-8 md:gap-12">
           {/* Galeria de Imagens */}
           <div className="space-y-4 w-full md:w-[450px] shrink-0">
@@ -158,7 +158,7 @@ export default async function ProductPage({
                 <ShieldCheck className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
                 <div>
                   <h3 className="font-bold text-gray-900 text-sm">
-                    Garantia Arel
+                    Garantia Repon
                   </h3>
                   <p className="text-xs text-gray-500 mt-1">
                     Qualidade assegurada.

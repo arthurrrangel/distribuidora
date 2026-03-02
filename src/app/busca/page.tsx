@@ -101,87 +101,91 @@ export default async function SearchPage({
           </p>
         </div>
 
-        {/* Barra de Filtros */}
-        <FilterBar />
-
-        {/* Conteúdo Principal */}
-        {products.length > 0 ? (
-          <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {products.map((product) => {
-                // Tratamento seguro de dados opcionais
-                const firstVariant = product.variants.edges[0]?.node;
-                const price = parseFloat(
-                  product.priceRange.minVariantPrice.amount,
-                );
-                const originalPrice = product.compareAtPriceRange
-                  ? parseFloat(
-                      product.compareAtPriceRange.minVariantPrice.amount,
-                    )
-                  : undefined;
-                const imageUrl = product.images.edges[0]?.node.url || "";
-
-                return (
-                  <ProductCard
-                    key={product.id}
-                    id={firstVariant?.id || product.id}
-                    productId={product.id}
-                    handle={product.handle}
-                    title={product.title}
-                    price={price}
-                    originalPrice={originalPrice}
-                    image={imageUrl}
-                    unit="un"
-                  />
-                );
-              })}
-            </div>
-
-            {/* Paginação */}
-            <div className="mt-8">
-              <Pagination pageInfo={pageInfo} />
-            </div>
-          </>
-        ) : (
-          /* Estado Vazio (Error/Empty State) */
-          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl shadow-sm border border-gray-100 text-center animate-in fade-in zoom-in duration-300">
-            {query ? (
+        {/* Layout: Filtros na lateral + Produtos */}
+        <div className="flex flex-col md:flex-row gap-6 items-start">
+          <FilterBar />
+          <div className="flex-1 min-w-0">
+            {/* Conteúdo Principal */}
+            {products.length > 0 ? (
               <>
-                <div className="bg-gray-50 p-4 rounded-full mb-4">
-                  <PackageX className="w-12 h-12 text-gray-400" />
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                  {products.map((product) => {
+                    // Tratamento seguro de dados opcionais
+                    const firstVariant = product.variants.edges[0]?.node;
+                    const price = parseFloat(
+                      product.priceRange.minVariantPrice.amount,
+                    );
+                    const originalPrice = product.compareAtPriceRange
+                      ? parseFloat(
+                          product.compareAtPriceRange.minVariantPrice.amount,
+                        )
+                      : undefined;
+                    const imageUrl = product.images.edges[0]?.node.url || "";
+
+                    return (
+                      <ProductCard
+                        key={product.id}
+                        id={firstVariant?.id || product.id}
+                        productId={product.id}
+                        handle={product.handle}
+                        title={product.title}
+                        price={price}
+                        originalPrice={originalPrice}
+                        image={imageUrl}
+                        unit="un"
+                      />
+                    );
+                  })}
                 </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">
-                  Nenhum resultado encontrado
-                </h3>
-                <p className="text-gray-500 max-w-md mx-auto mb-6">
-                  Não encontramos produtos correspondentes a{" "}
-                  <strong>&quot;{query}&quot;</strong> com os filtros atuais.
-                </p>
-                <div className="flex gap-3">
-                  <Link
-                    href="/busca"
-                    className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm"
-                  >
-                    Limpar busca e filtros
-                  </Link>
+
+                {/* Paginação */}
+                <div className="mt-8">
+                  <Pagination pageInfo={pageInfo} />
                 </div>
               </>
             ) : (
-              <>
-                <div className="bg-blue-50 p-4 rounded-full mb-4">
-                  <SearchIcon className="w-12 h-12 text-blue-400" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">
-                  Faça uma nova busca
-                </h3>
-                <p className="text-gray-500 max-w-md mx-auto">
-                  Digite o nome do produto que você procura na barra de pesquisa
-                  acima.
-                </p>
-              </>
+              /* Estado Vazio (Error/Empty State) */
+              <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl shadow-sm border border-gray-100 text-center animate-in fade-in zoom-in duration-300">
+                {query ? (
+                  <>
+                    <div className="bg-gray-50 p-4 rounded-full mb-4">
+                      <PackageX className="w-12 h-12 text-gray-400" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800 mb-2">
+                      Nenhum resultado encontrado
+                    </h3>
+                    <p className="text-gray-500 max-w-md mx-auto mb-6">
+                      Não encontramos produtos correspondentes a{" "}
+                      <strong>&quot;{query}&quot;</strong> com os filtros
+                      atuais.
+                    </p>
+                    <div className="flex gap-3">
+                      <Link
+                        href="/busca"
+                        className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm"
+                      >
+                        Limpar busca e filtros
+                      </Link>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="bg-blue-50 p-4 rounded-full mb-4">
+                      <SearchIcon className="w-12 h-12 text-blue-400" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800 mb-2">
+                      Faça uma nova busca
+                    </h3>
+                    <p className="text-gray-500 max-w-md mx-auto">
+                      Digite o nome do produto que você procura na barra de
+                      pesquisa acima.
+                    </p>
+                  </>
+                )}
+              </div>
             )}
           </div>
-        )}
+        </div>
       </div>
 
       <div className="mt-auto">

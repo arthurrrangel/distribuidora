@@ -122,6 +122,9 @@ export interface Product {
   variants: {
     edges: Array<{ node: ProductVariant }>;
   };
+  coverInfo?: {
+    value: string;
+  } | null;
 }
 
 // Interface Genérica para Conexões do Shopify (Edges/Nodes)

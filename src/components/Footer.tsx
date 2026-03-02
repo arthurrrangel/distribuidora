@@ -1,340 +1,260 @@
 "use client";
 
-import {
-  Facebook,
-  Instagram,
-  Linkedin,
-  ChevronDown,
-  Mail,
-  Truck,
-  CheckCircle2,
-  Banknote,
-} from "lucide-react";
+import { Instagram, Linkedin, MessageCircle, Clock } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import api from "@/services/api";
-
-// --- TIPAGEM ESTRITA ---
-interface ShopifyCollectionNode {
-  id: string;
-  title: string;
-  handle: string;
-}
-
-interface ShopifyCollectionsResponse {
-  data: {
-    collections: {
-      edges: Array<{
-        node: ShopifyCollectionNode;
-      }>;
-    };
-  };
-}
-
-// Componente movido para fora do Footer
-function FooterSection({
-  title,
-  sectionBox,
-  children,
-  openSection,
-  toggleSection,
-}: {
-  title: string;
-  sectionBox: string;
-  children: React.ReactNode;
-  openSection: string | null;
-  toggleSection: (section: string) => void;
-}) {
-  return (
-    <div className="border-b border-gray-100 md:border-none last:border-0">
-      <button
-        onClick={() => toggleSection(sectionBox)}
-        className="flex items-center justify-between w-full py-4 md:py-0 md:mb-6 group"
-      >
-        <h3 className="font-bold text-[#1e3a8a]">{title}</h3>
-        <ChevronDown
-          className={`w-5 h-5 text-gray-400 transition-transform md:hidden ${openSection === sectionBox ? "rotate-180" : ""}`}
-        />
-      </button>
-      <div
-        className={`overflow-hidden transition-all duration-300 md:block ${openSection === sectionBox ? "max-h-96 opacity-100 mb-4" : "max-h-0 opacity-0 md:max-h-none md:opacity-100"}`}
-      >
-        {children}
-      </div>
-    </div>
-  );
-}
 
 export function Footer() {
-  const [openSection, setOpenSection] = useState<string | null>(null);
-  const [departments, setDepartments] = useState<ShopifyCollectionNode[]>([]);
-
-  const toggleSection = (section: string) => {
-    setOpenSection(openSection === section ? null : section);
-  };
-
-  // 👇 Número puxado do .env com um fallback de segurança
   const whatsappNumber =
     process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "21995946491";
-
   const whatsappMessage = encodeURIComponent(
     "Olá! Gostaria de mais informações sobre os produtos da Repon Distribuidora.",
   );
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
-  // Fetch Departamentos
-  useEffect(() => {
-    async function fetchDepartments() {
-      // Aumentamos para 10 para garantir que teremos 5 departamentos válidos após o filtro
-      const query = `
-        query getFooterCollections {
-          collections(first: 10, sortKey: TITLE) {
-            edges {
-              node {
-                id
-                title
-                handle
-              }
-            }
-          }
-        }
-      `;
-
-      try {
-        const response = await api.post<ShopifyCollectionsResponse>("", {
-          query,
-        });
-
-        const validNodes = response.data.data.collections.edges
-          .map((edge) => edge.node)
-          .filter((node) => {
-            const titleLower = node.title.toLowerCase();
-            const handleLower = node.handle.toLowerCase();
-
-            // Filtra as coleções que não queremos mostrar
-            return (
-              !titleLower.includes("destaque") &&
-              !handleLower.includes("destaque") &&
-              !titleLower.includes("principais") &&
-              !handleLower.includes("principais")
-            );
-          })
-          .slice(0, 5); // Pega apenas os 5 primeiros após limpar
-
-        setDepartments(validNodes);
-      } catch (error) {
-        console.error("Erro ao carregar departamentos no footer:", error);
-      }
-    }
-    fetchDepartments();
-  }, []);
-
   return (
-    <footer className="mt-16 bg-white border-t border-gray-200 pt-8 pb-24 md:pt-16 md:pb-8">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-0 md:gap-8 mb-8 md:mb-12">
-          {/* Brand */}
-          <div className="mb-8 md:mb-0 text-center md:text-left">
-            <div className="mb-6 flex justify-center md:justify-start">
-              <Link href="/">
-                <Image
-                  src="/repon-logo.svg"
-                  alt="Repon Distribuidora"
-                  width={150}
-                  height={50}
-                  className="h-12 w-auto object-contain"
-                />
-              </Link>
+    <footer className="mt-16">
+      {/* Faixa de ajuda */}
+      <div className="bg-blue-100 border-t border-blue-200">
+        <div className="container mx-auto px-4 py-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          {/* Lado esquerdo: texto + botão */}
+          <div className="flex items-center gap-6">
+            <div className="hidden sm:flex w-16 h-16 rounded-full flex-shrink-0 bg-[#2563EB] items-center justify-center overflow-hidden">
+              <Image
+                src="/repon-logo-branca-r.svg"
+                alt="AREL Distribuidora"
+                width={40}
+                height={40}
+                className="w-8 h-8 object-contain"
+              />
             </div>
-            <p className="text-gray-500 text-sm mb-6 max-w-xs mx-auto md:mx-0">
-              Sua distribuidora parceira para abastecer seu negócio com
-              agilidade e os melhores preços.
-            </p>
-            <div className="flex gap-4 justify-center md:justify-start">
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-[#2563EB] hover:bg-[#2563EB] hover:text-white transition-colors"
-              >
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-[#2563EB] hover:bg-[#2563EB] hover:text-white transition-colors"
-              >
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-[#2563EB] hover:bg-[#2563EB] hover:text-white transition-colors"
-              >
-                <Linkedin className="w-5 h-5" />
-              </a>
-            </div>
-          </div>
-
-          {/* Links Sections with Accordion on Mobile */}
-          <FooterSection
-            title="Institucional"
-            sectionBox="institucional"
-            openSection={openSection}
-            toggleSection={toggleSection}
-          >
-            <ul className="space-y-4 text-sm text-gray-500">
-              <li>
-                <Link href="#" className="hover:text-[#2563EB]">
-                  Sobre nós
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-[#2563EB]">
-                  Trabalhe conosco
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-[#2563EB]">
-                  Política de Privacidade
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-[#2563EB]">
-                  Termos de Uso
-                </Link>
-              </li>
-            </ul>
-          </FooterSection>
-
-          <FooterSection
-            title="Departamentos"
-            sectionBox="departamentos"
-            openSection={openSection}
-            toggleSection={toggleSection}
-          >
-            <ul className="space-y-4 text-sm text-gray-500">
-              {departments.length > 0 ? (
-                departments.map((dep) => (
-                  <li key={dep.id}>
-                    <Link
-                      href={`/departamento/${dep.handle}`}
-                      className="hover:text-[#2563EB]"
-                    >
-                      {dep.title}
-                    </Link>
-                  </li>
-                ))
-              ) : (
-                <li>Carregando...</li>
-              )}
-            </ul>
-          </FooterSection>
-
-          <FooterSection
-            title="Ajuda"
-            sectionBox="ajuda"
-            openSection={openSection}
-            toggleSection={toggleSection}
-          >
-            <ul className="space-y-4 text-sm text-gray-500">
-              <li>
-                <Link href="#" className="hover:text-[#2563EB]">
-                  Central de Ajuda
-                </Link>
-              </li>
-              <li>
-                <Link href="/meus-pedidos" className="hover:text-[#2563EB]">
-                  Meus Pedidos
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-[#2563EB]">
-                  Trocas e Devoluções
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-[#2563EB]">
-                  Fale Conosco
-                </Link>
-              </li>
-            </ul>
-          </FooterSection>
-
-          {/* Contact */}
-          <div className="pt-8 md:pt-0">
-            <h3 className="font-bold text-[#1e3a8a] mb-6 text-center md:text-left">
-              Atendimento
-            </h3>
-            <div className="space-y-4">
+            <div>
+              <p className="font-bold text-gray-800 text-lg">
+                Precisa de ajuda?
+              </p>
+              <p className="text-gray-500 text-sm mb-3">Envie uma mensagem!</p>
               <a
                 href={whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 w-full justify-center md:justify-start bg-[#25D366] text-white px-4 py-3 rounded-md font-bold hover:bg-[#20bd5b] transition-colors"
+                className="inline-flex items-center gap-2 bg-[#2563EB] text-white px-5 py-2.5 rounded-md font-semibold text-sm hover:bg-blue-700 transition-colors"
               >
-                <svg
-                  className="w-5 h-5 fill-current"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-                </svg>
-                <span>Falar no WhatsApp</span>
+                <MessageCircle className="w-4 h-4" />
+                Enviar mensagem
               </a>
-              <a
-                href="mailto:contato@repondistribuidora.com.br"
-                className="flex items-center w-full justify-center md:justify-start text-gray-500 hover:text-[#2563EB] transition-colors text-sm"
-              >
-                <Mail className="w-4 h-4" />
-                <span>contato@repondistribuidora.com.br</span>
-              </a>
-              <p className="text-sm text-center md:text-left text-gray-500">
-                Segunda a Sexta das 9h às 18h
-                <br />
-                Sábado das 9h às 13h
+            </div>
+          </div>
+
+          {/* Divisor vertical */}
+          <div className="hidden md:block w-px h-20 bg-gray-300" />
+
+          {/* Lado direito: horários */}
+          <div className="text-center md:text-left">
+            <p className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2 flex items-center gap-1 justify-center md:justify-start">
+              <Clock className="w-3.5 h-3.5" />
+              Horários de Atendimento*
+            </p>
+            <p className="text-gray-700 text-sm">
+              Segunda à sexta das 09h às 18h
+            </p>
+            <p className="text-gray-700 text-sm">Sábado das 09h às 13h</p>
+            <p className="text-gray-400 text-xs mt-1">*Exceto feriados</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Faixa principal azul */}
+      <div className="bg-[#2563EB]">
+        <div className="container mx-auto px-4 py-10">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-evenly gap-10">
+            {/* Logo */}
+            <div className="flex-shrink-0 ml-8">
+              <Link href="/">
+                <Image
+                  src="/repon-logo-branca.svg"
+                  alt="Repon Distribuidora"
+                  width={120}
+                  height={40}
+                  className="h-12 w-auto object-contain"
+                />
+              </Link>
+            </div>
+
+            {/* Links institucionais */}
+            <div>
+              <p className="text-blue-200 text-xs font-bold uppercase tracking-widest mb-3">
+                Sobre a Repon
               </p>
+              <ul className="space-y-2 text-sm text-white">
+                <li>
+                  <Link
+                    href="/sobre"
+                    className="hover:text-blue-200 transition-colors"
+                  >
+                    Sobre nós
+                  </Link>
+                </li>
+                <li>
+                  <a
+                    href={whatsappLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-blue-200 transition-colors"
+                  >
+                    Entre em Contato
+                  </a>
+                </li>
+                <li>
+                  <Link
+                    href="#"
+                    className="hover:text-blue-200 transition-colors"
+                  >
+                    Política de Privacidade
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/meus-pedidos"
+                    className="hover:text-blue-200 transition-colors"
+                  >
+                    Meus Pedidos
+                  </Link>
+                </li>
+              </ul>
             </div>
-          </div>
-        </div>
 
-        {/* Informações de Pagamento e Frete */}
-        <div className="border-t border-gray-100 pt-8 mb-8">
-          <div className="flex flex-col md:flex-row justify-around w-full gap-6 text-sm text-gray-500">
-            <div className="text-center md:text-left flex-1 md:flex-none border-b md:border-b-0 md:border-r border-gray-100 pb-4 md:pb-0 md:pr-12 last:border-0 last:pb-0 last:pr-0">
-              <h4 className="font-semibold text-[#1e3a8a] mb-2 flex items-center justify-center md:justify-start gap-2">
-                <Banknote className="w-5 h-5 text-blue-600" />
-                Pagamento B2B
-              </h4>
-              <p>À vista via Pix ou Boleto Bancário</p>
-              <p>Pedidos pelo WhatsApp</p>
+            {/* Formas de pagamento */}
+            <div>
+              <p className="text-blue-200 text-xs font-bold uppercase tracking-widest mb-3">
+                Formas de Pagamento
+              </p>
+              <div className="flex items-center gap-2">
+                {/* Boleto */}
+                <div className="bg-white rounded px-2 py-1.5 flex items-center gap-1">
+                  <svg
+                    className="h-4 w-auto"
+                    viewBox="0 0 48 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect width="48" height="24" rx="3" fill="white" />
+                    <rect x="4" y="5" width="2" height="14" fill="#222" />
+                    <rect x="7" y="5" width="1" height="14" fill="#222" />
+                    <rect x="9" y="5" width="2" height="14" fill="#222" />
+                    <rect x="12" y="5" width="1" height="14" fill="#222" />
+                    <rect x="14" y="5" width="3" height="14" fill="#222" />
+                    <rect x="18" y="5" width="1" height="14" fill="#222" />
+                    <rect x="20" y="5" width="2" height="14" fill="#222" />
+                    <rect x="23" y="5" width="1" height="14" fill="#222" />
+                    <rect x="25" y="5" width="3" height="14" fill="#222" />
+                    <rect x="29" y="5" width="1" height="14" fill="#222" />
+                    <rect x="31" y="5" width="2" height="14" fill="#222" />
+                    <rect x="34" y="5" width="1" height="14" fill="#222" />
+                    <rect x="36" y="5" width="2" height="14" fill="#222" />
+                    <rect x="39" y="5" width="3" height="14" fill="#222" />
+                    <rect x="43" y="5" width="1" height="14" fill="#222" />
+                  </svg>
+                  <span className="text-[10px] font-bold text-gray-700">
+                    Boleto
+                  </span>
+                </div>
+                {/* PIX */}
+                <div className="bg-white rounded px-2 py-1.5 flex items-center gap-1">
+                  <svg
+                    className="h-4 w-4"
+                    viewBox="0 0 512 512"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M390.2 345.6c-21.8 0-42.3-8.5-57.7-23.9l-81.1-81.1c-5.4-5.4-14.9-5.4-20.3 0l-81.4 81.4c-15.4 15.4-35.9 23.9-57.7 23.9h-16l102.7 102.7c31.7 31.7 83.1 31.7 114.8 0L396.2 346h-6z"
+                      fill="#32BCAD"
+                    />
+                    <path
+                      d="M92 166.4c21.8 0 42.3 8.5 57.7 23.9l81.4 81.4c5.6 5.6 14.7 5.6 20.3 0l81.1-81.1c15.4-15.4 35.9-23.9 57.7-23.9h6L294.5 63.9c-31.7-31.7-83.1-31.7-114.8 0L76 166.3h16z"
+                      fill="#32BCAD"
+                    />
+                    <path
+                      d="M458.7 209.5l-51.9-51.9h-16.6c-16.2 0-31.8 6.5-43.2 18l-81.1 81.1c-8.1 8.1-18.9 12.6-30.4 12.6-11.5 0-22.3-4.5-30.4-12.6l-81.4-81.4c-11.4-11.4-27-18-43.2-18H64.3l-51.9 51.9c-31.7 31.7-31.7 83.1 0 114.8l51.9 51.9h16.6c16.2 0 31.8-6.5 43.2-18l81.4-81.4c16.3-16.3 44.5-16.3 60.8 0l81.1 81.1c11.4 11.4 27 18 43.2 18h16.6l51.9-51.9c31.8-31.8 31.8-83.1.1-114.8z"
+                      fill="#32BCAD"
+                    />
+                  </svg>
+                  <span className="text-[10px] font-bold text-gray-700">
+                    Pix
+                  </span>
+                </div>
+              </div>
             </div>
-            <div className="text-center md:text-left flex-1 md:flex-none border-b md:border-b-0 md:border-r border-gray-100 pb-4 md:pb-0 md:pr-12 last:border-0 last:pb-0 last:pr-0">
-              <h4 className="font-semibold text-[#1e3a8a] mb-2 flex items-center justify-center md:justify-start gap-2">
-                <Truck className="w-5 h-5 text-blue-600" />
-                Entrega
-              </h4>
-              <p>Correios para todo o Brasil</p>
-              <p>Frete grátis acima de R$ 1.000,00</p>
-            </div>
-            <div className="text-center md:text-left flex-1 md:flex-none">
-              <h4 className="font-semibold text-[#1e3a8a] mb-2 flex items-center justify-center md:justify-start gap-2">
-                <CheckCircle2 className="w-5 h-5 text-blue-600" />
+
+            {/* Segurança */}
+            <div>
+              <p className="text-blue-200 text-xs font-bold uppercase tracking-widest mb-3">
                 Segurança
-              </h4>
-              <p>Compra 100% segura</p>
-              <p>Seus dados protegidos</p>
+              </p>
+              <div className="bg-white rounded px-3 py-2 flex items-center gap-2">
+                <svg
+                  className="w-5 h-5 text-green-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                  />
+                </svg>
+                <div>
+                  <p className="text-[10px] font-bold text-gray-700 leading-tight">
+                    Site Seguro
+                  </p>
+                  <p className="text-[9px] text-gray-500 leading-tight">
+                    SSL Certificado
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Redes Sociais */}
+            <div className="mr-8">
+              <p className="text-blue-200 text-xs font-bold uppercase tracking-widest mb-3">
+                Redes Sociais
+              </p>
+              <div className="flex items-center gap-3">
+                <a
+                  href="#"
+                  aria-label="Instagram"
+                  className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+                >
+                  <Instagram className="w-5 h-5" />
+                </a>
+                <a
+                  href="#"
+                  aria-label="LinkedIn"
+                  className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+                >
+                  <Linkedin className="w-5 h-5" />
+                </a>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Rodapé Legal */}
-        <div className="border-t border-gray-100 pt-8 text-center text-gray-400 text-xs space-y-2">
-          <p className="font-medium text-gray-500">
-            AREL VARIEDADES E COMERCIO LTDA
-          </p>
-          <p>CNPJ: 54.563.438/0001-07 | Santa Catarina - SC</p>
-          <p className="pt-2">
-            © {new Date().getFullYear()} Repon Distribuidora. Todos os direitos
-            reservados.
-          </p>
+        {/* Rodapé legal */}
+        <div className="border-t border-white/20">
+          <div className="container mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-blue-200">
+            <p>
+              <span className="font-semibold text-white">
+                AREL VARIEDADES E COMERCIO LTDA
+              </span>{" "}
+              — CNPJ: 54.563.438/0001-07 | Santa Catarina - SC
+            </p>
+            <p>
+              © {new Date().getFullYear()} AREL Distribuidora. Todos os direitos
+              reservados.
+            </p>
+          </div>
         </div>
       </div>
     </footer>
