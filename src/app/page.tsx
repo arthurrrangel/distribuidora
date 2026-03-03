@@ -81,7 +81,7 @@ export default async function Home() {
             vendor="Filipaper"
             brandName="Filipaper"
             brandDescription="Os melhores produtos da marca Filipaper"
-            brandLogo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOwodb7VZ6685KtyeSKawjG2CNhtWQ8ZO_IL24fvhbXSSWtCaj"
+            brandLogo=""
             brandBanner="https://i.pinimg.com/originals/08/44/f0/0844f023d79685a962eb98fba5d10c9f.jpg"
           />
 
@@ -96,7 +96,7 @@ export default async function Home() {
             vendor="Usapel"
             brandName="Usapel"
             brandDescription="Os melhores produtos da marca Usapel"
-            brandLogo="https://papelariacriativa.com.br/wp-content/uploads/papel-prsico-branco-a4-180g-c50-folhas-usapel-25022-2.jpg"
+            brandLogo=""
             brandBanner="https://ggpel.cdn.magazord.com.br/img/2025/11/produto/69728/image-2025-11-19t164656-151.jpg?ims=fit-in/600x600/filters:fill(white)"
           />
         </div>

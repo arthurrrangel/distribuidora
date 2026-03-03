@@ -651,9 +651,9 @@ export function Header() {
             )}
           </div>
 
-          {/* Links rápidos — todas as coleções na nav */}
+          {/* Links rápidos — apenas departamentos pai */}
           <div className="flex items-center overflow-x-auto no-scrollbar">
-            {collections.map((item) => (
+            {parentCollections.map((item) => (
               <Link
                 key={item.id}
                 href={`/departamento/${item.handle}`}
