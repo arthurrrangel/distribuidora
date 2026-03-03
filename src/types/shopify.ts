@@ -23,6 +23,56 @@ export interface Customer {
   };
 }
 
+// --- Customer Account Types ---
+
+export interface Address {
+  id: string;
+  firstName?: string;
+  lastName?: string;
+  address1: string;
+  address2?: string;
+  city: string;
+  province?: string;
+  country: string;
+  zip: string;
+  phone?: string;
+  isDefault?: boolean;
+}
+
+export interface CustomerFull {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  createdAt: string;
+  defaultAddress?: Address;
+  addresses: {
+    edges: Array<{ node: Address }>;
+  };
+}
+
+export interface UpdateCustomerInput {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  password?: string;
+  acceptsMarketing?: boolean;
+}
+
+export interface AddressInput {
+  firstName?: string;
+  lastName?: string;
+  address1: string;
+  address2?: string;
+  city: string;
+  province?: string;
+  country: string;
+  zip: string;
+  phone?: string;
+}
+
 // Interface para dados de cadastro de empresa (B2B)
 export interface CompanyRegistrationData {
   razaoSocial: string;

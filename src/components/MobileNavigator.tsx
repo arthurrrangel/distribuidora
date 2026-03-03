@@ -3,12 +3,14 @@
 import { Home, Menu, ShoppingCart, User, Search } from "lucide-react";
 import Link from "next/link";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 import { DepartmentsModal } from "./DepartmentsModal";
 import { SearchModal } from "./SearchModal";
 
 export function MobileNavigator() {
   const { cartCount } = useCart();
+  const { user } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -39,7 +41,7 @@ export function MobileNavigator() {
             <span className="text-[10px] font-medium mt-1">Departamentos</span>
           </button>
           <Link
-            href="/login"
+            href={user ? "/minha-conta" : "/login"}
             className="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-[#2563EB]"
           >
             <User className="w-6 h-6" />

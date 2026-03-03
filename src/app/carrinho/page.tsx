@@ -396,8 +396,8 @@ export default function CartPage() {
                         <BadgePercent className="w-4 h-4 text-green-600 shrink-0" />
                       )}
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-green-800 truncate">
-                          {appliedDiscount.code}
+                        <p className="text-sm font-bold text-green-800">
+                          Cupom adicionado
                         </p>
                         <p className="text-xs text-green-600">
                           {appliedDiscount.valueType === "PERCENTAGE"
@@ -478,7 +478,7 @@ export default function CartPage() {
                         <>
                           <span className="flex items-center gap-1 text-green-600">
                             <Tag className="w-3.5 h-3.5" />
-                            Desconto ({appliedDiscount.code})
+                            Desconto aplicado
                           </span>
                           <span className="text-green-600 font-semibold">
                             -{fmtBRL(discountAmount)}

@@ -587,11 +587,6 @@ export default function OrderDetailPage() {
                     <span className="flex items-center gap-1">
                       <Tag className="w-3.5 h-3.5" />
                       Desconto
-                      {discountLabels.length > 0 && (
-                        <span className="text-green-500 font-normal">
-                          ({discountLabels.join(", ")})
-                        </span>
-                      )}
                     </span>
                     <span className="font-semibold">
                       -{fmt(discountAmount, discountCurrency)}
