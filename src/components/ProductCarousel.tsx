@@ -92,6 +92,7 @@ export function ProductCarousel({
                   }
                   image={p.images.edges[0]?.node.url || ""}
                   coverInfo={p.coverInfo?.value}
+                  quantityAvailable={variant.quantityAvailable}
                 />
               </div>
             );

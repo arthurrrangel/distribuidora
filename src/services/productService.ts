@@ -39,6 +39,7 @@ const PRODUCT_FRAGMENT = `
         id
         title
         availableForSale
+        quantityAvailable
         price { amount currencyCode }
         compareAtPrice { amount currencyCode }
       }

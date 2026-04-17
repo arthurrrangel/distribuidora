@@ -149,6 +149,7 @@ export interface ProductVariant {
   price: MoneyV2;
   compareAtPrice: MoneyV2 | null;
   availableForSale: boolean;
+  quantityAvailable?: number;
 }
 
 export interface Product {

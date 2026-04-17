@@ -328,6 +328,7 @@ export default async function DepartmentPage({
                         originalPrice={originalPrice}
                         image={imageUrl}
                         coverInfo={product.coverInfo?.value}
+                        quantityAvailable={firstVariant?.quantityAvailable}
                       />
                     );
                   })}

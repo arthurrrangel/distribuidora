@@ -255,65 +255,61 @@ export function Header() {
 
               {/* Conta */}
               <div className="relative">
+                {!user ? (
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href="/register"
+                      className="flex flex-col items-center justify-center bg-[#F5A623] hover:bg-[#e09610] text-gray-900 font-bold px-4 py-1.5 rounded-lg transition-colors text-xs leading-tight"
+                    >
+                      <span>Cadastre-se</span>
+                      <span className="font-normal text-[10px] opacity-80">Ou faça Login</span>
+                    </Link>
+                  </div>
+                ) : (
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  aria-label={user ? "Minha conta" : "Entrar ou Cadastrar"}
+                  aria-label="Minha conta"
                   className="flex flex-col items-center gap-0.5 px-3 py-1 rounded-lg hover:bg-white/10 transition-colors group"
                 >
                   <User className="w-5 h-5 text-white" />
                   <span className="text-[10px] text-white/70 group-hover:text-white font-medium leading-none">
-                    {user ? (user.firstName || "Conta") : "Entrar"}
+                    {user.firstName || "Conta"}
                   </span>
                 </button>
+                )}
 
-                {isUserMenuOpen && (
+                {user && isUserMenuOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsUserMenuOpen(false)} />
                     <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
-                      {user ? (
-                        <>
-                          <div className="bg-[#0464D5] px-4 py-4">
-                            <div className="flex items-center gap-3">
-                              <div className="bg-[#0464D5]/30 p-2 rounded-full">
-                                <User className="w-5 h-5 text-white" />
-                              </div>
-                              <div className="min-w-0">
-                                <p className="text-sm font-semibold text-white">{user.firstName || "Cliente"}</p>
-                                <p className="text-xs text-blue-300 truncate">{user.email}</p>
-                              </div>
-                            </div>
+                      <div className="bg-[#0464D5] px-4 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="bg-white/20 p-2 rounded-full">
+                            <User className="w-5 h-5 text-white" />
                           </div>
-                          <div className="py-1">
-                            <Link href="/minha-conta" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-[#0464D5] transition-colors text-sm">
-                              <User className="w-4 h-4 text-gray-400" />
-                              Minha Conta
-                              <ChevronRight className="w-4 h-4 text-gray-300 ml-auto" />
-                            </Link>
-                            <Link href="/meus-pedidos" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-[#0464D5] transition-colors text-sm">
-                              <Package className="w-4 h-4 text-gray-400" />
-                              Meus Pedidos
-                              <ChevronRight className="w-4 h-4 text-gray-300 ml-auto" />
-                            </Link>
-                            <div className="h-px bg-gray-100 mx-4" />
-                            <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 w-full transition-colors text-sm">
-                              <LogOut className="w-4 h-4" />
-                              Sair da conta
-                            </button>
-                          </div>
-                        </>
-                      ) : (
-                        <div className="py-2">
-                          <div className="px-4 py-3 text-center">
-                            <p className="text-sm text-gray-600 mb-3">Faça login para continuar</p>
-                            <Link href="/login" onClick={() => setIsUserMenuOpen(false)} className="block w-full bg-[#0464D5] text-white text-sm font-semibold py-2 rounded-md hover:bg-[#0353b4] transition-colors mb-2">
-                              Entrar
-                            </Link>
-                            <Link href="/register" onClick={() => setIsUserMenuOpen(false)} className="block w-full border border-[#0464D5] text-[#0464D5] text-sm font-semibold py-2 rounded-md hover:bg-blue-50 transition-colors">
-                              Cadastrar
-                            </Link>
+                          <div className="min-w-0">
+                            <p className="text-sm font-semibold text-white">{user.firstName || "Cliente"}</p>
+                            <p className="text-xs text-blue-300 truncate">{user.email}</p>
                           </div>
                         </div>
-                      )}
+                      </div>
+                      <div className="py-1">
+                        <Link href="/minha-conta" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-[#0464D5] transition-colors text-sm">
+                          <User className="w-4 h-4 text-gray-400" />
+                          Minha Conta
+                          <ChevronRight className="w-4 h-4 text-gray-300 ml-auto" />
+                        </Link>
+                        <Link href="/meus-pedidos" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-[#0464D5] transition-colors text-sm">
+                          <Package className="w-4 h-4 text-gray-400" />
+                          Meus Pedidos
+                          <ChevronRight className="w-4 h-4 text-gray-300 ml-auto" />
+                        </Link>
+                        <div className="h-px bg-gray-100 mx-4" />
+                        <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 w-full transition-colors text-sm">
+                          <LogOut className="w-4 h-4" />
+                          Sair da conta
+                        </button>
+                      </div>
                     </div>
                   </>
                 )}

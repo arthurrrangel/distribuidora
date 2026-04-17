@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Plus, Lock, Check, Package } from "lucide-react";
+import { Plus, Check, Package, LogIn } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 
@@ -17,6 +17,7 @@ interface ProductCardProps {
   image: string | null;
   unit?: string;
   coverInfo?: string;
+  quantityAvailable?: number;
 }
 
 export function ProductCard({
@@ -27,135 +28,134 @@ export function ProductCard({
   price,
   originalPrice,
   image,
-  unit = "UN",
+  unit = "un",
   coverInfo,
+  quantityAvailable,
 }: ProductCardProps) {
   const { user } = useAuth();
-  const isLoggedIn = !!user;
+  const { addItem } = useCart();
+  const [added, setAdded] = useState(false);
 
+  // Preço de atacado B2B
   const finalPrice = price * 0.9;
 
-  const discountPercentage =
+  const discountPct =
     originalPrice && originalPrice > finalPrice
       ? Math.round(((originalPrice - finalPrice) / originalPrice) * 100)
       : 0;
 
-  const { addItem } = useCart();
-  const [added, setAdded] = useState(false);
+  // Parte inteira e decimal do preço
+  const intPart = Math.floor(finalPrice);
+  const decPart = (finalPrice - intPart).toFixed(2).slice(1); // ",XX"
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!user) {
+      window.location.href = "/login";
+      return;
+    }
     addItem({ id, productId, handle, title, price: finalPrice, image, unit });
     setAdded(true);
-    setTimeout(() => setAdded(false), 1200);
+    setTimeout(() => setAdded(false), 1500);
   };
 
+  const stockLow =
+    typeof quantityAvailable === "number" && quantityAvailable > 0 && quantityAvailable <= 5;
+
   return (
-    <div className="group relative w-full rounded-2xl bg-white border border-gray-100 hover:border-[#0464D5]/30 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 overflow-hidden flex flex-col">
-      {/* Discount Badge */}
-      {discountPercentage > 0 && isLoggedIn && (
-        <span className="absolute top-2.5 left-2.5 z-10 bg-[#0464D5] text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm tracking-wide">
-          -{discountPercentage}%
-        </span>
-      )}
+    <div className="group relative w-full rounded-xl bg-white border border-gray-100 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 overflow-hidden flex flex-col">
 
-      {/* Image Area */}
-      <Link href={`/produto/${handle}`} className="block">
-        <div className="relative w-full h-48 bg-gray-50 flex items-center justify-center overflow-hidden">
-          {image ? (
-            <Image
-              src={image}
-              alt={title}
-              fill
-              className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
-              sizes="(max-width: 640px) 50vw, 200px"
-            />
-          ) : (
-            <div className="flex flex-col items-center justify-center gap-2 text-gray-300">
-              <Package className="w-10 h-10" />
-            </div>
-          )}
+      {/* ── Imagem ─────────────────────────────────────────────────── */}
+      <Link href={`/produto/${handle}`} className="relative block w-full aspect-square bg-gray-50 overflow-hidden">
+        {image ? (
+          <Image
+            src={image}
+            alt={title}
+            fill
+            className="object-contain p-3 group-hover:scale-105 transition-transform duration-300"
+            sizes="(max-width: 640px) 50vw, 220px"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center text-gray-200">
+            <Package className="w-12 h-12" />
+          </div>
+        )}
 
-          {/* Cover Info Badge */}
-          {coverInfo && (
-            <span className="absolute bottom-2 left-2 z-10 bg-white/90 backdrop-blur-sm text-gray-700 text-[10px] font-semibold px-2 py-0.5 rounded-md shadow-sm">
-              {coverInfo}
-            </span>
-          )}
+        {/* Badge % OFF */}
+        {discountPct > 0 && (
+          <span className="absolute top-2 left-2 bg-green-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm leading-tight">
+            {discountPct}% OFF
+          </span>
+        )}
 
-          {/* Add to Cart Button */}
-          {isLoggedIn && (
-            <button
-              onClick={handleAddToCart}
-              title="Adicionar ao carrinho"
-              className={`
-                absolute bottom-2 right-2 z-20
-                group/btn h-8 rounded-full border-none cursor-pointer
-                flex items-center justify-center gap-1.5
-                overflow-hidden shadow-md transition-all duration-300 active:scale-95
-                ${added
-                  ? "bg-[#0464D5] text-white w-[108px] px-3"
-                  : "bg-[#0464D5] hover:bg-[#0353b4] text-white w-8 hover:w-[108px] hover:px-3"
-                }
-              `}
-            >
-              {added ? (
-                <>
-                  <Check className="w-3.5 h-3.5 shrink-0" />
-                  <span className="text-xs font-semibold whitespace-nowrap">Adicionado!</span>
-                </>
-              ) : (
-                <>
-                  <Plus className="w-3.5 h-3.5 shrink-0" />
-                  <span className="text-xs font-semibold whitespace-nowrap opacity-0 group-hover/btn:opacity-100 transition-opacity duration-200 max-w-0 group-hover/btn:max-w-[80px] overflow-hidden">
-                    Adicionar
-                  </span>
-                </>
-              )}
-            </button>
-          )}
-        </div>
+        {/* Badge quantidade/embalagem */}
+        {coverInfo && (
+          <span className="absolute bottom-2 left-2 bg-white/90 backdrop-blur-sm text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm border border-gray-100 leading-tight">
+            {coverInfo}
+          </span>
+        )}
+
+        {/* Botão + (estilo Praso: circular azul) */}
+        <button
+          onClick={handleAdd}
+          aria-label="Adicionar ao carrinho"
+          className={`absolute bottom-2 right-2 w-9 h-9 rounded-full flex items-center justify-center shadow-md transition-all duration-150 active:scale-90 z-10 ${
+            added
+              ? "bg-green-500 text-white"
+              : "bg-[#0464D5] hover:bg-[#0353b4] text-white"
+          }`}
+        >
+          {added ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4 stroke-[2.5]" />}
+        </button>
+
+        {/* Estoque baixo */}
+        {stockLow && (
+          <span className="absolute top-2 right-2 bg-orange-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md shadow-sm leading-tight">
+            {quantityAvailable} restante{quantityAvailable! > 1 ? "s" : ""}
+          </span>
+        )}
       </Link>
 
-      {/* Content Area */}
-      <Link href={`/produto/${handle}`} className="flex flex-col px-3.5 pb-3.5 pt-3 bg-white flex-1">
-        {/* Title first — draws the eye */}
+      {/* ── Informações ────────────────────────────────────────────── */}
+      <Link href={`/produto/${handle}`} className="flex flex-col p-3 flex-1">
+
+        {/* Preço — sempre visível, estilo Praso */}
+        <div className="mb-2">
+          <p className="text-[10px] text-gray-400 leading-none mb-0.5">
+            R$/{unit.toLowerCase()}
+          </p>
+          <div className="flex items-end gap-0.5 leading-none">
+            <span className="text-[22px] font-extrabold text-gray-900 leading-none tracking-tight">
+              {intPart}
+            </span>
+            <span className="text-sm font-bold text-gray-900 leading-none mb-0.5">
+              {decPart}
+            </span>
+          </div>
+
+          {originalPrice && originalPrice > finalPrice && (
+            <p className="text-[10px] text-gray-400 line-through leading-tight mt-0.5">
+              R${originalPrice.toFixed(2).replace(".", ",")}
+            </p>
+          )}
+        </div>
+
+        {/* Nome */}
         <p
-          className="text-gray-800 text-[13px] font-semibold leading-snug line-clamp-2 mb-2.5 group-hover:text-[#0464D5] transition-colors"
+          className="text-gray-700 text-[12px] font-medium leading-snug line-clamp-2 group-hover:text-[#0464D5] transition-colors flex-1"
           title={title}
         >
           {title}
         </p>
 
-        {/* Price Block at the bottom */}
-        <div className="mt-auto">
-          {isLoggedIn ? (
-            <>
-              {!!originalPrice && originalPrice > finalPrice && (
-                <span className="block text-[11px] text-gray-400 line-through leading-none mb-0.5">
-                  R$ {originalPrice.toFixed(2).replace(".", ",")}
-                </span>
-              )}
-              <div className="flex items-baseline gap-1">
-                <span className="text-[#0464D5] text-xl font-extrabold tracking-tight leading-none">
-                  R$ {finalPrice.toFixed(2).replace(".", ",")}
-                </span>
-                <span className="text-gray-400 text-[11px] font-medium">/{unit}</span>
-              </div>
-              {discountPercentage > 0 && (
-                <span className="block text-[10px] text-green-600 font-semibold mt-0.5">
-                  Economize R$ {(originalPrice! - finalPrice).toFixed(2).replace(".", ",")}
-                </span>
-              )}
-            </>
-          ) : (
-            <div className="flex items-center gap-1.5 text-[#0464D5] bg-blue-50 px-2.5 py-1.5 rounded-lg border border-blue-100 w-fit">
-              <Lock size={11} />
-              <span className="text-[11px] font-bold">Ver preço de atacado</span>
-            </div>
-          )}
-        </div>
+        {/* CTA para não logados */}
+        {!user && (
+          <div className="mt-2 flex items-center gap-1 text-[#0464D5] text-[10px] font-bold">
+            <LogIn className="w-3 h-3 shrink-0" />
+            Entre para comprar
+          </div>
+        )}
       </Link>
     </div>
   );
