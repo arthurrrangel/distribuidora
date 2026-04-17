@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
-import { Minus, Plus, ShoppingCart, Lock } from "lucide-react";
+import { Minus, Plus, ShoppingCart, Lock, MessageCircle } from "lucide-react";
 
 interface ProductMainInfoProps {
   id: string; // ID da Variante
@@ -34,6 +34,12 @@ export function ProductMainInfo({
   const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+
+  const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "21995946491";
+  const waMessage = encodeURIComponent(
+    `Olá! Tenho interesse no produto: ${title}. Poderia me passar mais informações?`
+  );
+  const waLink = `https://wa.me/${WHATSAPP}?text=${waMessage}`;
 
   // Sempre aplicar desconto de CNPJ
   const finalPrice = price * 0.9;
@@ -147,6 +153,17 @@ export function ProductMainInfo({
           </p>
         </div>
       )}
+
+      {/* WhatsApp CTA — sempre visível */}
+      <a
+        href={waLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-3 flex items-center justify-center gap-2 w-full py-3 rounded-lg border-2 border-[#25D366] text-[#25D366] font-bold text-sm hover:bg-[#25D366] hover:text-white transition-all duration-200"
+      >
+        <MessageCircle className="w-4 h-4" />
+        Tirar dúvida pelo WhatsApp
+      </a>
     </div>
   );
 }

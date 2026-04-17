@@ -19,6 +19,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import api from "@/services/api";
 import { SearchModal } from "@/components/SearchModal";
+import { TopBar } from "@/components/TopBar";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Collection {
@@ -131,6 +132,7 @@ export function Header() {
     <div className="w-full">
       {/* ── Fixed header wrapper ──────────────────────────────────────── */}
       <header className="fixed top-0 left-0 right-0 z-50 w-full">
+        <TopBar />
 
 
         {/* ── Header principal: fundo azul Repon ─────────────────────── */}
@@ -460,8 +462,8 @@ export function Header() {
         </nav>
       </header>
 
-      {/* Espaço para compensar header fixo */}
-      <div className="h-[104px] md:h-[112px]" />
+      {/* Espaço para compensar header fixo (TopBar 28px + header 68px + nav 40px = 136px desktop / mobile sem TopBar) */}
+      <div className="h-[104px] md:h-[140px]" />
 
       {/* ── Mobile Drawer ─────────────────────────────────────────────── */}
       {isMobileMenuOpen && (

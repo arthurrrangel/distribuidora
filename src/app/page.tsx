@@ -42,6 +42,26 @@ export default async function Home() {
       <div className="flex-1 flex flex-col">
         <Hero />
 
+        {/* Banner de vantagens B2B */}
+        <div className="bg-gradient-to-r from-[#03419A] to-[#0464D5] py-5 mt-2">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-white">
+              {[
+                { emoji: "🚚", title: "Frete Grátis", sub: "pra todo CNPJ" },
+                { emoji: "⚡", title: "Entrega 24h", sub: "nas principais cidades do RJ" },
+                { emoji: "🧾", title: "Nota Fiscal", sub: "em 100% dos pedidos" },
+                { emoji: "💬", title: "WhatsApp", sub: "seg. a sáb. das 9h às 18h" },
+              ].map(({ emoji, title, sub }) => (
+                <div key={title} className="flex flex-col items-center gap-1">
+                  <span className="text-2xl">{emoji}</span>
+                  <p className="font-extrabold text-sm leading-tight">{title}</p>
+                  <p className="text-blue-200 text-[11px] leading-tight">{sub}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
         <div className="container mx-auto px-4">
           <ProductCarousel
             products={ofertasProducts}
