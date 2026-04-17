@@ -143,6 +143,11 @@ export function ProductCard({
                 </span>
                 <span className="text-gray-400 text-[11px] font-medium">/{unit}</span>
               </div>
+              {discountPercentage > 0 && (
+                <span className="block text-[10px] text-green-600 font-semibold mt-0.5">
+                  Economize R$ {(originalPrice! - finalPrice).toFixed(2).replace(".", ",")}
+                </span>
+              )}
             </>
           ) : (
             <div className="flex items-center gap-1.5 text-[#0464D5] bg-blue-50 px-2.5 py-1.5 rounded-lg border border-blue-100 w-fit">

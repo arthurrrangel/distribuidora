@@ -13,6 +13,7 @@ import { PackageX, Package } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import api from "@/services/api";
+import type { Metadata } from "next";
 
 // ---- TIPOS ----
 interface ShopifyCollectionNode {
@@ -54,6 +55,64 @@ const FALLBACK_IMAGES: Record<string, string> = {
 };
 
 export const dynamic = "force-dynamic";
+
+// ── SEO dinâmico por departamento ─────────────────────────────────────────
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+
+  const formatTitle = (s: string) =>
+    s.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+
+  try {
+    const infoQuery = `
+      query getMeta($handle: String!) {
+        collectionByHandle(handle: $handle) {
+          title
+          description
+          image { url }
+        }
+      }
+    `;
+    const res = await api.post<{
+      data: {
+        collectionByHandle: {
+          title: string;
+          description: string;
+          image: { url: string } | null;
+        } | null;
+      };
+    }>("", { query: infoQuery, variables: { handle: slug } });
+
+    const col = res.data.data.collectionByHandle;
+    const title = col?.title ?? formatTitle(slug);
+    const description =
+      col?.description ||
+      `Compre ${title} no atacado na Repon. Preço B2B exclusivo para CNPJ, frete grátis e entrega em 24h no Rio de Janeiro.`;
+    const image = col?.image?.url;
+
+    return {
+      title: `${title} no Atacado | Repon`,
+      description,
+      openGraph: {
+        title: `${title} no Atacado | Repon`,
+        description,
+        images: image ? [{ url: image, width: 1200, height: 630, alt: title }] : [],
+        type: "website",
+        locale: "pt_BR",
+        siteName: "Repon",
+      },
+    };
+  } catch {
+    return {
+      title: `${formatTitle(slug)} | Repon`,
+      description: "Papelaria e escritório no atacado para CNPJ. Repon.",
+    };
+  }
+}
 
 export default async function DepartmentPage({
   params,

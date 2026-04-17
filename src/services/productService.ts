@@ -434,7 +434,37 @@ export async function searchProducts(
   }
 }
 
-// 7. Buscar todas as marcas (vendors) dos produtos
+// 7. Buscar produtos recomendados (para Você Também Pode Gostar)
+interface GetRecommendationsResponse {
+  productRecommendations: Product[];
+}
+
+export async function getProductRecommendations(
+  productId: string,
+): Promise<Product[]> {
+  const query = `
+    query GetRecommendations($productId: ID!) {
+      productRecommendations(productId: $productId) {
+        ${PRODUCT_FRAGMENT}
+      }
+    }
+  `;
+
+  try {
+    const response = await api.post<
+      ShopifyGraphQLResponse<GetRecommendationsResponse>
+    >("", {
+      query,
+      variables: { productId },
+    });
+    return response.data.data.productRecommendations ?? [];
+  } catch (error) {
+    console.error(`Erro ao buscar recomendações para ${productId}:`, error);
+    return [];
+  }
+}
+
+// 8. Buscar todas as marcas (vendors) dos produtos
 export async function getProductVendors(): Promise<string[]> {
   const query = `
     query GetProductVendors {

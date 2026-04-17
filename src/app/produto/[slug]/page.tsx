@@ -4,11 +4,61 @@ import { MobileNavigator } from "@/components/MobileNavigator";
 import { getProductByHandle } from "@/services/productService";
 import { ProductMainInfo } from "@/components/ProductMainInfo";
 import { ProductImageGallery } from "@/components/ProductImageGallery";
+import { RelatedProducts } from "@/components/RelatedProducts";
 import { ChevronRight, Truck, ShieldCheck, PackageX, Tag } from "lucide-react";
 import Link from "next/link";
+import type { Metadata } from "next";
 
 // Garante que a página sempre busque dados novos se necessário
 export const dynamic = "force-dynamic";
+
+// ── SEO dinâmico por produto ───────────────────────────────────────────────
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await getProductByHandle(slug);
+
+  if (!product) {
+    return {
+      title: "Produto não encontrado | Repon",
+      description: "Este produto não está disponível no momento.",
+    };
+  }
+
+  const price = product.variants.edges[0]?.node
+    ? (parseFloat(product.variants.edges[0].node.price.amount) * 0.9).toFixed(2)
+    : null;
+
+  const description = product.description
+    ? `${product.description.slice(0, 140)}...`
+    : `Compre ${product.title} no atacado na Repon. Preço B2B exclusivo para CNPJ, frete grátis e entrega em 24h no Rio de Janeiro.`;
+
+  const image = product.images.edges[0]?.node.url;
+
+  return {
+    title: `${product.title} | Repon Atacado`,
+    description,
+    openGraph: {
+      title: `${product.title} | Repon Atacado`,
+      description: price
+        ? `${description} A partir de R$ ${price.replace(".", ",")}`
+        : description,
+      images: image ? [{ url: image, width: 800, height: 800, alt: product.title }] : [],
+      type: "website",
+      locale: "pt_BR",
+      siteName: "Repon",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${product.title} | Repon Atacado`,
+      description,
+      images: image ? [image] : [],
+    },
+  };
+}
 
 export default async function ProductPage({
   params,
@@ -54,8 +104,36 @@ export default async function ProductPage({
     altText: e.node.altText,
   }));
 
+  // ── JSON-LD structured data ───────────────────────────────────────────────
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description: product.description,
+    image: images.map((i) => i.url),
+    brand: {
+      "@type": "Brand",
+      name: product.vendor || "Repon",
+    },
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "BRL",
+      price: (price * 0.9).toFixed(2),
+      availability: "https://schema.org/InStock",
+      seller: {
+        "@type": "Organization",
+        name: "Repon Plataforma de Comércio Ltda",
+      },
+      url: `https://repon.com.br/produto/${product.handle}`,
+    },
+  };
+
   return (
     <main className="min-h-screen bg-white flex flex-col pb-16 md:pb-0">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header />
 
       {/* Breadcrumb */}
@@ -140,6 +218,11 @@ export default async function ProductPage({
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Produtos Relacionados */}
+      <div className="container mx-auto px-4 md:px-8 pb-8">
+        <RelatedProducts productId={product.id} currentHandle={product.handle} />
       </div>
 
       <div className="mt-auto">
