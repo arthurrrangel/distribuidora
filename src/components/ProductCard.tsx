@@ -52,34 +52,34 @@ export function ProductCard({
   };
 
   return (
-    <div className="group relative w-full rounded-2xl bg-white shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-200 overflow-hidden flex flex-col">
+    <div className="group relative w-full rounded-2xl bg-white border border-gray-100 hover:border-[#0464D5]/30 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 overflow-hidden flex flex-col">
       {/* Discount Badge */}
       {discountPercentage > 0 && isLoggedIn && (
-        <span className="absolute top-2.5 left-2.5 z-10 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow">
-          -{discountPercentage}% OFF
+        <span className="absolute top-2.5 left-2.5 z-10 bg-[#0464D5] text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm tracking-wide">
+          -{discountPercentage}%
         </span>
       )}
 
       {/* Image Area */}
       <Link href={`/produto/${handle}`} className="block">
-        <div className="relative w-full h-44 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
+        <div className="relative w-full h-48 bg-gray-50 flex items-center justify-center overflow-hidden">
           {image ? (
             <Image
               src={image}
               alt={title}
               fill
-              className="object-contain p-4"
-              sizes="200px"
+              className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
+              sizes="(max-width: 640px) 50vw, 200px"
             />
           ) : (
-            <div className="flex flex-col items-center justify-center gap-2 text-blue-300">
-              <Package className="w-12 h-12" />
+            <div className="flex flex-col items-center justify-center gap-2 text-gray-300">
+              <Package className="w-10 h-10" />
             </div>
           )}
 
           {/* Cover Info Badge */}
           {coverInfo && (
-            <span className="absolute bottom-2 left-2 z-10 bg-white text-gray-800 text-[11px] font-semibold px-2 py-0.5 rounded shadow-sm">
+            <span className="absolute bottom-2 left-2 z-10 bg-white/90 backdrop-blur-sm text-gray-700 text-[10px] font-semibold px-2 py-0.5 rounded-md shadow-sm">
               {coverInfo}
             </span>
           )}
@@ -92,27 +92,23 @@ export function ProductCard({
               className={`
                 absolute bottom-2 right-2 z-20
                 group/btn h-8 rounded-full border-none cursor-pointer
-                flex items-center justify-center
-                overflow-hidden
-                shadow-md transition-all duration-300 active:scale-95
-                ${
-                  added
-                    ? "bg-green-500 text-white w-[100px] px-3"
-                    : "bg-blue-600 hover:bg-blue-700 text-white w-8 hover:w-[105px] hover:px-3"
+                flex items-center justify-center gap-1.5
+                overflow-hidden shadow-md transition-all duration-300 active:scale-95
+                ${added
+                  ? "bg-[#0464D5] text-white w-[108px] px-3"
+                  : "bg-[#0464D5] hover:bg-[#0353b4] text-white w-8 hover:w-[108px] hover:px-3"
                 }
               `}
             >
               {added ? (
                 <>
-                  <Check className="w-4 h-4 shrink-0" />
-                  <span className="text-xs font-semibold whitespace-nowrap">
-                    Adicionado!
-                  </span>
+                  <Check className="w-3.5 h-3.5 shrink-0" />
+                  <span className="text-xs font-semibold whitespace-nowrap">Adicionado!</span>
                 </>
               ) : (
                 <>
-                  <Plus className="w-4 h-4 shrink-0" />
-                  <span className="text-xs font-semibold whitespace-nowrap opacity-0 group-hover/btn:opacity-100 transition-opacity duration-200 max-w-0 group-hover/btn:max-w-[80px] overflow-hidden group-hover/btn:ml-1.5">
+                  <Plus className="w-3.5 h-3.5 shrink-0" />
+                  <span className="text-xs font-semibold whitespace-nowrap opacity-0 group-hover/btn:opacity-100 transition-opacity duration-200 max-w-0 group-hover/btn:max-w-[80px] overflow-hidden">
                     Adicionar
                   </span>
                 </>
@@ -123,43 +119,38 @@ export function ProductCard({
       </Link>
 
       {/* Content Area */}
-      <Link
-        href={`/produto/${handle}`}
-        className="flex flex-col px-3 pb-3 pt-2.5 bg-gray-50 flex-1"
-      >
-        {/* Price Block */}
-        <div className="mb-1.5 min-h-[42px] flex flex-col justify-center">
-          {isLoggedIn ? (
-            <>
-              {!!originalPrice && originalPrice > finalPrice && (
-                <span className="block text-[10px] text-gray-400 line-through leading-none mb-0.5">
-                  R$ {originalPrice.toFixed(2).replace(".", ",")}
-                </span>
-              )}
-              <div className="flex items-baseline gap-1">
-                <span className="text-gray-900 text-lg font-extrabold tracking-tight">
-                  R$ {finalPrice.toFixed(2).replace(".", ",")}
-                </span>
-                <span className="text-gray-400 text-[10px]">/{unit}</span>
-              </div>
-            </>
-          ) : (
-            <div className="flex items-center gap-1.5 text-orange-600 bg-orange-50 px-2 py-1.5 rounded-lg border border-orange-100 w-fit">
-              <Lock size={11} />
-              <span className="text-[10px] font-bold">
-                Entre para ver o preço
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* Title */}
+      <Link href={`/produto/${handle}`} className="flex flex-col px-3.5 pb-3.5 pt-3 bg-white flex-1">
+        {/* Title first — draws the eye */}
         <p
-          className="text-gray-700 text-xs font-medium leading-snug line-clamp-2 mt-auto group-hover:text-blue-600 transition-colors"
+          className="text-gray-800 text-[13px] font-semibold leading-snug line-clamp-2 mb-2.5 group-hover:text-[#0464D5] transition-colors"
           title={title}
         >
           {title}
         </p>
+
+        {/* Price Block at the bottom */}
+        <div className="mt-auto">
+          {isLoggedIn ? (
+            <>
+              {!!originalPrice && originalPrice > finalPrice && (
+                <span className="block text-[11px] text-gray-400 line-through leading-none mb-0.5">
+                  R$ {originalPrice.toFixed(2).replace(".", ",")}
+                </span>
+              )}
+              <div className="flex items-baseline gap-1">
+                <span className="text-[#0464D5] text-xl font-extrabold tracking-tight leading-none">
+                  R$ {finalPrice.toFixed(2).replace(".", ",")}
+                </span>
+                <span className="text-gray-400 text-[11px] font-medium">/{unit}</span>
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center gap-1.5 text-[#0464D5] bg-blue-50 px-2.5 py-1.5 rounded-lg border border-blue-100 w-fit">
+              <Lock size={11} />
+              <span className="text-[11px] font-bold">Ver preço de atacado</span>
+            </div>
+          )}
+        </div>
       </Link>
     </div>
   );

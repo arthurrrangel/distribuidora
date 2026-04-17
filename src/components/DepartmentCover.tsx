@@ -35,7 +35,7 @@ export function DepartmentCover({
             <ChevronRight className="w-4 h-4 opacity-40" />
 
             <div className="inline-flex w-fit">
-              <span className="text-[#2563EB] text-lg md:text-1xl tracking-tight font-bold rounded-2xl px-5 py-2 bg-white shadow-[0_4px_18px_-2px_rgba(37,99,235,0.25)]">
+              <span className="text-[#0464D5] text-lg md:text-1xl tracking-tight font-bold rounded-2xl px-5 py-2 bg-white shadow-[0_4px_18px_-2px_rgba(37,99,235,0.25)]">
                 {title}
               </span>
             </div>
@@ -49,7 +49,7 @@ export function DepartmentCover({
         </div>
 
         {/* Direita: imagem */}
-        <div className="flex-shrink-0 w-28 h-28 md:w-44 md:h-44 relative rounded-2xl overflow-hidden border-4 border-[#2563EB] shadow-[0_4px_24px_-4px_rgba(0,0,0,0.15)] bg-gray-50">
+        <div className="flex-shrink-0 w-28 h-28 md:w-44 md:h-44 relative rounded-2xl overflow-hidden border-4 border-[#0464D5] shadow-[0_4px_24px_-4px_rgba(0,0,0,0.15)] bg-gray-50">
           <Image
             src={imageUrl}
             alt={title}

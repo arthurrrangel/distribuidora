@@ -11,6 +11,7 @@ const PRODUCT_FRAGMENT = `
   id
   title
   handle
+  vendor
   description
   descriptionHtml
   availableForSale

@@ -108,7 +108,7 @@ export function AddressList({ customer, onUpdate, onToast }: AddressListProps) {
           <h3 className="text-base font-semibold text-gray-900">Endereços</h3>
           <button
             onClick={() => setShowForm(true)}
-            className="flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+            className="flex items-center gap-1.5 text-sm font-medium text-[#0464D5] hover:text-gray-900 transition-colors"
           >
             <Plus className="w-4 h-4" />
             Novo endereço
@@ -121,7 +121,7 @@ export function AddressList({ customer, onUpdate, onToast }: AddressListProps) {
             <p className="text-gray-500 text-sm">Nenhum endereço cadastrado.</p>
             <button
               onClick={() => setShowForm(true)}
-              className="mt-3 text-sm text-blue-600 hover:underline font-medium"
+              className="mt-3 text-sm text-[#0464D5] hover:underline font-medium"
             >
               Adicionar endereço
             </button>
@@ -189,12 +189,12 @@ function AddressCard({
   return (
     <div
       className={`relative rounded-xl border p-4 transition-all ${
-        isDefault ? "border-blue-300 bg-blue-50/50" : "border-gray-200 bg-white"
+        isDefault ? "border-[#0464D5]/30 bg-blue-50/50" : "border-gray-200 bg-white"
       }`}
     >
       {isDefault && (
-        <span className="absolute top-3 right-3 flex items-center gap-1 text-xs font-medium text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
-          <Star className="w-3 h-3 fill-blue-500 text-blue-500" />
+        <span className="absolute top-3 right-3 flex items-center gap-1 text-xs font-medium text-[#0464D5] bg-blue-50 px-2 py-0.5 rounded-full">
+          <Star className="w-3 h-3 fill-[#0464D5] text-[#0464D5]" />
           Padrão
         </span>
       )}
@@ -217,7 +217,7 @@ function AddressCard({
           <button
             onClick={onSetDefault}
             disabled={isSettingDefault}
-            className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600 transition-colors disabled:opacity-50"
+            className="flex items-center gap-1 text-xs text-gray-500 hover:text-[#0464D5] transition-colors disabled:opacity-50"
           >
             {isSettingDefault ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -230,7 +230,7 @@ function AddressCard({
         <div className="flex items-center gap-2 ml-auto">
           <button
             onClick={onEdit}
-            className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600 transition-colors"
+            className="flex items-center gap-1 text-xs text-gray-500 hover:text-[#0464D5] transition-colors"
           >
             <Pencil className="w-3.5 h-3.5" />
             Editar

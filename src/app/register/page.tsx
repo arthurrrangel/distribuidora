@@ -100,7 +100,7 @@ const InputField = ({
         maxLength={maxLength}
         className={`w-full ${Icon ? "pl-10" : "px-4"} pr-4 py-3 rounded-md border ${
           error ? "border-red-300 bg-red-50" : "border-gray-200"
-        } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 disabled:bg-gray-100 disabled:cursor-not-allowed`}
+        } focus:outline-none focus:ring-2 focus:ring-[#0464D5] focus:border-transparent text-gray-900 disabled:bg-gray-100 disabled:cursor-not-allowed`}
         placeholder={placeholder}
       />
     </div>
@@ -397,7 +397,7 @@ export default function RegisterPage() {
 
       <div className="container mx-auto px-4 py-12 flex flex-col items-center justify-center flex-1">
         <div className="w-full max-w-2xl bg-white p-8 rounded-xl shadow-sm border border-gray-100">
-          <h1 className="text-2xl font-bold text-[#1e3a8a] mb-2 text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2 text-center">
             Cadastre sua Empresa
           </h1>
           <p className="text-gray-500 text-sm mb-8 text-center">
@@ -424,7 +424,7 @@ export default function RegisterPage() {
           <form onSubmit={handleRegister} className="space-y-8">
             <section>
               <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-blue-600" />
+                <Building2 className="w-5 h-5 text-[#0464D5]" />
                 Dados da Empresa
               </h2>
               <div className="space-y-4">
@@ -479,7 +479,7 @@ export default function RegisterPage() {
                           name="ieIsento"
                           checked={formData.ieIsento}
                           onChange={handleChange}
-                          className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                          className="w-4 h-4 rounded border-gray-300 text-[#0464D5] focus:ring-[#0464D5]"
                         />
                         Isento de Inscrição Estadual
                       </label>
@@ -491,7 +491,7 @@ export default function RegisterPage() {
 
             <section>
               <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                <User className="w-5 h-5 text-blue-600" />
+                <User className="w-5 h-5 text-[#0464D5]" />
                 Dados do Responsável
               </h2>
               <div className="space-y-4">
@@ -544,7 +544,7 @@ export default function RegisterPage() {
 
             <section>
               <h2 className="mt-4 text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-blue-600" />
+                <MapPin className="w-5 h-5 text-[#0464D5]" />
                 Endereço de Entrega
               </h2>
               <div className="space-y-4">
@@ -561,7 +561,7 @@ export default function RegisterPage() {
                       maxLength={9}
                     />
                     {loadingCEP && (
-                      <p className="mt-1 text-xs text-blue-600">
+                      <p className="mt-1 text-xs text-[#0464D5]">
                         Buscando endereço...
                       </p>
                     )}
@@ -630,7 +630,7 @@ export default function RegisterPage() {
                         errors["endereco.uf"]
                           ? "border-red-300 bg-red-50"
                           : "border-gray-200"
-                      } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900`}
+                      } focus:outline-none focus:ring-2 focus:ring-[#0464D5] focus:border-transparent text-gray-900`}
                     >
                       <option value="">Selecione</option>
                       {estados.map((uf) => (
@@ -654,7 +654,7 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#2563EB] text-white py-4 rounded-md font-bold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed text-lg"
+                className="w-full bg-[#0464D5] text-white py-4 rounded-lg font-bold hover:bg-[#0353b4] transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed text-base"
               >
                 {loading ? "Criando conta..." : "Criar Conta"}
                 {!loading && <ArrowRight className="w-5 h-5" />}
@@ -666,7 +666,7 @@ export default function RegisterPage() {
             <p className="text-sm text-gray-600 mb-4">Já tem uma conta?</p>
             <Link
               href="/login"
-              className="inline-block w-full bg-white border border-[#2563EB] text-[#2563EB] py-3 rounded-md font-bold hover:bg-blue-50 transition-colors"
+              className="inline-block w-full bg-white border border-[#0464D5] text-[#0464D5] py-3 rounded-md font-bold hover:bg-blue-50 transition-colors"
             >
               Fazer Login
             </Link>

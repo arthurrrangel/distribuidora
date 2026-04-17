@@ -37,7 +37,7 @@ export function ProductCarousel({
         <div className="flex items-center gap-3">
           <a
             href={`/departamento/${collection}`}
-            className="text-[#2563EB] font-semibold text-sm hover:underline"
+            className="text-[#0464D5] font-semibold text-sm hover:underline"
           >
             Ver todos
           </a>

@@ -171,7 +171,7 @@ export function AccountForm({ customer, onUpdate, onToast }: AccountFormProps) {
                 onChange={handlePhoneChange}
                 placeholder="(81) 99235-1167"
                 maxLength={15}
-                className="w-full border border-gray-200 rounded-xl pl-10 pr-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition placeholder-gray-400"
+                className="w-full border border-gray-200 rounded-xl pl-10 pr-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0464D5] focus:border-transparent transition placeholder-gray-400"
               />
             </div>
             <p className="text-xs text-gray-400">
@@ -183,7 +183,7 @@ export function AccountForm({ customer, onUpdate, onToast }: AccountFormProps) {
             <button
               type="submit"
               disabled={saving}
-              className="flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-medium rounded-xl transition-colors"
+              className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[#0464D5] hover:bg-[#0353b4] disabled:opacity-60 text-white text-sm font-medium rounded-xl transition-colors"
             >
               {saving ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -251,7 +251,7 @@ function InputField({
         onChange={onChange}
         required={required}
         placeholder={placeholder}
-        className="border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition placeholder-gray-400"
+        className="border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0464D5] focus:border-transparent transition placeholder-gray-400"
       />
     </div>
   );

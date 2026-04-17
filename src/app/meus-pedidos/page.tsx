@@ -303,7 +303,7 @@ export default function MeusPedidosPage() {
       },
       REFUNDED: {
         label: "Reembolsado",
-        color: "text-blue-600 bg-blue-50",
+        color: "text-[#0464D5] bg-blue-50",
         icon: CreditCard,
       },
       VOIDED: {
@@ -318,7 +318,7 @@ export default function MeusPedidosPage() {
       },
       AUTHORIZED: {
         label: "Autorizado",
-        color: "text-blue-600 bg-blue-50",
+        color: "text-[#0464D5] bg-blue-50",
         icon: CreditCard,
       },
     };
@@ -348,7 +348,7 @@ export default function MeusPedidosPage() {
       },
       PARTIALLY_FULFILLED: {
         label: "Parcialmente Enviado",
-        color: "text-blue-600 bg-blue-50",
+        color: "text-[#0464D5] bg-blue-50",
         icon: Truck,
       },
       IN_PROGRESS: {
@@ -399,7 +399,7 @@ export default function MeusPedidosPage() {
         <div className="mb-6 text-center">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#2563EB] transition-colors"
+            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#0464D5] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Voltar para a loja
@@ -408,7 +408,7 @@ export default function MeusPedidosPage() {
 
         {/* Título */}
         <div className="mx-auto mb-8 text-center">
-          <h1 className="text-2xl md:text-3xl font-bold text-[#1e3a8a] flex items-center justify-center gap-3">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 flex items-center justify-center gap-3">
             <Package className="w-7 h-7 md:w-8 md:h-8" />
             Meus Pedidos
           </h1>
@@ -425,7 +425,7 @@ export default function MeusPedidosPage() {
               onClick={() => setStatusFilter("all")}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 border ${
                 statusFilter === "all"
-                  ? "bg-[#2563EB] text-white border-[#2563EB] shadow-md"
+                  ? "bg-[#0464D5] text-white border-[#0464D5] shadow-md"
                   : "bg-white/70 backdrop-blur-md text-gray-600 border-gray-200 hover:bg-white hover:shadow-md"
               }`}
             >
@@ -435,7 +435,7 @@ export default function MeusPedidosPage() {
               onClick={() => setStatusFilter("pending")}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 border ${
                 statusFilter === "pending"
-                  ? "bg-[#2563EB] text-white border-[#2563EB] shadow-md"
+                  ? "bg-[#0464D5] text-white border-[#0464D5] shadow-md"
                   : "bg-white/70 backdrop-blur-md text-gray-600 border-gray-200 hover:bg-white hover:shadow-md"
               }`}
             >
@@ -445,7 +445,7 @@ export default function MeusPedidosPage() {
               onClick={() => setStatusFilter("paid")}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 border ${
                 statusFilter === "paid"
-                  ? "bg-[#2563EB] text-white border-[#2563EB] shadow-md"
+                  ? "bg-[#0464D5] text-white border-[#0464D5] shadow-md"
                   : "bg-white/70 backdrop-blur-md text-gray-600 border-gray-200 hover:bg-white hover:shadow-md"
               }`}
             >
@@ -461,7 +461,7 @@ export default function MeusPedidosPage() {
               className={`p-2 rounded-xl transition-all duration-300 border ${
                 currentPage === 1
                   ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed opacity-50"
-                  : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:text-blue-600 shadow-sm"
+                  : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:text-[#0464D5] shadow-sm"
               }`}
             >
               <ChevronLeft className="w-5 h-5" />
@@ -477,7 +477,7 @@ export default function MeusPedidosPage() {
               className={`p-2 rounded-xl transition-all duration-300 border ${
                 !pageInfo?.hasNextPage
                   ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed opacity-50"
-                  : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:text-blue-600 shadow-sm"
+                  : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:text-[#0464D5] shadow-sm"
               }`}
             >
               <ChevronRight className="w-5 h-5" />
@@ -488,7 +488,7 @@ export default function MeusPedidosPage() {
         {/* Draft Orders - Pedidos em Aberto */}
         {statusFilter !== "paid" && draftOrders.length > 0 && (
           <div className="mb-8">
-            <h2 className="text-lg font-bold text-[#1e3a8a] mb-4 flex items-center gap-2">
+            <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
               <ClipboardList className="w-5 h-5" />
               Pedidos Aguardando Pagamento ({draftOrders.length})
             </h2>
@@ -497,7 +497,7 @@ export default function MeusPedidosPage() {
                 <Link
                   key={draft.id}
                   href={`/meus-pedidos/draft-${draft.id.split("/").pop()}`}
-                  className="block bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgb(37,99,235,0.12)] hover:border-blue-400 hover:-translate-y-2 relative cursor-pointer"
+                  className="block bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgb(37,99,235,0.12)] hover:border-[#0464D5]/40 hover:-translate-y-2 relative cursor-pointer"
                 >
                   {/* Header do Draft */}
                   <div className="bg-gradient-to-r from-gray-50 to-white px-4 md:px-6 py-4 border-b border-gray-100">
@@ -505,12 +505,12 @@ export default function MeusPedidosPage() {
                       <div className="flex items-center gap-3">
                         <div className="bg-white p-2 rounded-xl border border-gray-100 flex items-center justify-center shadow-sm">
                           <ClipboardList
-                            className="w-5 h-5 text-blue-600"
+                            className="w-5 h-5 text-[#0464D5]"
                             strokeWidth={2.5}
                           />
                         </div>
                         <div>
-                          <h3 className="font-bold text-[#1e3a8a]">
+                          <h3 className="font-bold text-gray-900">
                             {draft.name}
                           </h3>
                           <p className="text-xs text-gray-500 flex items-center gap-1">
@@ -529,7 +529,7 @@ export default function MeusPedidosPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium bg-blue-100/80 text-blue-700 border border-blue-200/50">
+                        <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium bg-blue-50 text-[#0464D5] border border-[#0464D5]/20">
                           <Clock className="w-3.5 h-3.5" />
                           Aguardando Pagamento
                         </span>
@@ -543,7 +543,7 @@ export default function MeusPedidosPage() {
                       {draft.lineItems.map((item, idx) => (
                         <div
                           key={idx}
-                          className="flex items-center gap-3 bg-white shadow-sm border border-blue-100 rounded-xl p-2 pr-4 w-full"
+                          className="flex items-center gap-3 bg-white shadow-sm border border-[#0464D5]/10 rounded-xl p-2 pr-4 w-full"
                         >
                           <div className="w-12 h-12 bg-white rounded-lg overflow-hidden flex-shrink-0 shadow-sm">
                             {item.image ? (
@@ -577,7 +577,7 @@ export default function MeusPedidosPage() {
                       <span className="text-sm text-gray-500">
                         Total do pedido
                       </span>
-                      <span className="text-lg font-bold text-[#1e3a8a]">
+                      <span className="text-lg font-bold text-gray-900">
                         {new Intl.NumberFormat("pt-BR", {
                           style: "currency",
                           currency: "BRL",
@@ -668,7 +668,7 @@ export default function MeusPedidosPage() {
               </p>
               <Link
                 href="/"
-                className="bg-[#2563EB] text-white rounded-md font-medium hover:bg-blue-700 transition-colors px-6 py-3 inline-block"
+                className="bg-[#0464D5] text-white rounded-md font-medium hover:bg-[#0353b4] transition-colors px-6 py-3 inline-block"
               >
                 <span className="flex items-center gap-2">
                   <ShoppingBag className="w-5 h-5" />
@@ -715,7 +715,7 @@ export default function MeusPedidosPage() {
                     <Link
                       key={order.id}
                       href={`/meus-pedidos/order-${order.id.split("/").pop()}`}
-                      className="block bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgb(37,99,235,0.12)] hover:border-blue-400 hover:-translate-y-2 relative cursor-pointer"
+                      className="block bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgb(37,99,235,0.12)] hover:border-[#0464D5]/40 hover:-translate-y-2 relative cursor-pointer"
                     >
                       {/* Header do Pedido */}
                       <div className="bg-gradient-to-r from-gray-50 to-white px-4 md:px-6 py-4 border-b border-gray-100">
@@ -723,12 +723,12 @@ export default function MeusPedidosPage() {
                           <div className="flex items-center gap-3">
                             <div className="bg-white p-2 rounded-xl border border-gray-100 flex items-center justify-center shadow-sm">
                               <ClipboardList
-                                className="w-5 h-5 text-blue-600"
+                                className="w-5 h-5 text-[#0464D5]"
                                 strokeWidth={2.5}
                               />
                             </div>
                             <div>
-                              <h3 className="font-bold text-[#1e3a8a]">
+                              <h3 className="font-bold text-gray-900">
                                 Pedido #{order.orderNumber}
                               </h3>
                               <p className="text-xs text-gray-500 flex items-center gap-1">
@@ -760,7 +760,7 @@ export default function MeusPedidosPage() {
                           {order.lineItems.edges.map((item, idx) => (
                             <div
                               key={idx}
-                              className="flex items-center gap-3 bg-white shadow-sm border border-blue-100 rounded-xl p-2 pr-4 w-full"
+                              className="flex items-center gap-3 bg-white shadow-sm border border-[#0464D5]/10 rounded-xl p-2 pr-4 w-full"
                             >
                               <div className="w-12 h-12 bg-white rounded-lg overflow-hidden flex-shrink-0 shadow-sm">
                                 {item.node.variant?.image?.url ? (
@@ -797,7 +797,7 @@ export default function MeusPedidosPage() {
                           <span className="text-sm text-gray-500">
                             Total do pedido
                           </span>
-                          <span className="text-lg font-bold text-[#1e3a8a]">
+                          <span className="text-lg font-bold text-gray-900">
                             {formatPrice(
                               order.totalPrice.amount,
                               order.totalPrice.currencyCode,

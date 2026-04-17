@@ -29,7 +29,7 @@ export function DepartmentsModal({ isOpen, onClose }: DepartmentsModalProps) {
             {/* Modal Content */}
             <div className="bg-white rounded-t-2xl w-full max-h-[85vh] overflow-y-auto relative z-10 animate-slide-up pb-safe">
                 <div className="flex items-center justify-between p-4 border-b border-gray-100 sticky top-0 bg-white">
-                    <h2 className="font-bold text-lg text-[#1e3a8a]">Departamentos</h2>
+                    <h2 className="font-bold text-lg text-gray-900">Departamentos</h2>
                     <button onClick={onClose} className="p-2 bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200">
                         <X className="w-5 h-5" />
                     </button>
@@ -43,7 +43,7 @@ export function DepartmentsModal({ isOpen, onClose }: DepartmentsModalProps) {
                             className="flex items-center gap-4 p-4 border-b border-gray-50 last:border-0 hover:bg-gray-50 active:bg-blue-50 transition-colors rounded-lg"
                             onClick={onClose}
                         >
-                            <div className="p-2 bg-blue-50 text-[#2563EB] rounded-lg">
+                            <div className="p-2 bg-blue-50 text-[#0464D5] rounded-lg">
                                 <dept.icon className="w-6 h-6" />
                             </div>
                             <span className="font-medium text-gray-700 flex-1">{dept.name}</span>

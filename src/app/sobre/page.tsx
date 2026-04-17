@@ -3,9 +3,9 @@ import { Footer } from "@/components/Footer";
 import { MobileNavigator } from "@/components/MobileNavigator";
 
 export const metadata = {
-  title: "Sobre nós | Distribuidora Repon ",
+  title: "Sobre a Repon | Quem somos",
   description:
-    "Conheça a Repon Distribuidora, referência em papelaria e material de escritório no Rio de Janeiro.",
+    "Distribuidora de papelaria e material de escritório com sede no Rio de Janeiro.",
 };
 
 export default function SobrePage() {
@@ -14,34 +14,35 @@ export default function SobrePage() {
       <Header />
       <main className="bg-white min-h-screen">
         <div className="container mx-auto px-4 py-12 max-w-3xl">
-          <h1 className="text-3xl font-bold text-blue-600 mb-6">Sobre nós</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-6">
+            Quem é a Repon
+          </h1>
 
           <p className="text-gray-700 leading-relaxed mb-4">
-            A distribuidora <strong>Repon </strong> é uma empresa especializada
-            na distribuição de produtos de papelaria e material de escritório,
-            com sede no <strong>Rio de Janeiro, RJ</strong>. Atuamos há anos no
-            mercado, fornecendo soluções completas para empresas, escolas,
-            escritórios e consumidores em geral.
+            A <strong>Repon</strong> nasceu no Rio de Janeiro pra resolver um
+            problema simples: quem tem papelaria, escola ou escritório não
+            deveria perder tempo comprando de vários fornecedores diferentes. A
+            gente junta tudo num lugar só — Filipaper, Filimail, Usapel, Spiral
+            e outras marcas que você já conhece — e entrega na sua porta.
           </p>
 
           <p className="text-gray-700 leading-relaxed mb-4">
-            Nossa missão é oferecer produtos de qualidade com agilidade na
-            entrega e preços competitivos. Trabalhamos com um amplo portfólio de
-            marcas líderes de mercado, garantindo que nossos clientes encontrem
-            tudo o que precisam em um único lugar.
+            Somos a <strong>Repon Plataforma de Comércio Ltda</strong> (CNPJ
+            54.563.438/0001-07), com sede no Rio de Janeiro.
+            Vendemos exclusivamente para empresas com CNPJ, com preço de
+            atacado e nota fiscal em todo pedido.
           </p>
 
           <p className="text-gray-700 leading-relaxed mb-4">
-            Com foco em atendimento personalizado e eficiência logística, a
-            Repon se destaca como parceira confiável para quem busca praticidade
-            e bom custo-benefício. Seja para uso pessoal ou corporativo, estamos
-            prontos para atender às suas necessidades.
+            O que diferencia a Repon? A gente não complica. Pediu até as 14h,
+            sai no mesmo dia. Frete grátis em pedidos acima de R$ 500. E se
+            tiver qualquer dúvida, é só mandar um zap que a gente responde
+            rápido.
           </p>
 
           <p className="text-gray-700 leading-relaxed">
-            Ficou com alguma dúvida ou deseja fazer um pedido? Entre em contato
-            com nosso time de atendimento pelo WhatsApp e teremos prazer em
-            ajudar.
+            Quer fazer um pedido ou tirar uma dúvida? Manda uma mensagem pelo
+            WhatsApp — a gente tá sempre por aqui.
           </p>
         </div>
       </main>

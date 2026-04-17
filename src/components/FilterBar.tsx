@@ -107,7 +107,7 @@ function SectionHeader({
   return (
     <button
       onClick={onToggle}
-      className="w-full flex items-center justify-between py-2.5 text-sm font-semibold text-gray-800 hover:text-[#2563EB] transition-colors"
+      className="w-full flex items-center justify-between py-2.5 text-sm font-semibold text-gray-800 hover:text-[#0464D5] transition-colors"
     >
       <span>{title}</span>
       {isOpen ? (
@@ -137,7 +137,7 @@ function RadioList({
             key={opt}
             className={`flex items-center gap-2.5 cursor-pointer text-sm px-2 py-1.5 rounded-md transition-colors select-none ${
               isActive
-                ? "bg-blue-50 text-[#2563EB] font-semibold"
+                ? "bg-blue-50 text-[#0464D5] font-semibold"
                 : "text-gray-600 hover:bg-gray-50"
             }`}
           >
@@ -149,7 +149,7 @@ function RadioList({
               onClick={() => {
                 if (isActive) onChange("");
               }}
-              className="w-3.5 h-3.5 accent-[#2563EB] shrink-0 cursor-pointer"
+              className="w-3.5 h-3.5 accent-[#0464D5] shrink-0 cursor-pointer"
             />
             <span className="truncate leading-tight">{opt}</span>
           </label>
@@ -321,13 +321,13 @@ export function FilterBar() {
       {/* Header */}
       <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-gray-100">
         <span className="text-sm font-bold text-gray-800 flex items-center gap-2">
-          <SlidersHorizontal className="w-4 h-4 text-[#2563EB]" />
+          <SlidersHorizontal className="w-4 h-4 text-[#0464D5]" />
           Filtros
         </span>
         {hasActiveFilters && (
           <button
             onClick={clearAllFilters}
-            className="text-xs text-[#2563EB] hover:underline font-medium"
+            className="text-xs text-[#0464D5] hover:underline font-medium"
           >
             Limpar tudo
           </button>
@@ -344,7 +344,7 @@ export function FilterBar() {
             <select
               value={currentSort}
               onChange={(e) => applyFilters({ sort: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB] bg-white text-gray-700 text-sm appearance-none cursor-pointer hover:border-gray-300 transition-colors"
+              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0464D5] focus:border-[#0464D5] bg-white text-gray-700 text-sm appearance-none cursor-pointer hover:border-gray-300 transition-colors"
             >
               {SORT_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>
@@ -362,7 +362,7 @@ export function FilterBar() {
             {activeFilters.map((f) => (
               <span
                 key={f.key}
-                className="inline-flex items-center gap-1 pl-2.5 pr-1.5 py-1 bg-[#2563EB] text-white rounded-full text-xs font-medium shadow-sm"
+                className="inline-flex items-center gap-1 pl-2.5 pr-1.5 py-1 bg-[#0464D5] text-white rounded-full text-xs font-medium shadow-sm"
               >
                 {f.label}
                 <button
@@ -458,7 +458,7 @@ export function FilterBar() {
         onClick={() => setMobileOpen((v) => !v)}
         className={`md:hidden w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-sm font-semibold mb-2 transition-colors ${
           mobileOpen || hasActiveFilters
-            ? "bg-[#2563EB] text-white"
+            ? "bg-[#0464D5] text-white"
             : "bg-white text-gray-700 border border-gray-200 shadow-sm"
         }`}
       >
@@ -467,7 +467,7 @@ export function FilterBar() {
           Filtros
           {hasActiveFilters && (
             <span
-              className={`text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center ${mobileOpen ? "bg-white text-[#2563EB]" : "bg-[#2563EB] text-white"}`}
+              className={`text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center ${mobileOpen ? "bg-white text-[#0464D5]" : "bg-[#0464D5] text-white"}`}
             >
               {activeFilters.length}
             </span>

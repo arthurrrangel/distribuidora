@@ -65,7 +65,7 @@ const STATUS_MAP: Record<
   },
   REFUNDED: {
     label: "Reembolsado",
-    color: "text-blue-700 bg-blue-50 border-blue-200",
+    color: "text-[#0464D5] bg-blue-50 border-[#0464D5]/20",
     icon: CreditCard,
   },
   VOIDED: {
@@ -80,7 +80,7 @@ const STATUS_MAP: Record<
   },
   AUTHORIZED: {
     label: "Autorizado",
-    color: "text-blue-700 bg-blue-50 border-blue-200",
+    color: "text-[#0464D5] bg-blue-50 border-[#0464D5]/20",
     icon: CreditCard,
   },
   COMPLETED: {
@@ -100,7 +100,7 @@ const STATUS_MAP: Record<
   },
   PARTIALLY_FULFILLED: {
     label: "Parcialmente Enviado",
-    color: "text-blue-700 bg-blue-50 border-blue-200",
+    color: "text-[#0464D5] bg-blue-50 border-[#0464D5]/20",
     icon: Truck,
   },
   IN_PROGRESS: {
@@ -115,7 +115,7 @@ const STATUS_MAP: Record<
   },
   SCHEDULED: {
     label: "Agendado",
-    color: "text-blue-700 bg-blue-50 border-blue-200",
+    color: "text-[#0464D5] bg-blue-50 border-[#0464D5]/20",
     icon: Calendar,
   },
 };
@@ -286,7 +286,7 @@ export default function OrderDetailPage() {
       <main className="min-h-screen bg-gray-50 flex flex-col pb-16 md:pb-0">
         <Header />
         <div className="flex-1 flex items-center justify-center">
-          <Loader2 className="w-8 h-8 text-[#2563EB] animate-spin" />
+          <Loader2 className="w-8 h-8 text-[#0464D5] animate-spin" />
         </div>
         <Footer />
         <MobileNavigator />
@@ -307,7 +307,7 @@ export default function OrderDetailPage() {
             </p>
             <Link
               href="/meus-pedidos"
-              className="text-[#2563EB] hover:underline text-sm"
+              className="text-[#0464D5] hover:underline text-sm"
             >
               Voltar para Meus Pedidos
             </Link>
@@ -381,7 +381,7 @@ export default function OrderDetailPage() {
         {/* Breadcrumb */}
         <Link
           href="/meus-pedidos"
-          className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#2563EB] transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#0464D5] transition-colors mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
           Meus Pedidos
@@ -391,7 +391,7 @@ export default function OrderDetailPage() {
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-4">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-[#1e3a8a] mb-1">
+              <h1 className="text-2xl font-bold text-gray-900 mb-1">
                 {order.name}
               </h1>
               <p className="text-sm text-gray-400 flex items-center gap-1">
@@ -427,7 +427,7 @@ export default function OrderDetailPage() {
                 href={order.invoiceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 inline-flex items-center gap-2 bg-[#2563EB] hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-md shadow-blue-900/10"
+                className="mt-4 inline-flex items-center gap-2 bg-[#0464D5] hover:bg-[#0353b4] text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-md shadow-[#0464D5]/10"
               >
                 <CreditCard className="w-4 h-4" />
                 Pagar agora
@@ -501,7 +501,7 @@ export default function OrderDetailPage() {
                           </span>
                         </div>
                       </div>
-                      <p className="text-sm font-bold text-[#1e3a8a] shrink-0">
+                      <p className="text-sm font-bold text-gray-900 shrink-0">
                         {fmt(
                           String(
                             parseFloat(
@@ -543,7 +543,7 @@ export default function OrderDetailPage() {
                               href={t.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-xs text-[#2563EB] hover:underline inline-flex items-center gap-1 mt-0.5"
+                              className="text-xs text-[#0464D5] hover:underline inline-flex items-center gap-1 mt-0.5"
                             >
                               Rastrear <ExternalLink className="w-3 h-3" />
                             </a>
@@ -606,7 +606,7 @@ export default function OrderDetailPage() {
                     <span>{fmt(taxAmount, totalCurrency)}</span>
                   </div>
                 )}
-                <div className="flex justify-between font-bold text-[#1e3a8a] text-base pt-2 border-t border-gray-100">
+                <div className="flex justify-between font-bold text-gray-900 text-base pt-2 border-t border-gray-100">
                   <span>Total</span>
                   <span>{fmt(totalAmount, totalCurrency)}</span>
                 </div>

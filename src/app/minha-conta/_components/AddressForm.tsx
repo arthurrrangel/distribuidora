@@ -70,7 +70,7 @@ export function AddressForm({ address, onClose, onSubmit }: AddressFormProps) {
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 shrink-0">
           <div className="flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-blue-600" />
+            <MapPin className="w-4 h-4 text-[#0464D5]" />
             <h3 className="font-semibold text-gray-900">
               {isEditing ? "Editar Endereço" : "Novo Endereço"}
             </h3>
@@ -173,7 +173,7 @@ export function AddressForm({ address, onClose, onSubmit }: AddressFormProps) {
               name="country"
               value={form.country}
               onChange={handleChange}
-              className="border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white"
+              className="border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0464D5] focus:border-transparent transition bg-white"
             >
               <option value="Brazil">Brasil</option>
               <option value="United States">Estados Unidos</option>
@@ -194,7 +194,7 @@ export function AddressForm({ address, onClose, onSubmit }: AddressFormProps) {
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-medium rounded-xl transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-[#0464D5] hover:bg-[#0353b4] disabled:opacity-60 text-white text-sm font-medium rounded-xl transition-colors"
             >
               {saving && <Loader2 className="w-4 h-4 animate-spin" />}
               {saving ? "Salvando..." : isEditing ? "Salvar" : "Adicionar"}
@@ -240,7 +240,7 @@ function InputField({
         onChange={onChange}
         required={required}
         placeholder={placeholder}
-        className="border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition placeholder-gray-400"
+        className="border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0464D5] focus:border-transparent transition placeholder-gray-400"
       />
     </div>
   );

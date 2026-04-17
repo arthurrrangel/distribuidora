@@ -99,7 +99,7 @@ export default function LoginPage() {
 
       <div className="container mx-auto px-4 py-12 flex flex-col items-center justify-center flex-1">
         <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-sm border border-gray-100">
-          <h1 className="text-2xl font-bold text-[#1e3a8a] mb-2 text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2 text-center">
             Acesse sua conta
           </h1>
           <p className="text-gray-500 text-sm mb-8 text-center">
@@ -108,8 +108,8 @@ export default function LoginPage() {
 
           {/* Login apenas para Atacado (CNPJ) */}
           <div className="mb-6">
-            <div className="flex-1 py-2 rounded-md font-bold text-sm bg-green-100 text-green-700 ring-2 ring-green-500 ring-offset-1 text-center">
-              Entrar como Atacado (CNPJ)
+            <div className="flex-1 py-2 rounded-md font-semibold text-sm bg-blue-50 text-[#0464D5] border border-blue-100 text-center">
+              Acesso exclusivo para empresas com CNPJ
             </div>
           </div>
 
@@ -158,7 +158,7 @@ export default function LoginPage() {
               <div className="flex justify-end mt-1">
                 <Link
                   href="/recuperar-senha"
-                  className="text-xs text-[#2563EB] hover:underline"
+                  className="text-xs text-[#0464D5] hover:underline"
                 >
                   Esqueci minha senha
                 </Link>
@@ -169,7 +169,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#2563EB] text-white py-3 rounded-md font-bold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full bg-[#0464D5] text-white py-3 rounded-lg font-bold hover:bg-[#0353b4] transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {loading ? "Entrando..." : "Entrar"}
                 {!loading && <ArrowRight className="w-4 h-4" />}
@@ -181,7 +181,7 @@ export default function LoginPage() {
             <p className="text-sm text-gray-600 mb-4">Ainda não tem conta?</p>
             <Link
               href="/register"
-              className="inline-block w-full bg-white border border-[#2563EB] text-[#2563EB] py-3 rounded-md font-bold hover:bg-blue-50 transition-colors"
+              className="inline-block w-full bg-white border border-[#0464D5] text-[#0464D5] py-3 rounded-md font-bold hover:bg-blue-50 transition-colors"
             >
               Criar conta
             </Link>

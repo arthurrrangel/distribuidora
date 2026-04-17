@@ -213,7 +213,7 @@ export default function CartPage() {
               <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">
                 Total do pedido
               </p>
-              <p className="text-2xl font-bold text-[#2563EB]">
+              <p className="text-2xl font-bold text-[#0464D5]">
                 R${" "}
                 {parseFloat(draftOrder.totalPrice).toFixed(2).replace(".", ",")}
               </p>
@@ -225,7 +225,7 @@ export default function CartPage() {
                 href={draftOrder.invoiceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full bg-[#2563EB] hover:bg-blue-700 text-white py-3.5 rounded-xl font-bold transition-colors shadow-md shadow-blue-900/10 active:scale-95"
+                className="flex items-center justify-center gap-2 w-full bg-[#0464D5] hover:bg-[#0353b4] text-white py-3.5 rounded-xl font-bold transition-colors shadow-md shadow-blue-900/10 active:scale-95"
               >
                 <CreditCard className="w-5 h-5" />
                 Pagar agora
@@ -263,7 +263,7 @@ export default function CartPage() {
       <Header />
 
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold text-[#1e3a8a] mb-6 flex items-center gap-2">
+        <h1 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
           <ShoppingCart className="w-6 h-6" />
           Meu Carrinho ({cartCount})
         </h1>
@@ -277,7 +277,7 @@ export default function CartPage() {
 
         {items.length === 0 ? (
           <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 text-center">
-            <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 text-[#2563EB]">
+            <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 text-[#0464D5]">
               <ShoppingCart className="w-10 h-10" />
             </div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">
@@ -288,7 +288,7 @@ export default function CartPage() {
             </p>
             <Link
               href="/"
-              className="inline-block bg-[#2563EB] text-white px-8 py-3 rounded-md font-bold hover:bg-blue-700 transition-colors"
+              className="inline-block bg-[#0464D5] text-white px-8 py-3 rounded-md font-bold hover:bg-[#0353b4] transition-colors"
             >
               Ir às compras
             </Link>
@@ -322,7 +322,7 @@ export default function CartPage() {
                   <div className="flex-1 min-w-0">
                     <Link
                       href={`/produto/${item.handle}`}
-                      className="font-semibold text-gray-800 text-sm md:text-base hover:text-blue-600 transition-colors line-clamp-2"
+                      className="font-semibold text-gray-800 text-sm md:text-base hover:text-[#0464D5] transition-colors line-clamp-2"
                     >
                       {item.title}
                     </Link>
@@ -333,7 +333,7 @@ export default function CartPage() {
                     </p>
 
                     <div className="mt-3 flex flex-wrap items-center gap-4 justify-between sm:justify-start">
-                      <span className="font-bold text-[#2563EB] text-lg">
+                      <span className="font-bold text-[#0464D5] text-lg">
                         R$ {item.price.toFixed(2).replace(".", ",")}
                       </span>
 
@@ -436,7 +436,7 @@ export default function CartPage() {
                       <button
                         onClick={handleApplyCoupon}
                         disabled={couponLoading || couponInput.trim() === ""}
-                        className="px-4 py-2.5 bg-[#1e3a8a] hover:bg-blue-900 text-white rounded-xl text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
+                        className="px-4 py-2.5 bg-[#0464D5] hover:bg-blue-900 text-white rounded-xl text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
                       >
                         {couponLoading ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
@@ -494,7 +494,7 @@ export default function CartPage() {
                   </div>
                 </div>
 
-                <div className="flex justify-between font-bold text-lg text-[#1e3a8a] border-t pt-4">
+                <div className="flex justify-between font-bold text-lg text-gray-900 border-t pt-4">
                   <span>Total</span>
                   <span>{fmtBRL(total)}</span>
                 </div>
@@ -502,7 +502,7 @@ export default function CartPage() {
                 <button
                   onClick={handleCheckout}
                   disabled={isCheckingOut}
-                  className="w-full bg-[#2563EB] text-white py-3.5 rounded-md font-bold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 shadow-md shadow-blue-900/10 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="w-full bg-[#0464D5] text-white py-3.5 rounded-md font-bold hover:bg-[#0353b4] transition-colors flex items-center justify-center gap-2 shadow-md shadow-blue-900/10 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {isCheckingOut ? (
                     <>
@@ -519,7 +519,7 @@ export default function CartPage() {
 
                 <Link
                   href="/"
-                  className="block text-center text-[#2563EB] text-sm mt-4 hover:underline font-medium"
+                  className="block text-center text-[#0464D5] text-sm mt-4 hover:underline font-medium"
                 >
                   Continuar Comprando
                 </Link>

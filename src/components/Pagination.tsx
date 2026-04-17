@@ -53,7 +53,7 @@ export function Pagination({ pageInfo }: PaginationProps) {
         className={`flex items-center px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 border ${
           !pageInfo.hasPreviousPage
             ? "border-gray-100 text-gray-300 cursor-not-allowed bg-gray-50"
-            : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:text-blue-600 hover:border-blue-300 shadow-sm"
+            : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:text-[#0464D5] hover:border-[#0464D5]/30 shadow-sm"
         }`}
       >
         <ChevronLeft className="w-4 h-4 mr-2" />
@@ -72,7 +72,7 @@ export function Pagination({ pageInfo }: PaginationProps) {
         className={`flex items-center px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 border ${
           !pageInfo.hasNextPage
             ? "border-gray-100 text-gray-300 cursor-not-allowed bg-gray-50"
-            : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:text-blue-600 hover:border-blue-300 shadow-sm"
+            : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:text-[#0464D5] hover:border-[#0464D5]/30 shadow-sm"
         }`}
       >
         Próximo

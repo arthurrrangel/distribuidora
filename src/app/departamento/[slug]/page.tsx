@@ -187,7 +187,7 @@ export default async function DepartmentPage({
 
       {/* CAPA + FAIXA AZUL (faixa fica atrás da imagem) */}
       <div className="relative">
-        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-16 bg-[#2563EB]" />
+        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-16 bg-[#0464D5]" />
         <div className="relative z-10">
           <DepartmentCover
             title={thisTitle}
@@ -203,7 +203,7 @@ export default async function DepartmentPage({
         {/* SUBCATEGORIAS */}
         {isParent && children.length > 0 && (
           <section className="mb-10">
-            <h2 className="text-xl font-bold text-[#2563EB] mb-6 text-center">
+            <h2 className="text-xl font-bold text-[#0464D5] mb-6 text-center">
               Categorias
             </h2>
             <div className="flex flex-wrap gap-8 justify-center">
@@ -213,7 +213,7 @@ export default async function DepartmentPage({
                   href={`/departamento/${child.handle}`}
                   className="flex flex-col items-center gap-3 group w-[110px]"
                 >
-                  <div className="w-24 h-24 rounded-full overflow-hidden flex items-center justify-center bg-[#2563EB] border-4 border-blue-100 group-hover:border-[#2563EB] group-hover:shadow-lg transition-all duration-200 flex-shrink-0">
+                  <div className="w-24 h-24 rounded-full overflow-hidden flex items-center justify-center bg-[#0464D5] border-4 border-[#0464D5]/20 group-hover:border-[#0464D5] group-hover:shadow-lg transition-all duration-200 flex-shrink-0">
                     {child.imageUrl ? (
                       <Image
                         src={child.imageUrl}
@@ -226,7 +226,7 @@ export default async function DepartmentPage({
                       <Package className="w-10 h-10 text-white" />
                     )}
                   </div>
-                  <span className="text-sm font-medium text-gray-700 group-hover:text-[#2563EB] transition-colors text-center leading-tight">
+                  <span className="text-sm font-medium text-gray-700 group-hover:text-[#0464D5] transition-colors text-center leading-tight">
                     {child.title}
                   </span>
                 </Link>
@@ -295,7 +295,7 @@ export default async function DepartmentPage({
                 {(type || tag) && (
                   <Link
                     href={`/departamento/${slug}`}
-                    className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm"
+                    className="px-6 py-2.5 bg-[#0464D5] text-white rounded-lg font-medium hover:bg-[#0353b4] transition-colors shadow-sm"
                   >
                     Limpar Filtros
                   </Link>

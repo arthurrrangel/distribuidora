@@ -155,6 +155,7 @@ export interface Product {
   id: string;
   title: string;
   handle: string;
+  vendor?: string;
   description: string;
   descriptionHtml: string;
   availableForSale: boolean;

@@ -77,7 +77,7 @@ export default async function AllProductsPage({
       <div className="container mx-auto px-4 py-8 flex-1">
         {/* Cabeçalho Simples */}
         <div className="mb-8 text-center md:text-left">
-          <h1 className="text-3xl font-bold text-[#1e3a8a] mb-2">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Todos os Produtos
           </h1>
           <p className="text-gray-500">

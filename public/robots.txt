@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Não indexar páginas privadas
+Disallow: /minha-conta
+Disallow: /meus-pedidos
+Disallow: /carrinho
+Disallow: /checkout
+Disallow: /login
+Disallow: /register
+
+Sitemap: https://repon.com.br/sitemap.xml

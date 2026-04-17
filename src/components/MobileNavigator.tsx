@@ -21,28 +21,28 @@ export function MobileNavigator() {
         <div className="flex justify-around items-center h-16">
           <Link
             href="/"
-            className="flex flex-col items-center justify-center w-full h-full text-[#2563EB]"
+            className="flex flex-col items-center justify-center w-full h-full text-[#0464D5]"
           >
             <Home className="w-6 h-6" />
             <span className="text-[10px] font-medium mt-1">Início</span>
           </Link>
           <button
             onClick={() => setIsSearchOpen(true)}
-            className={`flex flex-col items-center justify-center w-full h-full ${isSearchOpen ? "text-[#2563EB]" : "text-gray-500"} hover:text-[#2563EB]`}
+            className={`flex flex-col items-center justify-center w-full h-full ${isSearchOpen ? "text-[#0464D5]" : "text-gray-500"} hover:text-[#0464D5]`}
           >
             <Search className="w-6 h-6" />
             <span className="text-[10px] font-medium mt-1">Busca</span>
           </button>
           <button
             onClick={() => setIsMenuOpen(true)}
-            className={`flex flex-col items-center justify-center w-full h-full ${isMenuOpen ? "text-[#2563EB]" : "text-gray-500"} hover:text-[#2563EB]`}
+            className={`flex flex-col items-center justify-center w-full h-full ${isMenuOpen ? "text-[#0464D5]" : "text-gray-500"} hover:text-[#0464D5]`}
           >
             <Menu className="w-6 h-6" />
             <span className="text-[10px] font-medium mt-1">Departamentos</span>
           </button>
           <Link
             href={user ? "/minha-conta" : "/login"}
-            className="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-[#2563EB]"
+            className="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-[#0464D5]"
           >
             <User className="w-6 h-6" />
             <span className="text-[10px] font-medium mt-1">Conta</span>

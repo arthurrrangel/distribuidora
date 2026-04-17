@@ -87,7 +87,7 @@ export function BrandCarousel({
                     </p>
                     <a
                       href={`/busca?vendor=${encodeURIComponent(vendor)}`}
-                      className="text-[#2563EB] font-semibold text-xs hover:underline shrink-0"
+                      className="text-[#0464D5] font-semibold text-xs hover:underline shrink-0"
                     >
                       Ver todos
                     </a>

@@ -4,7 +4,7 @@ export function WhatsAppButton() {
   const whatsappNumber =
     process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "21995946491";
   const message = encodeURIComponent(
-    "Olá! Gostaria de mais informações sobre os produtos da AREL Distribuidora.",
+    "Olá! Vim pelo site da Repon e queria saber mais sobre os produtos.",
   );
   const href = `https://wa.me/${whatsappNumber}?text=${message}`;
 

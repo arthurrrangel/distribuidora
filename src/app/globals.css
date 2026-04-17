@@ -1,5 +1,54 @@
 @import "tailwindcss";
 
+/* ── Funnel Sans — Tipografia oficial Repon ─────────────────────────────── */
+@font-face {
+  font-family: 'Funnel Sans';
+  src: url('/fonts/FunnelSans-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Funnel Sans';
+  src: url('/fonts/FunnelSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Funnel Sans';
+  src: url('/fonts/FunnelSans-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Funnel Sans';
+  src: url('/fonts/FunnelSans-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Funnel Sans';
+  src: url('/fonts/FunnelSans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Funnel Sans';
+  src: url('/fonts/FunnelSans-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Reset tipográfico global ────────────────────────────────────────────── */
+html, body, * {
+  font-family: 'Funnel Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
 @layer utilities {
     .no-scrollbar::-webkit-scrollbar {
         display: none;
@@ -8,7 +57,7 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
     }
-    
+
     .mask-gradient {
         mask-image: linear-gradient(to right, transparent, black 10px, black 95%, transparent);
         -webkit-mask-image: linear-gradient(to right, transparent, black 10px, black 95%, transparent);

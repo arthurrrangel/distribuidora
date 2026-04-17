@@ -1,0 +1,1000 @@
+================================================================================
+DOCUMENTAÇÃO TÉCNICA - DISTRIBUIDORA (REPON DISTRIBUIDORA)
+================================================================================
+Projeto: Loja B2B (Atacado) baseada em Shopify + Next.js
+Data: Março de 2026
+================================================================================
+
+
+================================================================================
+1. VISÃO GERAL DO PROJETO
+================================================================================
+
+Este projeto é uma loja virtual B2B (business-to-business) voltada para
+distribuidora de produtos de escritório e papelaria. O frontend é construído
+em Next.js 16 com TypeScript e Tailwind CSS. O backend de dados, produtos,
+clientes e pedidos é provido pelo Shopify.
+
+A arquitetura pode ser dividida em três camadas:
+
+  A) SHOPIFY STOREFRONT API (GraphQL, pública/token público)
+     Usada para: buscar produtos, coleções, criar carrinho, autenticar clientes
+     (login/logout), buscar dados do cliente logado e endereços.
+     Acesso via token público (NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN).
+
+  B) SHOPIFY ADMIN API (GraphQL + REST, privada/token de app)
+     Usada para: criar clientes com metafields (cadastro B2B), criar Draft
+     Orders (pedidos rascunho), buscar pedidos do cliente (Draft Orders +
+     Orders confirmados), validar cupons de desconto, buscar detalhes de
+     pedido individual.
+     Acesso via token de app privado (SHOPIFY_ADMIN_TOKEN).
+     Essas chamadas NUNCA são feitas direto do navegador — passam sempre pelas
+     Route Handlers do Next.js (pasta src/app/api/) para não expor o token.
+
+  C) NEXT.JS ROUTE HANDLERS (Backend próprio dentro do projeto)
+     Fazem a ponte entre o frontend (navegador) e a Admin API do Shopify.
+     São endpoints HTTP internos que recebem chamadas do próprio frontend e
+     repassam para o Shopify usando o token secreto guardado em variável de
+     ambiente do servidor.
+
+Stack de tecnologias:
+  - Next.js 16.1.3 (App Router)
+  - React 19
+  - TypeScript 5
+  - Tailwind CSS 4
+  - Axios (para chamadas à Storefront API)
+  - Fetch nativo (para chamadas às Route Handlers e Admin API)
+  - Lucide React (ícones)
+
+
+================================================================================
+2. VARIÁVEIS DE AMBIENTE
+================================================================================
+
+O projeto usa dois grupos de variáveis:
+
+  Variáveis PÚBLICAS (prefixo NEXT_PUBLIC_ — disponíveis no navegador):
+    NEXT_PUBLIC_SHOPIFY_DOMAIN          → domínio da loja (ex: 7qs3ys-84.myshopify.com)
+    NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN → token público da Storefront API
+    NEXT_PUBLIC_API_VERSION             → versão da API Shopify (ex: 2024-01)
+    NEXT_PUBLIC_WHATSAPP_NUMBER         → número do WhatsApp para contato/pedidos
+
+  Variáveis SECRETAS (apenas no servidor, nunca expostas ao navegador):
+    SHOPIFY_STORE_DOMAIN   → domínio da loja (igual ao público, mas usado no servidor)
+    SHOPIFY_ADMIN_TOKEN    → token de acesso da Admin API (veja seção 3)
+
+
+================================================================================
+3. COMO O TOKEN DA ADMIN API FOI OBTIDO (SHOPIFY OAUTH / APP PRIVADO)
+================================================================================
+
+O Shopify não permite acesso à Admin API diretamente do frontend por questões
+de segurança. Para ter acesso a funcionalidades como criar Draft Orders e buscar
+pedidos, foi necessário criar um App Customizado (Custom App) dentro do painel
+Shopify e passar pelo fluxo de OAuth para obter um token de acesso permanente.
+
+O processo foi o seguinte:
+
+  PASSO 1 - Criar o App no Shopify:
+    No painel do Shopify, acessar: Configurações → Apps e canais de vendas →
+    Desenvolver apps → Criar um app. Nessa tela é onde se obtém o CLIENT_ID
+    e o CLIENT_SECRET do app.
+
+  PASSO 2 - Definir os Escopos (Permissões):
+    No app criado, configurar quais permissões ele precisa. Para este projeto,
+    as permissões relevantes são:
+      - read_orders / write_orders           (para buscar e criar pedidos)
+      - read_draft_orders / write_draft_orders (para Draft Orders)
+      - read_customers / write_customers      (para criar clientes via REST)
+      - read_price_rules / read_discounts     (para validar cupons)
+
+  PASSO 3 - Gerar o Authorization Code:
+    Com o CLIENT_ID em mãos, abrir no navegador uma URL no seguinte formato:
+      https://[LOJA].myshopify.com/admin/oauth/authorize
+        ?client_id=[CLIENT_ID]
+        &scope=[ESCOPOS_SEPARADOS_POR_VIRGULA]
+        &redirect_uri=[URL_DE_REDIRECT]
+        &state=[VALOR_ALEATORIO_CSRF]
+    O Shopify redireciona para a URL de redirect com um parâmetro "code" na
+    query string. Esse código é temporário e de uso único.
+
+  PASSO 4 - Trocar o Code pelo Access Token (via Postman):
+    Fazer uma requisição POST para:
+      https://[LOJA].myshopify.com/admin/oauth/access_token
+    Com o body (ou query params) contendo:
+      client_id     = [CLIENT_ID do app]
+      client_secret = [CLIENT_SECRET do app]
+      code          = [código obtido no passo anterior]
+    A resposta retorna um JSON com o campo "access_token". Esse valor é o
+    SHOPIFY_ADMIN_TOKEN que é salvo como variável de ambiente no servidor.
+
+  RESULTADO:
+    O access_token obtido é permanente (não expira, a menos que o app seja
+    desinstalado ou o token seja revogado). Ele é usado em todas as chamadas
+    às Route Handlers que precisam acessar a Admin API, sempre no header:
+      X-Shopify-Access-Token: [SHOPIFY_ADMIN_TOKEN]
+
+  IMPORTANTE DE SEGURANÇA:
+    O token da Admin API NUNCA aparece no código do frontend. Ele está apenas
+    nas variáveis de ambiente do servidor (arquivo .env.local, não commitado
+    no git) e é acessado somente dentro das Route Handlers (src/app/api/).
+
+
+================================================================================
+4. HIERARQUIA DE COLEÇÕES (PAI E FILHA VIA METAFIELD)
+================================================================================
+
+O Shopify não possui nativamente o conceito de "coleção pai" e "coleção filha".
+Para resolver isso, foi criado um metafield personalizado em cada coleção:
+
+  Namespace: custom
+  Key: parent_collection
+  Tipo: single_line_text_field (texto simples)
+
+LÓGICA DE FUNCIONAMENTO:
+
+  - Coleção PAI: o metafield "parent_collection" fica VAZIO (sem valor).
+    No projeto atual há apenas um departamento principal, então as coleções
+    pai não precisam apontar para nenhum departamento acima delas.
+    Exemplo: a coleção "Papelaria" (pai) tem parent_collection = "".
+
+  - Coleção FILHA: o metafield "parent_collection" contém o TÍTULO (não o
+    handle/slug) da coleção pai.
+    Exemplo: a coleção "Canetas" (filha) tem parent_collection = "Papelaria".
+
+COMO O CÓDIGO CONSOME ISSO:
+
+  Na função getSubcollections() em src/services/productService.ts:
+    1. Busca TODAS as coleções da loja (até 100) via Storefront API
+    2. Para cada coleção, lê o metafield parent_collection
+    3. Filtra apenas as coleções cujo parent_collection seja igual ao título
+       da coleção pai que está sendo buscada
+    4. Retorna essas coleções como "subcoleções" da pai
+
+  Na página de departamento (src/app/departamento/[slug]/page.tsx):
+    1. Busca a coleção atual pelo handle (slug da URL)
+    2. Lê o metafield parent_collection da coleção atual
+    3. Se o metafield tiver valor → essa coleção é FILHA; o valor é o título
+       da coleção pai.
+    4. Se o metafield estiver vazio → essa coleção é PAI; busca todas as
+       coleções que possuam parent_collection igual ao título desta coleção,
+       e as exibe como subcategorias.
+    5. Gera breadcrumb mostrando "Pai > Filha" quando aplicável
+    6. Na visão de coleção pai: exibe grid de cards com as coleções filhas
+       para o usuário navegar
+
+
+================================================================================
+5. ATRIBUIÇÃO DE PRODUTO A COLEÇÕES VIA TAGS
+================================================================================
+
+O Shopify permite atribuir produtos a coleções de duas formas: manualmente ou
+por condições automáticas. Para simplificar o processo sem precisar da interface
+de coleção para cada produto, foi adotado o uso de TAGS no produto:
+
+PROCESSO DE CADASTRO DE PRODUTO:
+  1. Cadastrar o produto normalmente no painel do Shopify
+  2. No campo "Tags" do produto, inserir o handle (slug) das coleções às quais
+     o produto pertence, separados por vírgula.
+     Exemplo: um produto de caneta deve receber as tags "canetas, papelaria"
+     (atribui à coleção filha "canetas" E à coleção pai "papelaria")
+
+  IMPORTANTE: É necessário adicionar AMBAS as coleções (pai e filha) como tags.
+  Isso porque quando o usuário navega pela coleção pai "papelaria", o produto
+  já aparece lá. Quando navega pela coleção filha "canetas", também aparece.
+  Sem a tag da coleção pai, o produto só apareceria na filha.
+
+  3. As coleções no Shopify são configuradas com regras automáticas:
+     "Produto deve conter a tag [nome-da-colecao]". Assim, ao salvar o produto
+     com as tags corretas, ele é automaticamente incluído nas coleções
+     correspondentes, sem intervenção manual adicional.
+
+
+================================================================================
+6. AUTENTICAÇÃO DO CLIENTE (LOGIN / LOGOUT / PERSISTÊNCIA)
+================================================================================
+
+ARQUIVO: src/contexts/AuthContext.tsx
+
+O sistema de autenticação usa a Storefront API do Shopify, que possui mutations
+específicas para criar e invalidar tokens de acesso de clientes.
+
+FLUXO DE LOGIN:
+  1. O usuário digita e-mail e senha na página /login
+  2. O frontend (src/app/login/page.tsx) chama a mutation GraphQL
+     "customerAccessTokenCreate" diretamente na Storefront API via Axios
+  3. O Shopify retorna um objeto { accessToken, expiresAt }
+  4. O token e a data de expiração são salvos no localStorage do navegador:
+       localStorage.setItem("accessToken", token)
+       localStorage.setItem("tokenExpiresAt", expiresAt)
+  5. A função login() do AuthContext é chamada, que por sua vez chama
+     fetchCustomer() com o token para buscar nome, email e id do cliente
+  6. O estado global "user" é populado com os dados do cliente
+  7. O usuário é redirecionado para a home
+
+PERSISTÊNCIA ENTRE SESSÕES:
+  Quando o usuário fecha e reabre o navegador, o AuthContext (que é montado
+  no layout raiz) executa um useEffect que:
+    1. Lê o token do localStorage
+    2. Se existir, chama fetchCustomer() para revalidar o token com o Shopify
+    3. Se o Shopify retornar dados do cliente → usuário continua logado
+    4. Se o token estiver expirado ou inválido → logout automático e
+       remoção dos dados do localStorage
+
+LOGOUT:
+  A função logout() simplesmente:
+    1. Remove "accessToken" e "tokenExpiresAt" do localStorage
+    2. Zera o estado "user" para null
+    3. Redireciona para /login
+
+VERIFICAÇÃO DE EXPIRAÇÃO (tokenUtils.ts):
+  A função getAccessToken() em src/utils/tokenUtils.ts faz uma verificação
+  preventiva no lado do cliente: antes de retornar o token, compara a data
+  "tokenExpiresAt" com a data atual. Se o token já expirou, remove tudo do
+  localStorage e retorna null. Isso evita fazer chamadas à API com tokens
+  obviamente inválidos.
+
+CONTEXTO GLOBAL:
+  O AuthContext é provido pelo AuthProvider que envolve toda a aplicação no
+  src/app/layout.tsx. Qualquer componente pode chamar o hook useAuth() para
+  obter:
+    - user: dados do cliente (id, firstName, lastName, email) ou null
+    - loading: boolean indicando se o processo de autenticação está em curso
+    - login(token, expiresAt): função para efetuar login
+    - logout(): função para efetuar logout
+
+
+================================================================================
+7. CARRINHO DE COMPRAS (CartContext)
+================================================================================
+
+ARQUIVO: src/contexts/CartContext.tsx
+
+O carrinho é um estado global gerenciado pelo CartContext e persistido no
+localStorage do navegador, sob a chave "repon_cart".
+
+ESTRUTURA DE ITEM DO CARRINHO (CartItem):
+  - id: ID da VARIANTE do produto (no formato gid://shopify/ProductVariant/...)
+  - productId: ID do produto pai
+  - handle: slug do produto para gerar a URL
+  - title: nome do produto
+  - price: preço unitário (número)
+  - originalPrice: preço original antes de desconto (opcional)
+  - image: URL da imagem
+  - quantity: quantidade
+  - unit: unidade de medida (ex: "un", "cx")
+
+LÓGICA DE PERSISTÊNCIA:
+  - Na montagem do componente (useEffect), o cart é carregado do localStorage
+  - Um segundo useEffect monitora o array "items": sempre que ele muda, salva
+    o estado atualizado no localStorage. A condição "!isLoading" evita que o
+    carrinho vazio sobrescreva o carrinho salvo durante o carregamento inicial.
+
+OPERAÇÕES DISPONÍVEIS:
+  - addItem: adiciona produto ou incrementa quantidade se já existir
+  - removeItem: remove item pelo ID da variante
+  - updateQuantity: altera a quantidade de um item (mínimo 1)
+  - clearCart: esvazia o carrinho completamente
+  - cartCount: total de unidades no carrinho (calculado)
+  - cartTotal: soma do valor total (calculado)
+
+
+================================================================================
+8. CHECKOUT E DRAFT ORDERS
+================================================================================
+
+O Shopify não permite criar pedidos finalizados diretamente via Storefront API
+de um frontend personalizado — apenas redirecionando para o checkout hospedado
+do próprio Shopify. Para o modelo B2B adotado neste projeto (pagamento via Pix
+ou Boleto, combinado por WhatsApp), o fluxo foi adaptado:
+
+FLUXO DE "FINALIZAR PEDIDO" (src/app/carrinho/page.tsx):
+
+  1. O usuário acessa a página do carrinho (/carrinho)
+  2. Pode opcionalmente aplicar um cupom de desconto
+  3. Ao clicar em "Finalizar Pedido", o frontend chama a Route Handler
+     POST /api/create-draft-order
+  4. A Route Handler cria um DRAFT ORDER (pedido rascunho) na Admin API do
+     Shopify com os itens do carrinho, os dados do cliente logado e o desconto
+     (se houver)
+  5. O Shopify confirma a criação e retorna: id, nome (ex: D-1001), invoiceUrl
+     e totalPrice do Draft Order
+  6. O frontend limpa o carrinho e exibe uma tela de confirmação com:
+     - Número do pedido
+     - Um botão "Combinar Pagamento pelo WhatsApp" que abre o WhatsApp Web com
+       uma mensagem pré-formatada contendo o número do pedido, lista de itens,
+       desconto aplicado e o total
+  7. O atendente recebe a mensagem, combina o pagamento e "converte" o Draft
+     Order em pedido confirmado dentro do painel do Shopify
+
+POR QUE DRAFT ORDER E NÃO CHECKOUT NATIVO?
+  O checkout nativo do Shopify (cartCreate + checkoutUrl) está implementado em
+  src/services/checkout.ts mas não é o fluxo principal. O Draft Order é usado
+  porque:
+    - Permite salvar o pedido sem pagamento imediato
+    - O pedido fica visível no painel do Shopify para o atendente processar
+    - Permite aplicar descontos/cupons pelo servidor (Admin API)
+    - É adequado para o modelo B2B de pagamento combinado manualmente
+
+VALIDAÇÃO DE CUPOM (src/app/api/validate-coupon/route.ts):
+  Antes de criar o Draft Order, o usuário pode aplicar um cupom. A validação
+  é feita via Route Handler que consulta a Admin API do Shopify. O endpoint
+  retorna:
+    - Se o cupom existe e está ativo
+    - O tipo de desconto (percentual ou valor fixo ou frete grátis)
+    - O valor do desconto
+  O desconto é então calculado no frontend e enviado junto com a criação do
+  Draft Order.
+
+
+================================================================================
+9. ROUTE HANDLERS (API INTERNA - src/app/api/)
+================================================================================
+
+São endpoints HTTP criados dentro do próprio Next.js que agem como um
+"backend" intermediário. Eles nunca são acessados diretamente pelo usuário —
+são chamados pelo próprio frontend do projeto. Todos usam o SHOPIFY_ADMIN_TOKEN
+que existe apenas no servidor, nunca exposto ao navegador.
+
+--------------------------------------------------------------------------------
+9.1 POST /api/create-customer (src/app/api/create-customer/route.ts)
+--------------------------------------------------------------------------------
+PROPÓSITO: Cadastrar um novo cliente B2B na Shopify com todos os dados
+empresariais que a Storefront API não suporta (como metafields ao cadastrar).
+
+RECEBE (body JSON):
+  razaoSocial, nomeFantasia, cnpj, inscricaoEstadual, nomeResponsavel,
+  whatsapp, email, senha, endereco { cep, rua, numero, complemento, bairro,
+  cidade, uf }
+
+LÓGICA INTERNA:
+  1. Separa o nome do responsável em firstName e lastName
+  2. Monta o endereço no padrão Shopify (address1 = rua + número,
+     address2 = complemento ou bairro)
+  3. Adiciona o DDI +55 ao WhatsApp
+  4. Chama o endpoint REST da Admin API: POST /admin/api/2024-01/customers.json
+     com o payload contendo:
+       - Dados pessoais (first_name, last_name, email, phone, password)
+       - send_email_welcome: true (Shopify envia e-mail de boas-vindas)
+       - Um endereço já formatado
+       - 4 metafields customizados: cnpj, razao_social, nome_fantasia,
+         inscricao_estadual (todos no namespace "custom")
+  5. Se o Shopify retornar erro (ex: email já existe), extrai a mensagem de
+     erro do formato proprietário do Shopify REST e a repassa ao frontend
+  6. Em caso de sucesso, retorna id, email, firstName e lastName do cliente
+
+POR QUE REST E NÃO GRAPHQL AQUI?
+  A Admin API REST permite criar o cliente já com senha e metafields em uma
+  única chamada. A Admin API GraphQL (customerCreate mutation) não suporta
+  definir senha no mesmo request, exigiria múltiplas chamadas.
+
+--------------------------------------------------------------------------------
+9.2 POST /api/create-draft-order (src/app/api/create-draft-order/route.ts)
+--------------------------------------------------------------------------------
+PROPÓSITO: Salvar o carrinho do cliente como um Draft Order (pedido rascunho)
+no Shopify, vinculado ao cliente e com possível desconto aplicado.
+
+RECEBE (body JSON):
+  lineItems[]: array de { variantId, quantity, title, price }
+  customerId: ID do cliente logado (formato gid://shopify/Customer/...)
+  customer: { email, firstName, lastName } (se não tiver customerId)
+  note: observação do pedido
+  appliedDiscount: { title, value, valueType } (opcional)
+
+LÓGICA INTERNA:
+  1. Valida que lineItems não está vazio
+  2. Monta a mutation GraphQL draftOrderCreate com os itens
+  3. Se vier appliedDiscount (cupom com desconto em % ou valor fixo), inclui
+     no campo "appliedDiscount" do input da mutation
+  4. Se vier customerId, vincula o Draft Order ao cliente existente na Shopify
+  5. Adiciona tags fixas: "whatsapp" e "pix-boleto" para identificação
+  6. Chama Admin API GraphQL e retorna: id, name, invoiceUrl, totalPrice, status
+
+--------------------------------------------------------------------------------
+9.3 POST /api/get-customer-orders (src/app/api/get-customer-orders/route.ts)
+--------------------------------------------------------------------------------
+PROPÓSITO: Buscar todos os pedidos de um cliente — tanto Draft Orders (pedidos
+rascunho/pendentes) quanto Orders confirmados — que a Storefront API não
+consegue retornar de forma unificada nem com detalhes de Draft Orders.
+
+RECEBE (body JSON):
+  customerId: ID do cliente (pode vir no formato gid:// ou só numérico)
+
+LÓGICA INTERNA:
+  1. Extrai o ID numérico puro do customerId (remove o prefixo gid:// se houver)
+  2. Monta uma única query GraphQL com DOIS campos paralelos:
+     - draftOrders: filtra por customer_id:[id] AND status:open
+       (Draft Orders abertos, ou seja, aguardando pagamento)
+     - orders: filtra por customer_id:[id]
+       (pedidos já confirmados/pagos)
+  3. Uma única chamada à Admin API retorna os dois conjuntos
+  4. Formata os dados para um formato unificado e limpo:
+     - Draft Orders recebem type: "draft"
+     - Orders recebem type: "order"
+  5. Retorna { success, drafts[], orders[] }
+
+--------------------------------------------------------------------------------
+9.4 POST /api/get-order (src/app/api/get-order/route.ts)
+--------------------------------------------------------------------------------
+PROPÓSITO: Buscar os detalhes completos de um pedido individual (Draft Order
+ou Order confirmado) para exibir na página de detalhe do pedido.
+
+RECEBE (body JSON):
+  type: "draft" ou "order"
+  numericId: ID numérico do pedido (sem o prefixo gid://)
+
+LÓGICA INTERNA:
+  Dependendo do tipo, monta uma query diferente:
+  - Para "draft": busca draftOrder com campos específicos de rascunho
+    (invoiceUrl, appliedDiscount, originalUnitPrice, etc.)
+  - Para "order": busca order com campos de pedido confirmado
+    (displayFinancialStatus, fulfillmentStatus, discountApplications,
+    lineItems com preços unitários REST, etc.)
+
+--------------------------------------------------------------------------------
+9.5 POST /api/validate-coupon (src/app/api/validate-coupon/route.ts)
+--------------------------------------------------------------------------------
+PROPÓSITO: Verificar se um código de cupom é válido e retornar seu tipo e
+valor de desconto.
+
+RECEBE (body JSON):
+  code: string com o código do cupom (ex: "DESCONTO10")
+
+LÓGICA INTERNA:
+  1. Valida que o código não está vazio
+  2. Chama Admin API GraphQL com a query codeDiscountNodeByCode
+  3. A query consegue identificar três tipos de cupom:
+     - DiscountCodeBasic: desconto percentual ou valor fixo
+     - DiscountCodeFreeShipping: frete grátis
+     - DiscountCodeBxgy: compre X leve Y
+  4. Verifica se o cupom existe, está ativo (status ACTIVE) e dentro do
+     prazo (startsAt / endsAt)
+  5. Retorna { success, discount: { type, value, valueType, title } }
+  6. O frontend usa essa informação para calcular o desconto localmente e
+     exibir ao usuário antes de criar o Draft Order
+
+
+================================================================================
+10. SERVIÇOS (src/services/)
+================================================================================
+
+--------------------------------------------------------------------------------
+10.1 src/services/api.ts — Instância Axios para Storefront API
+--------------------------------------------------------------------------------
+Cria e exporta uma instância Axios configurada com:
+  - baseURL: https://[DOMAIN]/api/[VERSION]/graphql.json
+  - Header "X-Shopify-Storefront-Access-Token" com o token público
+  - Interceptor de resposta: detecta erros de nível GraphQL (ex: erros de
+    sintaxe, throttling) que vêm com HTTP 200 mas com campo "errors" no body,
+    e os transforma em rejeições de Promise para tratamento uniforme
+
+--------------------------------------------------------------------------------
+10.2 src/services/productService.ts — Operações de Produtos e Coleções
+--------------------------------------------------------------------------------
+Todas as funções usam a instância Axios de api.ts (Storefront API GraphQL).
+
+Constante PAGE_SIZE = 40 (produtos por página em todos os listagens paginadas).
+
+FRAGMENT PRODUCT_FRAGMENT: reutilizado em todas as queries, inclui id, title,
+handle, description, descriptionHtml, availableForSale, priceRange,
+compareAtPriceRange, images(first:5), variants(first:1) e o metafield
+cover_info (namespace: custom, key: cover_info) que é usado para exibir
+informações adicionais de capa/embalagem no card do produto.
+
+Funções disponíveis:
+
+  getProducts(first): busca os primeiros N produtos da loja. Usado para
+    carregamento simples sem filtros.
+
+  getProductByHandle(handle): busca um produto único pelo slug. Usado na
+    página de detalhe do produto (/produto/[slug]).
+
+  getCollectionInfo(handle): busca apenas metadados de uma coleção
+    (título, descrição, imagem). Usado para montar os cabeçalhos de páginas
+    de departamento e carrosséis na home.
+
+  getSubcollections(parentHandle): busca TODAS as coleções e filtra pelo
+    metafield parent_collection. Retorna as coleções filhas de um pai.
+    Ver detalhes na seção 4.
+
+  getProductsByCollection(handle, options): busca produtos de uma coleção
+    com suporte completo a:
+      - Paginação cursor-based (hasNextPage, hasPreviousPage, endCursor)
+      - Ordenação (MANUAL, PRICE, TITLE, BEST_SELLING, CREATED)
+      - Filtros (productType, tag, vendor reconstituídos da query string)
+      - Direção (next/prev para navegar entre páginas)
+    Sempre inclui um filtro fixo "available: true" para não exibir produtos
+    sem estoque.
+
+  searchProducts(term, options): busca global de produtos por texto livre.
+    Se o termo for vazio, usa "*" para retornar todos os produtos.
+    Suporta os mesmos filtros e paginação que getProductsByCollection.
+    Usado tanto na página /busca quanto na /produtos.
+
+--------------------------------------------------------------------------------
+10.3 src/services/customerService.ts — Dados e Endereços do Cliente
+--------------------------------------------------------------------------------
+Todas as funções usam a Storefront API e requerem um token de acesso
+do cliente (accessToken salvo no localStorage).
+
+Fragmentos reutilizados:
+  ADDRESS_FRAGMENT: campos de endereço (id, firstName, lastName, address1,
+    address2, city, province, country, zip, phone)
+  CUSTOMER_FULL_FRAGMENT: dados completos do cliente incluindo defaultAddress
+    e lista de até 20 endereços
+
+Funções:
+  getCustomer(token): busca todos os dados do cliente via query. Lança erro
+    se o token for inválido ou expirado.
+
+  updateCustomer(token, data): mutation customerUpdate — atualiza nome, email,
+    telefone, senha. Retorna { data: CustomerFull, userErrors[] }.
+
+  createAddress(token, address): mutation customerAddressCreate — adiciona
+    novo endereço ao perfil do cliente.
+
+  updateAddress(token, addressId, address): mutation customerAddressUpdate —
+    atualiza endereço existente.
+
+  deleteAddress(token, addressId): mutation customerAddressDelete — remove
+    endereço pelo ID.
+
+  setDefaultAddress(token, addressId): mutation customerDefaultAddressUpdate —
+    define qual endereço é o padrão.
+
+--------------------------------------------------------------------------------
+10.4 src/services/orderService.ts — Pedidos (Admin API via Route Handlers)
+--------------------------------------------------------------------------------
+Diferente dos outros serviços, este não chama o Shopify diretamente.
+Ele chama as Route Handlers internas do projeto (que por sua vez acessam
+a Admin API de forma segura no servidor).
+
+Interfaces exportadas:
+  DraftOrderItem: estrutura de um Draft Order formatado
+  OrderItem: estrutura de um pedido confirmado formatado
+  CustomerOrdersResponse: { success, drafts[], orders[], error? }
+  CreateDraftOrderInput: input para criação de Draft Order
+  DraftOrderResponse: resposta da criação de Draft Order
+
+Funções:
+  fetchCustomerOrders(customerId, customerEmail?): chama POST /api/get-customer-orders
+    Retorna drafts e orders do cliente de forma unificada.
+
+  createDraftOrder(input): chama POST /api/create-draft-order
+    Cria um Draft Order com os itens do carrinho.
+
+--------------------------------------------------------------------------------
+10.5 src/services/checkout.ts — Checkout Nativo Shopify (não é o fluxo principal)
+--------------------------------------------------------------------------------
+Implementa o fluxo alternativo de checkout usando a mutation cartCreate da
+Storefront API. Ao criar o cart, o Shopify retorna um checkoutUrl que
+redireciona para a página de checkout hospedada pelo Shopify.
+
+Este arquivo existe no projeto mas o fluxo principal adotado é o Draft Order
+(src/services/orderService.ts + /api/create-draft-order). O checkout nativo
+poderia ser usado para pagamentos online (cartão de crédito via Shopify
+Payments), mas para o modelo B2B com Pix/Boleto combinado por WhatsApp,
+o Draft Order é mais adequado.
+
+
+================================================================================
+11. UTILITÁRIOS (src/utils/)
+================================================================================
+
+--------------------------------------------------------------------------------
+11.1 src/utils/tokenUtils.ts
+--------------------------------------------------------------------------------
+Exporta getAccessToken(): lê o token do localStorage, verifica se já expirou
+comparando a data atual com tokenExpiresAt. Se expirado, limpa o localStorage
+e retorna null. Usado nas páginas que precisam chamar a Storefront API com
+autenticação (Minha Conta, Meus Pedidos) sem passar pelo AuthContext.
+
+--------------------------------------------------------------------------------
+11.2 src/utils/errorUtils.ts
+--------------------------------------------------------------------------------
+Exporta duas funções:
+  getErrorMessage(err): converte qualquer tipo de erro em string legível.
+    Trata: AxiosError (extrai mensagem da resposta HTTP), Error genérico ou
+    objetos desconhecidos.
+  extractShopifyUserErrors(errors[]): pega o array de customerUserErrors
+    retornado pelas mutations do Shopify e retorna a primeira mensagem de
+    erro, ou null se não houver erros.
+
+--------------------------------------------------------------------------------
+11.3 src/utils/validations.ts
+--------------------------------------------------------------------------------
+Funções de validação e formatação para o formulário de cadastro B2B:
+  validateRequired(value): verifica se o campo não está vazio
+  validateEmail(email): regex para formato de e-mail
+  validateCNPJ(cnpj): implementa validação completa com cálculo dos dois
+    dígitos verificadores pelo Módulo 11
+  validatePhone(phone): aceita 10 ou 11 dígitos (fixo ou celular)
+  validateCEP(cep): verifica se tem 8 dígitos
+  validateIE(ie): valida Inscrição Estadual (8 a 14 dígitos, opcional)
+  formatCNPJ(cnpj): formata para exibição 00.000.000/0000-00
+  formatPhone(phone): formata para (00) 00000-0000
+  formatCEP(cep): formata para 00000-000
+
+
+================================================================================
+12. TIPAGEM (src/types/shopify.ts)
+================================================================================
+
+Arquivo central com todas as interfaces TypeScript do projeto. Estão agrupadas
+por domínio:
+
+  CustomerUserError: erro retornado pelas mutations do Shopify
+  Customer: dados básicos do cliente (id, firstName, lastName, email, phone)
+  Address: endereço completo com campos do Shopify
+  CustomerFull: cliente completo com defaultAddress e lista de endereços
+  UpdateCustomerInput: campos atualizáveis do cliente
+  AddressInput: campos para criar/atualizar endereço
+  CompanyRegistrationData: dados do formulário de cadastro B2B (razaoSocial,
+    nomeFantasia, cnpj, inscricaoEstadual, ieIsento, nomeResponsavel,
+    whatsapp, email, senha, endereco)
+  FormErrors: mapa de erros por campo [campo: string]: string
+  CustomerCreatePayload / CustomerCreateData: resposta da mutation de criação
+  CustomerAccessToken / CustomerAccessTokenCreatePayload: token e data de exp.
+  CustomerLoginData: wrapper da resposta de login
+  MoneyV2: { amount: string, currencyCode: string }
+  ImageNode: campos de imagem (url, altText, width, height)
+  ProductVariant: variante com id, title, price, compareAtPrice, availableForSale
+  Product: produto completo com images, variants, priceRange, coverInfo (metafield)
+  Connection<T>: tipo genérico para listas paginadas { edges: [{node: T}] }
+  ShopifyGraphQLResponse<T>: { data: T, errors?: [] }
+
+
+================================================================================
+13. PÁGINAS (src/app/)
+================================================================================
+
+--------------------------------------------------------------------------------
+13.1 src/app/layout.tsx — Layout Raiz
+--------------------------------------------------------------------------------
+Configura a fonte Inter do Google Fonts, define os metadados globais (título e
+descrição), e envolve toda a aplicação com os dois Providers:
+  - AuthProvider (autenticação)
+  - CartProvider (carrinho)
+Também inclui o botão flutuante de WhatsApp em todas as páginas.
+
+--------------------------------------------------------------------------------
+13.2 src/app/page.tsx — Home
+--------------------------------------------------------------------------------
+Página server-side que faz múltiplas chamadas em paralelo (Promise.all) para:
+  - Produtos das coleções: destaques, escritorio, papelaria, ofertas-da-semana
+  - Info de coleções (título): destaques, escritorio, papelaria, ofertas-da-semana
+  - Produtos por marca (vendor): Filimail, Filipaper, Usapel
+
+Monta a página com seções em ordem:
+  Hero → ProductCarousel(Ofertas) → Categories → BrandShowcase →
+  ProductCarousel(Destaques) → BrandCarousel(Filimail) →
+  ProductCarousel(Escritório) → BrandCarousel(Filipaper) →
+  ProductCarousel(Papelaria) → BrandCarousel(Usapel)
+
+--------------------------------------------------------------------------------
+13.3 src/app/departamento/[slug]/page.tsx — Listagem por Departamento
+--------------------------------------------------------------------------------
+Página server-side dinâmica para exibir produtos de uma coleção.
+O [slug] na URL corresponde ao handle da coleção no Shopify.
+
+Lógica:
+  1. Chama infoQuery: busca a coleção atual (com seu metafield parent_collection)
+     e TODAS as coleções da loja de uma vez
+  2. Determina se a coleção atual é PAI ou FILHA (pela presença do metafield)
+  3. Se for PAI: lista as coleções filhas (children cards) no topo
+  4. Se for FILHA: exibe o link de volta para a coleção pai
+  5. Lê os searchParams (sort, type, tag, cursor, direction) da URL para
+     controlar ordenação, filtros e paginação
+  6. Busca os produtos da coleção com getProductsByCollection
+  7. Exibe DepartmentCover com título, imagem, breadcrumb e possíveis
+     subcoleções, depois FilterBar e grid de ProductCards paginados
+
+Imagens de capa: se a coleção no Shopify não tiver imagem, usa um mapa
+FALLBACK_IMAGES local (ex: para "papelaria" usa uma URL do Google Drive).
+
+--------------------------------------------------------------------------------
+13.4 src/app/produto/[slug]/page.tsx — Detalhe do Produto
+--------------------------------------------------------------------------------
+Página server-side que busca um produto pelo handle.
+Exibe: galeria de imagens com thumbnails, informações principais (componente
+ProductMainInfo que tem o botão "Adicionar ao Carrinho"), benefícios de entrega
+e garantia, e a descrição HTML completa do produto.
+
+Se o produto não for encontrado, exibe tela de erro com link para a home.
+
+--------------------------------------------------------------------------------
+13.5 src/app/busca/page.tsx — Busca Global
+--------------------------------------------------------------------------------
+Página server-side que lê o param "q" da URL como termo de busca.
+Usa searchProducts() do productService com suporte a filtros e paginação.
+Exibe FilterBar na lateral e grid de resultados. Se não houver resultados,
+mostra estado vazio com mensagem condicional (sem resultados para o termo
+específico vs. catálogo vazio).
+
+--------------------------------------------------------------------------------
+13.6 src/app/produtos/page.tsx — Todos os Produtos
+--------------------------------------------------------------------------------
+Similar à página de busca, mas sem termo. Chama searchProducts("") que retorna
+todos os produtos da loja. Aceita os mesmos filtros (sort, type, tag) e
+paginação via cursor nos searchParams.
+
+--------------------------------------------------------------------------------
+13.7 src/app/login/page.tsx — Login
+--------------------------------------------------------------------------------
+Página client-side com formulário de e-mail e senha.
+O login é feito DIRETAMENTE na Storefront API via Axios (não passa pela Route
+Handler), pois a Storefront API é projetada para ser chamada do navegador.
+A mutation customerAccessTokenCreate retorna o token que é salvo no
+localStorage via a função login() do AuthContext.
+Após login bem-sucedido, redireciona para a home.
+
+--------------------------------------------------------------------------------
+13.8 src/app/register/page.tsx — Cadastro B2B
+--------------------------------------------------------------------------------
+Página client-side com formulário extenso para cadastro de empresa.
+Campos: Razão Social, Nome Fantasia, CNPJ, Inscrição Estadual (opcional +
+opção "ISENTO"), Nome do Responsável, WhatsApp, E-mail, Senha, Endereço
+completo (CEP com autocomplete via ViaCEP, rua, número, complemento, bairro,
+cidade, UF).
+
+Lógica especial:
+  - handleCNPJChange: formata o CNPJ durante a digitação (00.000.000/0000-00)
+  - handlePhoneChange: formata o WhatsApp durante a digitação
+  - handleCEPChange: ao completar 8 dígitos, chama a API pública ViaCEP
+    (viacep.com.br) para preencher automaticamente rua, bairro, cidade e UF
+  - Validação completa no submit (todos os campos) usando funções de validations.ts
+  - Ao submeter, chama POST /api/create-customer (Route Handler)
+  - Em caso de sucesso, redireciona para /login
+
+--------------------------------------------------------------------------------
+13.9 src/app/carrinho/page.tsx — Carrinho
+--------------------------------------------------------------------------------
+Página client-side que lê os itens do CartContext.
+Permite:
+  - Ver e alterar quantidades dos itens
+  - Remover itens individualmente
+  - Inserir e aplicar cupom de desconto (chama /api/validate-coupon)
+  - Remover cupom aplicado
+  - Calcular subtotal, desconto e total
+  - Botão "Finalizar Pedido" que chama /api/create-draft-order
+
+Ao criar o Draft Order com sucesso, exibe tela de confirmação com:
+  - Número do pedido gerado (ex: D-1001)
+  - Link para o invoice URL do Shopify
+  - Botão "Combinar Pagamento pelo WhatsApp" que abre wa.me com mensagem
+    pré-formatada contendo lista de itens, cupom e total
+
+--------------------------------------------------------------------------------
+13.10 src/app/meus-pedidos/page.tsx — Meus Pedidos
+--------------------------------------------------------------------------------
+Página client-side com autenticação obrigatória (redireciona para /login se
+não estiver logado).
+
+Busca dois conjuntos de dados em paralelo:
+  1. Orders via Storefront API (pedidos confirmados com detalhes de variante)
+  2. Draft Orders + Orders via Admin API (fetchCustomerOrders service →
+     Route Handler → Admin API)
+
+Exibe dois agrupamentos:
+  - "Pedidos Pendentes": Draft Orders ainda com status OPEN
+  - "Histórico de Pedidos": Orders confirmados
+
+Recursos:
+  - Paginação cursor-based dos orders (5 por página, botões próxima/anterior)
+  - Paginação local dos draft orders (corte em 5 por página)
+  - Filtro por status: Todos / Pendentes / Pagos
+  - Cards clicáveis que levam para /meus-pedidos/[id]
+
+--------------------------------------------------------------------------------
+13.11 src/app/meus-pedidos/[id]/page.tsx — Detalhe do Pedido
+--------------------------------------------------------------------------------
+Página client-side que lê o ID do pedido pela URL.
+O ID vem no formato "[type]-[numericId]", ex: "draft-1234567890" ou
+"order-9876543210".
+
+Extrai o tipo e o ID numérico, chama POST /api/get-order e exibe:
+  - Status traduzido (PAID → "Pago", OPEN → "Aguardando Pagamento", etc.)
+  - Data de criação formatada
+  - Lista completa de itens com imagem, quantidade e preço unitário
+  - Endereço de entrega (se disponível)
+  - Totais: subtotal, desconto, frete,税 e total
+  - Para Draft Orders: botão com link para o invoice URL do Shopify e botão
+    de WhatsApp para reiniciar contato
+
+--------------------------------------------------------------------------------
+13.12 src/app/minha-conta/page.tsx — Minha Conta
+--------------------------------------------------------------------------------
+Página client-side com autenticação obrigatória.
+Usa tabs (abas) para organizar três seções:
+  - Resumo: visão geral dos dados do cliente (AccountSummary)
+  - Dados Cadastrais: formulário de edição de nome, e-mail, telefone, senha
+    (AccountForm — chama customerUpdate do customerService)
+  - Endereços: listagem, criação, edição e remoção de endereços
+    (AddressList + AddressForm)
+
+Um sistema de "Toast" (notificação temporária) é usado para confirmar ações
+como "Dados atualizados com sucesso!" ou erros.
+
+
+================================================================================
+14. COMPONENTES VISUAIS (src/components/)
+================================================================================
+
+Os componentes de UI são descritos resumidamente, com foco em qualquer
+lógica relevante:
+
+  Header.tsx: cabeçalho com logo, barra de busca, ícones de conta e carrinho.
+    Exibe o contador de itens do CartContext. Inclui botão de departamentos
+    que abre o DepartmentsModal.
+
+  Footer.tsx: rodapé com links, informações de contato e direitos.
+
+  MobileNavigator.tsx: barra de navegação inferior fixa para mobile com links
+    para Home, Busca, Carrinho e Conta. Visível apenas em telas pequenas.
+
+  Hero.tsx: banner principal da home com imagem e chamada para ação.
+
+  Categories.tsx: seção da home exibindo categorias/departamentos em cards.
+
+  ProductCard.tsx: card de produto com imagem, título, preço, preço original
+    riscado (se houver desconto), e botão "Adicionar ao Carrinho". Ao clicar
+    em adicionar, chama addItem() do CartContext.
+
+  ProductCarousel.tsx: carrossel horizontal de ProductCards com scroll.
+    Recebe um array de produtos e o handle da coleção para link "Ver todos".
+
+  ProductGrid.tsx: grade de ProductCards sem carrossel.
+
+  ProductMainInfo.tsx: componente da página de detalhe com seletor de
+    quantidade e botão "Adicionar ao Carrinho". Fica na seção de informações
+    junto com preço e disponibilidade.
+
+  BrandCarousel.tsx: seção de banner de marca com logo, texto descritivo,
+    banner de fundo e carrossel de produtos filtrados por vendor.
+
+  BrandShowcase.tsx: vitrine de logos de marcas.
+
+  DepartmentCover.tsx: área de capa das páginas de departamento com imagem
+    de fundo, título, descrição e breadcrumb pai/filha.
+
+  DepartmentsModal.tsx: modal aberto pelo Header mostrando todos os
+    departamentos/coleções para navegação.
+
+  FilterBar.tsx: barra lateral de filtros para páginas de listagem.
+    Permite filtrar por tipo de produto (product_type), tag e ordenação.
+    Ao selecionar, atualiza os searchParams da URL via router.push.
+
+  Pagination.tsx: botões de paginação "Anterior" e "Próxima".
+    Consome o objeto pageInfo { hasNextPage, hasPreviousPage, startCursor,
+    endCursor } e gera links com os query params cursor e direction.
+
+  SearchModal.tsx: modal de busca rápida acessível pelo Header.
+
+  WhatsAppButton.tsx: botão flutuante de WhatsApp presente em todas as
+    páginas. Usa o número configurado em NEXT_PUBLIC_WHATSAPP_NUMBER.
+
+
+================================================================================
+15. BIBLIOTECA (src/lib/)
+================================================================================
+
+  src/lib/shopifyProducts.ts: arquivo com funções básicas de busca de produtos
+    (getProductsByCollection, getProductByHandle, searchProducts). É uma versão
+    mais simples/antiga das funções que foram expandidas e movidas para
+    src/services/productService.ts. O arquivo ainda existe no projeto mas as
+    páginas usam o productService como fonte principal.
+
+  src/lib/products.ts: arquivo de biblioteca (não lido em detalhes, provável
+    conjunto de helpers ou tipos complementares).
+
+
+================================================================================
+16. CONFIGURAÇÃO DO PROJETO
+================================================================================
+
+next.config.ts:
+  A única configuração relevante é na propriedade "images.remotePatterns":
+  está configurada como "**" (aceita qualquer hostname) com protocolo HTTPS.
+  Isso é necessário porque as imagens dos produtos vêm do CDN do Shopify
+  (cdn.shopify.com) e outras fontes externas.
+
+package.json:
+  Dependências principais:
+    - next 16.1.3 (App Router)
+    - react / react-dom 19.2.3
+    - axios 1.13.2 (cliente HTTP para Storefront API)
+    - lucide-react 0.562.0 (ícones SVG)
+  Dev dependências:
+    - tailwindcss 4 + @tailwindcss/postcss
+    - typescript 5
+    - eslint + eslint-config-next
+
+tsconfig.json:
+  Configuração padrão do Next.js + TypeScript com strict mode e paths aliases
+  (@/ aponta para src/).
+
+tailwind.config.js:
+  Configuração do Tailwind CSS com tema customizado que inclui as cores da
+  marca (azul principal #2563EB, azul escuro #1e3a8a).
+
+
+================================================================================
+17. FLUXO COMPLETO — DO ZERO AO PEDIDO
+================================================================================
+
+Para facilitar o entendimento do fluxo completo de um cliente usando o sistema:
+
+  1. ACESSO: Cliente acessa o site. O AuthContext verifica localStorage — se
+     houver token válido, já fica logado.
+
+  2. NAVEGAÇÃO: Navega pela home, carrosséis de produtos, clica em um
+     departamento. A página de departamento exibe subcoleções se for pai, ou
+     produtos direto se for filha.
+
+  3. BUSCA: Usa a barra de busca que redireciona para /busca?q=termo.
+     A busca usa a Storefront API diretamente do servidor Next.js.
+
+  4. PRODUTO: Clica em um produto, vai para /produto/[slug]. Seleciona
+     quantidade e clica "Adicionar ao Carrinho". O item é salvo no CartContext
+     e persiste no localStorage.
+
+  5. CADASTRO (se necessário): Vai para /register, preenche todos os dados
+     empresariais. O CEP é preenchido automaticamente (ViaCEP). Ao submeter,
+     a Route Handler /api/create-customer cria o cliente no Shopify com os
+     metafields de CNPJ, Razão Social, etc. Depois vai para /login.
+
+  6. LOGIN: Email e senha são enviados à Storefront API. Token de acesso é
+     salvo no localStorage. AuthContext carrega os dados do cliente.
+
+  7. CARRINHO: Vai para /carrinho. Vê o resumo do pedido. Opcionalmente cola
+     um cupom (validado via /api/validate-coupon). Clica "Finalizar Pedido".
+
+  8. DRAFT ORDER: O frontend envia os itens + dados do cliente logado para
+     /api/create-draft-order. A Route Handler cria o Draft Order na Admin API
+     do Shopify. Retorna número do pedido.
+
+  9. WHATSAPP: O frontend exibe tela de confirmação com botão que abre o
+     WhatsApp com mensagem pré-formatada (número do pedido, itens, total).
+     O atendente combina o pagamento (Pix ou Boleto) e confirma o pedido
+     no painel do Shopify.
+
+  10. ACOMPANHAMENTO: O cliente acessa /meus-pedidos para ver o status.
+      Os Draft Orders aparecem como "Aguardando Pagamento". Após o atendente
+      confirmar o pagamento no Shopify, o Order aparece como "Pago".
+
+
+================================================================================
+18. RESUMO DE DECISÕES TÉCNICAS IMPORTANTES
+================================================================================
+
+1. POR QUE DUAS APIS SHOPIFY?
+   A Storefront API é pública e projetada para frontends — suporta login de
+   clientes, busca de produtos, criação de carrinhos. A Admin API tem mais
+   poder (Draft Orders, criar clientes com campos customizados, validar cupons)
+   mas não pode ser exposta no frontend por razões de segurança. A solução foi
+   usar Route Handlers do Next.js como camada intermediária segura.
+
+2. POR QUE DRAFT ORDERS E NÃO CHECKOUT SHOPIFY?
+   Para o modelo B2B com pagamento manual (Pix/Boleto), o Draft Order é mais
+   adequado: fica salvo no painel do Shopify, pode ser editado pelo atendente,
+   e só vira pedido confirmado quando o pagamento é combinado.
+
+3. POR QUE TOKEN NO LOCALSTORAGE?
+   Para que o cliente não precise fazer login novamente ao reabrir o navegador.
+   O token tem data de expiração e é verificado antes de uso. Para um sistema
+   B2B interno, essa abordagem é razoável e prática.
+
+4. POR QUE METAFIELD PARA HIERARQUIA DE COLEÇÕES?
+   O Shopify não tem hierarquia nativa de coleções. Usar metafields é a
+   abordagem oficial recomendada para estender o modelo de dados do Shopify
+   sem criar estruturas externas.
+
+5. POR QUE TAGS PARA VINCULAR PRODUTO À COLEÇÃO?
+   As coleções automáticas por tag dispensam a necessidade de entrar em cada
+   coleção e adicionar manualmente o produto. Basta colocar a tag certa no
+   produto e ele já entra nas coleções corretas.
+
+
+================================================================================
+FIM DA DOCUMENTAÇÃO
+================================================================================

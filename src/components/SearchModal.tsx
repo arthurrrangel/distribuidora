@@ -81,7 +81,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
               ref={inputRef}
               type="text"
               placeholder="O que você procura?"
-              className="w-full py-3 pl-10 pr-10 rounded-lg bg-gray-100 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#2563EB] text-base"
+              className="w-full py-3 pl-10 pr-10 rounded-lg bg-gray-100 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0464D5] text-base"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => {
@@ -102,7 +102,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
           </div>
           <button
             onClick={onClose}
-            className="text-[#2563EB] font-medium text-sm px-2 hover:bg-blue-50 rounded py-2 transition-colors"
+            className="text-[#0464D5] font-medium text-sm px-2 hover:bg-blue-50 rounded py-2 transition-colors"
           >
             Cancelar
           </button>
@@ -112,14 +112,14 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
         <div className="flex-1 overflow-y-auto p-2 md:min-h-[300px]">
           {loading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="w-8 h-8 text-[#2563EB] animate-spin" />
+              <Loader2 className="w-8 h-8 text-[#0464D5] animate-spin" />
             </div>
           ) : searchQuery.length > 2 ? (
             <div className="space-y-1">
               {results.length > 0 && (
                 <button
                   onClick={handleSearchSubmit}
-                  className="w-full text-left px-3 py-3 text-sm text-[#2563EB] font-semibold hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-2 border-b border-gray-100 mb-1"
+                  className="w-full text-left px-3 py-3 text-sm text-[#0464D5] font-semibold hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-2 border-b border-gray-100 mb-1"
                 >
                   <Search className="w-4 h-4 shrink-0" />
                   Ver todos os resultados para &quot;{searchQuery}&quot;
@@ -161,7 +161,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-sm font-medium text-gray-900 line-clamp-1 group-hover:text-[#2563EB] transition-colors">
+                      <h4 className="text-sm font-medium text-gray-900 line-clamp-1 group-hover:text-[#0464D5] transition-colors">
                         {product.title}
                       </h4>
                       <span className="text-[#166534] font-bold text-sm">
@@ -169,7 +169,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                       </span>
                     </div>
 
-                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#2563EB]" />
+                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#0464D5]" />
                   </Link>
                 );
               })}
@@ -177,7 +177,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
               {results.length > 0 && (
                 <button
                   onClick={handleSearchSubmit}
-                  className="w-full text-center py-4 text-sm text-[#2563EB] font-medium hover:underline mt-2 border-t border-gray-50"
+                  className="w-full text-center py-4 text-sm text-[#0464D5] font-medium hover:underline mt-2 border-t border-gray-50"
                 >
                   Ver todos os resultados para &quot;{searchQuery}&quot;
                 </button>

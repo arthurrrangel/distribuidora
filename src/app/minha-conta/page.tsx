@@ -103,7 +103,7 @@ export default function MinhaContaPage() {
         <Header />
         <div className="flex-1 flex items-center justify-center">
           <div className="flex flex-col items-center gap-3 text-gray-500">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+            <Loader2 className="w-8 h-8 animate-spin text-[#0464D5]" />
             <span className="text-sm">Carregando sua conta...</span>
           </div>
         </div>
@@ -124,7 +124,7 @@ export default function MinhaContaPage() {
             </p>
             <button
               onClick={fetchCustomerData}
-              className="px-4 py-2 bg-blue-600 text-white text-sm rounded-xl hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-[#0464D5] text-white text-sm rounded-xl hover:bg-[#0353b4] transition-colors"
             >
               Tentar novamente
             </button>
@@ -164,7 +164,7 @@ export default function MinhaContaPage() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
                     activeTab === tab.id
-                      ? "bg-blue-600 text-white shadow-sm"
+                      ? "bg-[#0464D5] text-white shadow-sm"
                       : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
@@ -178,8 +178,8 @@ export default function MinhaContaPage() {
             <div className="hidden md:flex flex-col bg-white border border-gray-200 rounded-2xl overflow-hidden">
               <div className="p-4 border-b border-gray-100">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-                    <span className="text-sm font-bold text-blue-600">
+                  <div className="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+                    <span className="text-sm font-bold text-[#0464D5]">
                       {customer.firstName?.[0]?.toUpperCase() ?? "?"}
                     </span>
                   </div>
@@ -201,7 +201,7 @@ export default function MinhaContaPage() {
                     onClick={() => setActiveTab(tab.id)}
                     className={`w-full flex items-center justify-between gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all mb-0.5 ${
                       activeTab === tab.id
-                        ? "bg-blue-600 text-white"
+                        ? "bg-[#0464D5] text-white"
                         : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                     }`}
                   >
@@ -237,13 +237,13 @@ export default function MinhaContaPage() {
                 {/* Quick actions */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <QuickCard
-                    icon={<User className="w-5 h-5 text-blue-600" />}
+                    icon={<User className="w-5 h-5 text-[#0464D5]" />}
                     title="Dados Cadastrais"
                     description="Edite seu nome, e-mail e telefone"
                     onClick={() => setActiveTab("dados")}
                   />
                   <QuickCard
-                    icon={<MapPin className="w-5 h-5 text-blue-600" />}
+                    icon={<MapPin className="w-5 h-5 text-[#0464D5]" />}
                     title="Endereços"
                     description="Gerencie seus endereços de entrega"
                     onClick={() => setActiveTab("enderecos")}
@@ -313,9 +313,9 @@ function QuickCard({
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-4 bg-white border border-gray-200 rounded-2xl p-4 hover:border-blue-300 hover:shadow-sm transition-all text-left w-full group"
+      className="flex items-center gap-4 bg-white border border-gray-200 rounded-2xl p-4 hover:border-[#0464D5]/30 hover:shadow-sm transition-all text-left w-full group"
     >
-      <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 group-hover:bg-blue-100 transition-colors">
+      <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 group-hover:bg-blue-50 transition-colors">
         {icon}
       </div>
       <div>

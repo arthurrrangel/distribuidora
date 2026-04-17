@@ -24,8 +24,8 @@ export function AccountSummary({ customer }: AccountSummaryProps) {
     <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-5">
       {/* Avatar + nome */}
       <div className="flex items-center gap-4">
-        <div className="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-          <span className="text-xl font-bold text-blue-600">
+        <div className="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+          <span className="text-xl font-bold text-[#0464D5]">
             {customer.firstName?.[0]?.toUpperCase() ?? "?"}
           </span>
         </div>

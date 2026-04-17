@@ -79,14 +79,14 @@ export default async function SearchPage({
         {/* Cabeçalho da Página */}
         <div className="mb-6">
           <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-            <Link href="/" className="hover:text-blue-600 transition-colors">
+            <Link href="/" className="hover:text-[#0464D5] transition-colors">
               Início
             </Link>
             <span>/</span>
             <span className="text-gray-800 font-medium">Busca</span>
           </div>
 
-          <h1 className="text-3xl font-bold text-[#1e3a8a] flex items-center gap-2">
+          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
             {query ? (
               <>Resultados para &quot;{query}&quot;</>
             ) : (
@@ -162,7 +162,7 @@ export default async function SearchPage({
                     <div className="flex gap-3">
                       <Link
                         href="/busca"
-                        className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm"
+                        className="px-6 py-2.5 bg-[#0464D5] text-white rounded-lg font-medium hover:bg-[#0353b4] transition-colors shadow-sm"
                       >
                         Limpar busca e filtros
                       </Link>
@@ -171,7 +171,7 @@ export default async function SearchPage({
                 ) : (
                   <>
                     <div className="bg-blue-50 p-4 rounded-full mb-4">
-                      <SearchIcon className="w-12 h-12 text-blue-400" />
+                      <SearchIcon className="w-12 h-12 text-[#0464D5]/50" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-800 mb-2">
                       Faça uma nova busca

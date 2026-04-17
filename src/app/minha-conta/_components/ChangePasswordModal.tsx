@@ -60,7 +60,7 @@ export function ChangePasswordModal({
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <div className="flex items-center gap-2">
-            <Lock className="w-4 h-4 text-blue-600" />
+            <Lock className="w-4 h-4 text-[#0464D5]" />
             <h3 className="font-semibold text-gray-900">Alterar Senha</h3>
           </div>
           <button
@@ -107,7 +107,7 @@ export function ChangePasswordModal({
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-medium rounded-xl transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-[#0464D5] hover:bg-[#0353b4] disabled:opacity-60 text-white text-sm font-medium rounded-xl transition-colors"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
               {saving ? "Salvando..." : "Salvar"}
@@ -150,7 +150,7 @@ function PasswordField({
           value={value}
           onChange={onChange}
           required
-          className="w-full border border-gray-200 rounded-xl px-3 py-2.5 pr-10 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className="w-full border border-gray-200 rounded-xl px-3 py-2.5 pr-10 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0464D5] focus:border-transparent transition"
         />
         <button
           type="button"

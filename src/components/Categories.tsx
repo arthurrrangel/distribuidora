@@ -139,7 +139,7 @@ function CategoryList({
           );
 
           const circleClass =
-            "w-20 h-20 md:w-24 md:h-24 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 transition-all shadow-md overflow-hidden ring-2 ring-transparent ring-offset-2 duration-200 group-hover:text-blue-500 group-hover:ring-blue-200 group-active:scale-95";
+            "w-20 h-20 md:w-24 md:h-24 rounded-full bg-white flex items-center justify-center text-gray-400 transition-all shadow-md overflow-hidden ring-2 ring-transparent ring-offset-2 duration-200 group-hover:text-[#0464D5] group-hover:ring-[#0464D5]/30 group-active:scale-95";
 
           if (isParentView && onParentClick) {
             return (
@@ -149,7 +149,7 @@ function CategoryList({
                 className="flex flex-col items-center gap-2 group min-w-[88px] md:min-w-[104px] focus:outline-none"
               >
                 <div className={circleClass}>{imgEl}</div>
-                <span className="text-xs md:text-sm font-semibold text-gray-700 text-center group-hover:text-[#2563EB] transition-colors leading-tight max-w-[96px]">
+                <span className="text-xs md:text-sm font-semibold text-gray-700 text-center group-hover:text-[#0464D5] transition-colors leading-tight max-w-[96px]">
                   {cat.title}
                 </span>
               </button>
@@ -163,7 +163,7 @@ function CategoryList({
               className="flex flex-col items-center gap-2 group min-w-[88px] md:min-w-[104px]"
             >
               <div className={circleClass}>{imgEl}</div>
-              <span className="text-xs md:text-sm font-semibold text-gray-700 text-center group-hover:text-[#2563EB] transition-colors leading-tight max-w-[96px]">
+              <span className="text-xs md:text-sm font-semibold text-gray-700 text-center group-hover:text-[#0464D5] transition-colors leading-tight max-w-[96px]">
                 {cat.title}
               </span>
             </Link>
@@ -279,7 +279,7 @@ export function Categories() {
         >
           <button
             onClick={handleBack}
-            className="flex items-center gap-1.5 text-sm font-medium text-[#2563EB] hover:text-blue-800 transition-colors"
+            className="flex items-center gap-1.5 text-sm font-medium text-[#0464D5] hover:text-blue-800 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Departamentos

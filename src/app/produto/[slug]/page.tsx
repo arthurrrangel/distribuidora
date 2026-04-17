@@ -3,9 +3,9 @@ import { Footer } from "@/components/Footer";
 import { MobileNavigator } from "@/components/MobileNavigator";
 import { getProductByHandle } from "@/services/productService";
 import { ProductMainInfo } from "@/components/ProductMainInfo";
-import { ChevronRight, Truck, ShieldCheck, Star, PackageX } from "lucide-react";
+import { ProductImageGallery } from "@/components/ProductImageGallery";
+import { ChevronRight, Truck, ShieldCheck, PackageX, Tag } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 
 // Garante que a página sempre busque dados novos se necessário
 export const dynamic = "force-dynamic";
@@ -31,7 +31,7 @@ export default async function ProductPage({
           </h1>
           <Link
             href="/"
-            className="bg-blue-600 text-white px-6 py-3 rounded-md font-bold hover:bg-blue-700 transition-colors"
+            className="bg-[#0464D5] text-white px-6 py-3 rounded-md font-bold hover:bg-[#0353b4] transition-colors"
           >
             Voltar para o Início
           </Link>
@@ -49,7 +49,10 @@ export default async function ProductPage({
     ? parseFloat(firstVariant.compareAtPrice.amount)
     : undefined;
 
-  const mainImage = product.images.edges[0]?.node;
+  const images = product.images.edges.map((e) => ({
+    url: e.node.url,
+    altText: e.node.altText,
+  }));
 
   return (
     <main className="min-h-screen bg-white flex flex-col pb-16 md:pb-0">
@@ -58,7 +61,7 @@ export default async function ProductPage({
       {/* Breadcrumb */}
       <div className="bg-gray-50 py-3 border-b border-gray-100 hidden md:block">
         <div className="container mx-auto px-4 md:px-8 text-xs text-gray-500 flex items-center gap-2">
-          <Link href="/" className="hover:text-blue-600">
+          <Link href="/" className="hover:text-[#0464D5]">
             Início
           </Link>
           <ChevronRight className="w-3 h-3" />
@@ -70,66 +73,24 @@ export default async function ProductPage({
 
       <div className="container mx-auto px-4 py-8 md:px-8">
         <div className="flex flex-col md:flex-row gap-8 md:gap-12">
-          {/* Galeria de Imagens */}
-          <div className="space-y-4 w-full md:w-[450px] shrink-0">
-            <div className="bg-white rounded-xl border border-gray-100 aspect-square flex items-center justify-center relative overflow-hidden shadow-sm">
-              {mainImage ? (
-                <Image
-                  src={mainImage.url}
-                  // CORREÇÃO: Fallback triplo (altText -> Title -> String Padrão)
-                  alt={
-                    mainImage.altText || product.title || "Imagem do Produto"
-                  }
-                  fill
-                  className="object-contain p-4"
-                  priority
-                  // CORREÇÃO: Adicionado sizes para remover o aviso e melhorar performance
-                  sizes="(max-width: 768px) 100vw, 450px"
-                />
-              ) : (
-                <div className="text-gray-300 font-bold text-2xl">SEM FOTO</div>
-              )}
-            </div>
-
-            {/* Thumbnails */}
-            {product.images.edges.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-                {product.images.edges.map((img, i) => (
-                  <div
-                    key={i}
-                    className="w-20 h-20 border border-gray-200 rounded-md relative shrink-0 cursor-pointer hover:border-blue-500 transition-colors bg-gray-50"
-                  >
-                    <Image
-                      src={img.node.url}
-                      // CORREÇÃO: Fallback específico para thumbnails
-                      alt={
-                        img.node.altText || `${product.title} - imagem ${i + 1}`
-                      }
-                      fill
-                      className="object-contain p-1"
-                      // CORREÇÃO: Adicionado sizes para thumbnails
-                      sizes="80px"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* Galeria de Imagens — agora interativa */}
+          <ProductImageGallery images={images} productTitle={product.title} />
 
           {/* Informações do Produto */}
           <div className="flex-1">
-            <h1 className="text-2xl md:text-3xl font-bold text-[#1e3a8a] mb-2 leading-tight">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 leading-tight">
               {product.title}
             </h1>
 
-            <div className="flex items-center gap-4 mb-6">
-              <div className="flex text-yellow-400">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Star key={i} className="w-4 h-4 fill-current" />
-                ))}
+            {/* Badge de marca/fornecedor no lugar das estrelas falsas */}
+            {product.vendor && (
+              <div className="flex items-center gap-2 mb-5">
+                <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full border border-blue-100">
+                  <Tag className="w-3 h-3" />
+                  {product.vendor}
+                </span>
               </div>
-              <span className="text-sm text-gray-500">(Novo)</span>
-            </div>
+            )}
 
             <ProductMainInfo
               id={firstVariant?.id || ""}
@@ -138,13 +99,13 @@ export default async function ProductPage({
               title={product.title}
               price={price}
               originalPrice={originalPrice}
-              image={mainImage?.url}
+              image={images[0]?.url}
             />
 
             {/* Benefícios */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
               <div className="flex items-start gap-3 p-4 rounded-lg bg-gray-50 border border-gray-100">
-                <Truck className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                <Truck className="w-5 h-5 text-[#0464D5] shrink-0 mt-0.5" />
                 <div>
                   <h3 className="font-bold text-gray-900 text-sm">
                     Entrega Rápida
@@ -155,7 +116,7 @@ export default async function ProductPage({
                 </div>
               </div>
               <div className="flex items-start gap-3 p-4 rounded-lg bg-gray-50 border border-gray-100">
-                <ShieldCheck className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                <ShieldCheck className="w-5 h-5 text-[#0464D5] shrink-0 mt-0.5" />
                 <div>
                   <h3 className="font-bold text-gray-900 text-sm">
                     Garantia Repon

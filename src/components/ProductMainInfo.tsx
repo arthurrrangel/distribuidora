@@ -72,7 +72,7 @@ export function ProductMainInfo({
 
         {isLoggedIn ? (
           <div className="flex items-end gap-2 flex-wrap">
-            <span className="text-4xl font-extrabold text-[#2563EB]">
+            <span className="text-4xl font-extrabold text-[#0464D5]">
               R$ {finalPrice.toFixed(2).replace(".", ",")}
             </span>
             <span className="text-gray-500 mb-2 font-medium">/{unit}</span>
@@ -102,7 +102,7 @@ export function ProductMainInfo({
           <div className="flex items-center border border-gray-300 rounded-lg bg-white h-12 w-full sm:w-auto">
             <button
               onClick={handleDecrement}
-              className="w-12 h-full flex items-center justify-center text-gray-500 hover:text-blue-600 hover:bg-gray-50 rounded-l-lg disabled:opacity-50"
+              className="w-12 h-full flex items-center justify-center text-gray-500 hover:text-[#0464D5] hover:bg-gray-50 rounded-l-lg disabled:opacity-50"
               disabled={quantity <= 1}
             >
               <Minus className="w-4 h-4" />
@@ -115,7 +115,7 @@ export function ProductMainInfo({
             />
             <button
               onClick={handleIncrement}
-              className="w-12 h-full flex items-center justify-center text-gray-500 hover:text-blue-600 hover:bg-gray-50 rounded-r-lg"
+              className="w-12 h-full flex items-center justify-center text-gray-500 hover:text-[#0464D5] hover:bg-gray-50 rounded-r-lg"
             >
               <Plus className="w-4 h-4" />
             </button>
@@ -126,7 +126,7 @@ export function ProductMainInfo({
             className={`flex-1 h-12 rounded-lg font-bold text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-900/10 active:scale-95 ${
               added
                 ? "bg-green-600 hover:bg-green-700"
-                : "bg-[#2563EB] hover:bg-blue-700"
+                : "bg-[#0464D5] hover:bg-[#0353b4]"
             }`}
           >
             {added ? (

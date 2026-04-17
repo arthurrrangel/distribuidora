@@ -1,0 +1,16 @@
+{
+  "name": "Repon",
+  "short_name": "Repon",
+  "description": "Papelaria e escritório no atacado para empresas com CNPJ",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0464D5",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
