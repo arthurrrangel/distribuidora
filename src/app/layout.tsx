@@ -4,6 +4,13 @@ import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { Analytics } from "@/components/Analytics";
+import {
+  StructuredData,
+  organizationSchema,
+  localBusinessSchema,
+  websiteSchema,
+} from "@/components/StructuredData";
 
 export const metadata: Metadata = {
   title: "Repon | Papelaria e escritório no atacado",
@@ -64,6 +71,23 @@ export const metadata: Metadata = {
     shortcut: "/favicon.svg",
   },
   manifest: "/site.webmanifest",
+  alternates: {
+    canonical: "/",
+  },
+  category: "shopping",
+  applicationName: "Repon",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+};
+
+export const viewport = {
+  themeColor: "#0464D5",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
@@ -73,7 +97,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
+      <head>
+        <StructuredData
+          data={[organizationSchema, localBusinessSchema, websiteSchema]}
+        />
+      </head>
       <body className="bg-white antialiased">
+        <Analytics />
         <AuthProvider>
           <CartProvider>
             {children}
