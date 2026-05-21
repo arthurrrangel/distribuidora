@@ -1,10 +1,15 @@
 // src/components/ProductMainInfo.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { Minus, Plus, ShoppingCart, Lock, MessageCircle } from "lucide-react";
+import {
+  trackAddToCart,
+  trackViewItem,
+  trackWhatsAppClick,
+} from "@/components/Analytics";
 
 interface ProductMainInfoProps {
   id: string; // ID da Variante
@@ -35,6 +40,12 @@ export function ProductMainInfo({
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
 
+  // Dispara view_item assim que o produto carrega (1x por mount)
+  useEffect(() => {
+    trackViewItem({ id: productId, name: title, price: price * 0.9 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productId]);
+
   const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "21995946491";
   const waMessage = encodeURIComponent(
     `Olá! Tenho interesse no produto: ${title}. Poderia me passar mais informações?`
@@ -61,6 +72,13 @@ export function ProductMainInfo({
       },
       quantity,
     );
+
+    trackAddToCart({
+      id: productId,
+      name: title,
+      price: finalPrice,
+      quantity,
+    });
 
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
@@ -159,6 +177,7 @@ export function ProductMainInfo({
         href={waLink}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackWhatsAppClick(`product:${handle}`)}
         className="mt-3 flex items-center justify-center gap-2 w-full py-3 rounded-lg border-2 border-[#25D366] text-[#25D366] font-bold text-sm hover:bg-[#25D366] hover:text-white transition-all duration-200"
       >
         <MessageCircle className="w-4 h-4" />

@@ -7,6 +7,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { searchProducts } from "@/services/productService"; // Agora importando do local correto
 import { Product } from "@/types/shopify";
+import { trackSearch } from "@/components/Analytics";
 
 type SearchModalProps = {
   isOpen: boolean;
@@ -56,6 +57,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   // Função para ir para a página de resultados completa
   const handleSearchSubmit = () => {
     if (searchQuery.trim().length > 0) {
+      trackSearch(searchQuery.trim());
       onClose();
       router.push(`/busca?q=${encodeURIComponent(searchQuery)}`);
     }
