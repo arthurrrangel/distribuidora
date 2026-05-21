@@ -5,12 +5,22 @@ import { getProductByHandle } from "@/services/productService";
 import { ProductMainInfo } from "@/components/ProductMainInfo";
 import { ProductImageGallery } from "@/components/ProductImageGallery";
 import { RelatedProducts } from "@/components/RelatedProducts";
-import { ChevronRight, Truck, ShieldCheck, PackageX, Tag } from "lucide-react";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { StructuredData, SITE_URL } from "@/components/StructuredData";
+import { Truck, ShieldCheck, PackageX, Tag } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
 
 // Garante que a página sempre busque dados novos se necessário
 export const dynamic = "force-dynamic";
+
+// Helper puro para gerar uma data 90 dias no futuro — extraído do componente
+// para satisfazer a regra react-hooks/purity (Date.now é impuro no render).
+function priceValidUntil90Days(): string {
+  const d = new Date();
+  d.setDate(d.getDate() + 90);
+  return d.toISOString().split("T")[0];
+}
 
 // ── SEO dinâmico por produto ───────────────────────────────────────────────
 export async function generateMetadata({
@@ -41,11 +51,15 @@ export async function generateMetadata({
   return {
     title: `${product.title} | Repon Atacado`,
     description,
+    alternates: {
+      canonical: `/produto/${product.handle}`,
+    },
     openGraph: {
       title: `${product.title} | Repon Atacado`,
       description: price
         ? `${description} A partir de R$ ${price.replace(".", ",")}`
         : description,
+      url: `${SITE_URL}/produto/${product.handle}`,
       images: image ? [{ url: image, width: 800, height: 800, alt: product.title }] : [],
       type: "website",
       locale: "pt_BR",
@@ -104,12 +118,14 @@ export default async function ProductPage({
     altText: e.node.altText,
   }));
 
-  // ── JSON-LD structured data ───────────────────────────────────────────────
-  const jsonLd = {
+  // ── JSON-LD Product — schema completo seguindo guideline do Google Merchant
+  const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
+    "@id": `${SITE_URL}/produto/${product.handle}#product`,
     name: product.title,
     description: product.description,
+    sku: firstVariant?.id?.split("/").pop() || product.handle,
     image: images.map((i) => i.url),
     brand: {
       "@type": "Brand",
@@ -119,35 +135,69 @@ export default async function ProductPage({
       "@type": "Offer",
       priceCurrency: "BRL",
       price: (price * 0.9).toFixed(2),
-      availability: "https://schema.org/InStock",
+      priceValidUntil: priceValidUntil90Days(),
+      availability: firstVariant?.availableForSale
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      itemCondition: "https://schema.org/NewCondition",
       seller: {
         "@type": "Organization",
         name: "Repon Plataforma de Comércio Ltda",
+        url: SITE_URL,
       },
-      url: `https://repon.com.br/produto/${product.handle}`,
+      url: `${SITE_URL}/produto/${product.handle}`,
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "BR",
+        returnPolicyCategory:
+          "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: 7,
+        returnMethod: "https://schema.org/ReturnByMail",
+        returnFees: "https://schema.org/FreeReturn",
+      },
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingRate: {
+          "@type": "MonetaryAmount",
+          value: "0",
+          currency: "BRL",
+        },
+        shippingDestination: {
+          "@type": "DefinedRegion",
+          addressCountry: "BR",
+        },
+        deliveryTime: {
+          "@type": "ShippingDeliveryTime",
+          handlingTime: {
+            "@type": "QuantitativeValue",
+            minValue: 0,
+            maxValue: 1,
+            unitCode: "DAY",
+          },
+          transitTime: {
+            "@type": "QuantitativeValue",
+            minValue: 1,
+            maxValue: 5,
+            unitCode: "DAY",
+          },
+        },
+      },
     },
   };
 
   return (
     <main className="min-h-screen bg-white flex flex-col pb-16 md:pb-0">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <StructuredData data={productSchema} />
       <Header />
 
-      {/* Breadcrumb */}
-      <div className="bg-gray-50 py-3 border-b border-gray-100 hidden md:block">
-        <div className="container mx-auto px-4 md:px-8 text-xs text-gray-500 flex items-center gap-2">
-          <Link href="/" className="hover:text-[#0464D5]">
-            Início
-          </Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-gray-800 font-medium truncate max-w-[300px]">
-            {product.title}
-          </span>
-        </div>
-      </div>
+      <Breadcrumb
+        items={[
+          { name: "Início", url: "/" },
+          { name: "Produtos", url: "/produtos" },
+          { name: product.title, url: `/produto/${product.handle}` },
+        ]}
+        className="hidden md:block"
+      />
 
       <div className="container mx-auto px-4 py-8 md:px-8">
         <div className="flex flex-col md:flex-row gap-8 md:gap-12">
