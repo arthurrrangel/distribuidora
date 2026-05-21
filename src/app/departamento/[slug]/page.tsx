@@ -9,6 +9,12 @@ import {
   getProductsByCollection,
   ProductOptions,
 } from "@/services/productService";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import {
+  StructuredData,
+  buildItemListSchema,
+  SITE_URL,
+} from "@/components/StructuredData";
 import { PackageX, Package } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -97,9 +103,13 @@ export async function generateMetadata({
     return {
       title: `${title} no Atacado | Repon`,
       description,
+      alternates: {
+        canonical: `/departamento/${slug}`,
+      },
       openGraph: {
         title: `${title} no Atacado | Repon`,
         description,
+        url: `${SITE_URL}/departamento/${slug}`,
         images: image ? [{ url: image, width: 1200, height: 630, alt: title }] : [],
         type: "website",
         locale: "pt_BR",
@@ -110,6 +120,7 @@ export async function generateMetadata({
     return {
       title: `${formatTitle(slug)} | Repon`,
       description: "Papelaria e escritório no atacado para CNPJ. Repon.",
+      alternates: { canonical: `/departamento/${slug}` },
     };
   }
 }
@@ -240,9 +251,38 @@ export default async function DepartmentPage({
   const { products: categoryProducts, pageInfo } =
     await getProductsByCollection(slug, options);
 
+  // ── Breadcrumb dinâmico: Início > [pai?] > coleção atual ─────────────────
+  const breadcrumbItems = [{ name: "Início", url: "/" }];
+  if (parentNode) {
+    breadcrumbItems.push({
+      name: parentNode.title,
+      url: `/departamento/${parentNode.handle}`,
+    });
+  }
+  breadcrumbItems.push({
+    name: thisTitle,
+    url: `/departamento/${slug}`,
+  });
+
+  // ── ItemList JSON-LD para a grade de produtos (rich snippet de listagem) ─
+  const itemListSchema =
+    categoryProducts.length > 0
+      ? buildItemListSchema(
+          categoryProducts.map((p) => ({
+            handle: p.handle,
+            title: p.title,
+            image: p.images.edges[0]?.node.url ?? null,
+            price: parseFloat(p.priceRange.minVariantPrice.amount),
+          })),
+          `${thisTitle} no Atacado`,
+        )
+      : null;
+
   return (
     <main className="min-h-screen bg-gray-50 flex flex-col md:pb-0">
+      {itemListSchema && <StructuredData data={itemListSchema} />}
       <Header />
+      <Breadcrumb items={breadcrumbItems} className="hidden md:block" />
 
       {/* CAPA + FAIXA AZUL (faixa fica atrás da imagem) */}
       <div className="relative">
