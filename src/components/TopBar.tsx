@@ -1,37 +1,27 @@
-"use client";
-
-import { Truck, ShieldCheck, Clock, MessageCircle } from "lucide-react";
-
-const benefits = [
-  { icon: Truck, text: "Frete grátis pra CNPJ" },
-  { icon: Clock, text: "Entrega em 24h no RJ" },
-  { icon: ShieldCheck, text: "NF em todo pedido" },
-];
-
-const WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "21995946491";
-const WA_LINK = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Olá! Vim pelo site da Repon e quero fazer um pedido.")}`;
+// src/components/TopBar.tsx
+// Barra superior preta com benefícios + CNPJ — estética startup B2B.
 
 export function TopBar() {
   return (
-    <div className="bg-[#03419A] text-white text-xs py-2 px-4 hidden md:flex items-center justify-between">
-      <div className="container mx-auto flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          {benefits.map(({ icon: Icon, text }) => (
-            <div key={text} className="flex items-center gap-1.5 text-blue-200">
-              <Icon className="w-3 h-3 shrink-0" />
-              <span className="font-medium">{text}</span>
-            </div>
-          ))}
+    <div className="bg-ink text-paper-100 border-b border-ink-800">
+      <div className="max-w-[1280px] mx-auto px-4 md:px-8 h-9 flex items-center justify-between gap-8 text-[11px]">
+        <div className="flex items-center gap-6 md:gap-8 overflow-x-auto no-scrollbar">
+          <span className="flex items-center gap-2 shrink-0">
+            <span className="w-1 h-1 rounded-full bg-paper-100"></span>
+            Frete grátis pra CNPJ no RJ
+          </span>
+          <span className="hidden md:flex items-center gap-2 shrink-0">
+            <span className="w-1 h-1 rounded-full bg-paper-100"></span>
+            Entrega em 24h
+          </span>
+          <span className="hidden md:flex items-center gap-2 shrink-0">
+            <span className="w-1 h-1 rounded-full bg-paper-100"></span>
+            Nota fiscal em todo pedido
+          </span>
         </div>
-        <a
-          href={WA_LINK}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold px-3 py-1 rounded-full transition-colors text-[11px]"
-        >
-          <MessageCircle className="w-3 h-3" />
-          Falar pelo WhatsApp
-        </a>
+        <span className="font-mono opacity-60 shrink-0 hidden sm:inline">
+          cnpj 54.563.438/0001-07
+        </span>
       </div>
     </div>
   );
