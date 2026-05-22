@@ -186,6 +186,38 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ===== FAQ — perguntas comuns ===== */}
+      <section style={{ background: "var(--color-iced)", borderTop: "1px solid var(--color-line)" }}>
+        <div className="container-rp py-28 md:py-40">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div className="lg:col-span-4">
+              <div className="eyebrow">Perguntas comuns</div>
+              <h2 className="h-section mt-6">
+                Antes de mandar<br/>o CNPJ.
+              </h2>
+            </div>
+            <div className="lg:col-span-8">
+              <ul className="divide-y" style={{ borderColor: "var(--color-line)" }}>
+                {site.faq.map((item, i) => (
+                  <li key={i} className="py-7 grid grid-cols-12 gap-6" style={{ borderColor: "var(--color-line)" }}>
+                    <div className="col-span-12 md:col-span-5">
+                      <h3 className="font-display text-[1.0625rem] md:text-[1.125rem]" style={{ fontWeight: 500, color: "var(--color-petrol)", lineHeight: 1.3 }}>
+                        {item.q}
+                      </h3>
+                    </div>
+                    <div className="col-span-12 md:col-span-7">
+                      <p className="text-[0.9375rem]" style={{ color: "var(--color-ink-700)", lineHeight: 1.6 }}>
+                        {item.a}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ===== CTA — um só, enxuto ===== */}
       <section className="section-petrol">
         <div className="container-rp py-28 md:py-40">

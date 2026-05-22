@@ -4,8 +4,7 @@ import { ContactForm } from "@/components/ContactForm";
 
 export const metadata: Metadata = {
   title: "Contato",
-  description:
-    "Canal comercial Repon: e-mail institucional, WhatsApp comercial, endereços dos centros logísticos em SC e SP.",
+  description: "Canal comercial Repon: e-mail institucional, WhatsApp, endereços dos centros logísticos.",
   alternates: { canonical: "/contato" },
 };
 
@@ -13,151 +12,123 @@ export default function ContatoPage() {
   return (
     <>
       {/* HERO */}
-      <section className="border-b border-line">
-        <div className="container-rp pt-24 md:pt-32 pb-20">
-          <div className="eyebrow">Contato institucional</div>
-          <h1 className="h-display mt-6 max-w-3xl">
-            Canal aberto para<br />
-            <span className="text-ink-500">compradores B2B,</span><br />
-            indústrias e parceiros.
-          </h1>
-        </div>
-      </section>
-
-      {/* CANAIS */}
-      <section>
-        <div className="container-rp py-20 md:py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-px bg-line border border-line">
-            {/* Comercial */}
-            <a
-              href={`mailto:${site.contact.emails.comercial}`}
-              className="bg-paper p-8 md:p-10 flex flex-col gap-5 hover:bg-paper-50 transition-colors group"
-            >
-              <div className="flex items-center justify-between">
-                <div className="eyebrow text-accent">Comercial</div>
-                <ArrowRight className="opacity-30 group-hover:opacity-100 transition-opacity" />
-              </div>
-              <h3 className="h-card">Atendimento B2B</h3>
-              <p className="text-[1.0625rem] text-ink font-medium break-all">
-                {site.contact.emails.comercial}
-              </p>
-              <p className="text-[0.8125rem] text-ink-500 leading-snug">
-                Cadastro de revendedor PJ, proposta de representação,
-                negociação direta.
-              </p>
-            </a>
-
-            {/* SAC */}
-            <a
-              href={`mailto:${site.contact.emails.sac}`}
-              className="bg-paper p-8 md:p-10 flex flex-col gap-5 hover:bg-paper-50 transition-colors group"
-            >
-              <div className="flex items-center justify-between">
-                <div className="eyebrow text-accent">Pós-venda</div>
-                <ArrowRight className="opacity-30 group-hover:opacity-100 transition-opacity" />
-              </div>
-              <h3 className="h-card">SAC</h3>
-              <p className="text-[1.0625rem] text-ink font-medium break-all">
-                {site.contact.emails.sac}
-              </p>
-              <p className="text-[0.8125rem] text-ink-500 leading-snug">
-                Acompanhamento de pedido, NF, ocorrência logística,
-                cobrança.
-              </p>
-            </a>
-
-            {/* WhatsApp */}
-            <a
-              href={site.contact.whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-paper p-8 md:p-10 flex flex-col gap-5 hover:bg-paper-50 transition-colors group"
-            >
-              <div className="flex items-center justify-between">
-                <div className="eyebrow text-accent">Direto</div>
-                <ArrowRight className="opacity-30 group-hover:opacity-100 transition-opacity" />
-              </div>
-              <h3 className="h-card">WhatsApp comercial</h3>
-              <p className="text-[1.0625rem] text-ink font-medium font-mono">
-                {site.contact.phone}
-              </p>
-              <p className="text-[0.8125rem] text-ink-500 leading-snug">
-                {site.contact.businessHours}.
-              </p>
-            </a>
+      <section className="section-petrol">
+        <div className="container-rp pt-20 md:pt-40 pb-20 md:pb-28">
+          <div className="max-w-3xl">
+            <div className="eyebrow">Contato institucional</div>
+            <h1 className="h-display mt-8" style={{ color: "var(--color-iced)" }}>
+              Canal aberto para<br />
+              <span style={{ color: "var(--color-blue-300)" }}>compradores B2B</span><br />
+              e indústrias.
+            </h1>
           </div>
         </div>
       </section>
 
-      {/* FORMULÁRIO + ENDEREÇOS */}
-      <section className="bg-paper-100 border-y border-line">
+      {/* CANAIS — lista */}
+      <section style={{ background: "var(--color-iced)" }}>
         <div className="container-rp py-24 md:py-32">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-            <div className="lg:col-span-7">
-              <div className="eyebrow">Formulário institucional</div>
-              <h2 className="h-section mt-5 mb-10">
-                Abra conversa<br />
-                com o comercial.
-              </h2>
-              <ContactForm />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div className="lg:col-span-4">
+              <div className="eyebrow">Canais diretos</div>
+              <h2 className="h-section mt-6">Três caminhos.</h2>
             </div>
+            <div className="lg:col-span-8">
+              <ul className="divide-y" style={{ borderColor: "var(--color-line)" }}>
+                <li className="py-7 grid grid-cols-12 gap-6 items-baseline" style={{ borderColor: "var(--color-line)" }}>
+                  <div className="col-span-3 md:col-span-2 eyebrow">Comercial</div>
+                  <div className="col-span-9 md:col-span-10">
+                    <a href={`mailto:${site.contact.emails.comercial}`} className="font-display text-[1.0625rem] md:text-[1.25rem]" style={{ fontWeight: 500, color: "var(--color-petrol)" }}>
+                      {site.contact.emails.comercial}
+                    </a>
+                    <p className="mt-1 text-[0.8125rem]" style={{ color: "var(--color-ink-500)" }}>
+                      Cadastro PJ, proposta de representação, negociação direta.
+                    </p>
+                  </div>
+                </li>
+                <li className="py-7 grid grid-cols-12 gap-6 items-baseline" style={{ borderColor: "var(--color-line)" }}>
+                  <div className="col-span-3 md:col-span-2 eyebrow">Pós-venda</div>
+                  <div className="col-span-9 md:col-span-10">
+                    <a href={`mailto:${site.contact.emails.sac}`} className="font-display text-[1.0625rem] md:text-[1.25rem]" style={{ fontWeight: 500, color: "var(--color-petrol)" }}>
+                      {site.contact.emails.sac}
+                    </a>
+                    <p className="mt-1 text-[0.8125rem]" style={{ color: "var(--color-ink-500)" }}>
+                      Pedido, NF, ocorrência logística, cobrança.
+                    </p>
+                  </div>
+                </li>
+                <li className="py-7 grid grid-cols-12 gap-6 items-baseline" style={{ borderColor: "var(--color-line)" }}>
+                  <div className="col-span-3 md:col-span-2 eyebrow">WhatsApp</div>
+                  <div className="col-span-9 md:col-span-10">
+                    <a href={site.contact.whatsappUrl} target="_blank" rel="noopener noreferrer" className="font-display font-mono text-[1.0625rem] md:text-[1.25rem]" style={{ fontWeight: 500, color: "var(--color-petrol)" }}>
+                      {site.contact.phone}
+                    </a>
+                    <p className="mt-1 text-[0.8125rem]" style={{ color: "var(--color-ink-500)" }}>
+                      {site.contact.businessHours}.
+                    </p>
+                  </div>
+                </li>
+                <li className="py-7 grid grid-cols-12 gap-6 items-baseline" style={{ borderColor: "var(--color-line)" }}>
+                  <div className="col-span-3 md:col-span-2 eyebrow">Instagram</div>
+                  <div className="col-span-9 md:col-span-10">
+                    <a href={site.contact.social.instagramUrl} target="_blank" rel="noopener noreferrer" className="font-display text-[1.0625rem] md:text-[1.25rem]" style={{ fontWeight: 500, color: "var(--color-petrol)" }}>
+                      {site.contact.social.instagram}
+                    </a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
 
-            <div className="lg:col-span-5">
-              <div className="eyebrow">Endereços</div>
-              <h2 className="h-section mt-5 mb-10">
-                Centros<br />logísticos.
-              </h2>
-
-              <div className="space-y-8">
+      {/* ENDEREÇOS — lista clean */}
+      <section style={{ background: "var(--color-iced-warm)", borderTop: "1px solid var(--color-line)" }}>
+        <div className="container-rp py-24 md:py-32">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div className="lg:col-span-4">
+              <div className="eyebrow">Centros logísticos</div>
+              <h2 className="h-section mt-6">Onde estamos.</h2>
+            </div>
+            <div className="lg:col-span-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-10">
                 {site.locations.map((loc) => (
-                  <div
-                    key={loc.slug}
-                    className="card-hairline p-7"
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="eyebrow text-accent">
-                        {loc.role}
-                      </span>
-                      <span className="font-mono text-[0.6875rem] text-ink-500 tracking-wider">
-                        {loc.state}
-                      </span>
-                    </div>
-                    <h3 className="h-card mb-2">
+                  <div key={loc.slug}>
+                    <div className="eyebrow mb-3">{loc.role} · {loc.state}</div>
+                    <h3 className="font-display text-[1.5rem]" style={{ fontWeight: 500, letterSpacing: "-0.022em", color: "var(--color-petrol)" }}>
                       {loc.city} / {loc.state}
                     </h3>
-                    <p className="text-[0.9375rem] text-ink-600 leading-relaxed">
+                    <p className="mt-4 text-[0.9375rem]" style={{ color: "var(--color-ink-700)", lineHeight: 1.6 }}>
                       {loc.address}<br />
                       CEP {loc.zip}
                     </p>
-                    <div className="mt-4 pt-4 border-t border-line">
-                      <p className="text-[0.8125rem] text-ink-500">
-                        <span className="font-mono uppercase tracking-wider text-[0.6875rem]">Operação 3PL · </span>
-                        <span className="text-ink">{loc.partner}</span>
-                      </p>
-                    </div>
+                    <p className="mt-4 text-[0.8125rem]" style={{ color: "var(--color-ink-500)" }}>
+                      <span className="font-mono uppercase tracking-wider text-[0.6875rem]">Operação 3PL</span> · {loc.partner}
+                    </p>
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-              <div className="mt-10 pt-8 border-t border-line">
-                <div className="eyebrow mb-3">CNPJ</div>
-                <p className="font-mono text-[0.8125rem] text-ink leading-relaxed">
-                  Matriz · {site.fiscal.matriz.cnpj}<br />
-                  Filial · {site.fiscal.filial.cnpj}
-                </p>
-              </div>
+      {/* FORMULÁRIO */}
+      <section style={{ background: "var(--color-iced)", borderTop: "1px solid var(--color-line)" }}>
+        <div className="container-rp py-24 md:py-32">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div className="lg:col-span-4">
+              <div className="eyebrow">Formulário institucional</div>
+              <h2 className="h-section mt-6">
+                Abra conversa<br />com o comercial.
+              </h2>
+            </div>
+            <div className="lg:col-span-8">
+              <ContactForm />
             </div>
           </div>
         </div>
       </section>
     </>
-  );
-}
-
-function ArrowRight({ className = "" }: { className?: string }) {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" className={className} aria-hidden>
-      <path d="M1 7 H13 M8 2 L13 7 L8 12" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
   );
 }

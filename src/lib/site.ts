@@ -220,6 +220,40 @@ export const site = {
   ],
 
   // ============================================================
+  // FAQ — perguntas comuns do comprador B2B
+  // ============================================================
+  faq: [
+    {
+      q: "Qual o pedido mínimo?",
+      a: "R$ 800 no primeiro pedido. Acima de R$ 1.500, frete subsidiado para Sudeste e Sul.",
+    },
+    {
+      q: "Aceitam MEI?",
+      a: "Sim, desde que o CNAE do MEI seja compatível com revenda. Mande o CNPJ pelo WhatsApp e validamos em 24h.",
+    },
+    {
+      q: "Qual o prazo de entrega?",
+      a: "Despacho em até 48h úteis. Sudeste em 3 a 5 dias úteis, Sul em 2 a 3 dias úteis após o despacho.",
+    },
+    {
+      q: "Formas de pagamento?",
+      a: "PIX e boleto à vista no primeiro pedido. A partir do segundo pedido, boleto com prazo de 21 dias para clientes recorrentes.",
+    },
+    {
+      q: "Tem catálogo em PDF?",
+      a: "Sim. Catálogo digital por vertical é enviado por WhatsApp ou e-mail após cadastro PJ aprovado.",
+    },
+    {
+      q: "Vocês atendem fora do Sudeste e Sul?",
+      a: "Hoje a operação logística está focada nessas duas regiões. Para outras regiões, mande o CNPJ pra avaliarmos caso a caso.",
+    },
+    {
+      q: "Como funciona a representação de marcas?",
+      a: "Avaliamos novas representações nas quatro verticais ativas. Política de MAP formalizada em contrato. Apresentação institucional enviada por e-mail.",
+    },
+  ],
+
+  // ============================================================
   // Para quem é — 3 perfis concretos
   // ============================================================
   audience: [
