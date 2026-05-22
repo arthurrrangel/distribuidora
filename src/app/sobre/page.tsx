@@ -13,39 +13,74 @@ export const metadata: Metadata = {
 export default function SobrePage() {
   return (
     <>
-      {/* HERO institucional */}
-      <section className="border-b border-line">
-        <div className="container-rp pt-24 md:pt-32 pb-20 md:pb-28">
-          <div className="eyebrow">Institucional</div>
-          <h1 className="h-display mt-6 max-w-4xl">
-            Uma distribuidora<br />
-            construída para<br />
-            <span className="text-ink-500">vender através do canal,</span><br />
-            não apesar dele.
+      {/* HERO */}
+      <section className="section-petrol border-b border-line">
+        <div className="container-rp pt-20 md:pt-32 pb-16 md:pb-24">
+          <div className="eyebrow">A Repon em uma página</div>
+          <h1 className="h-display mt-6 max-w-4xl" style={{ color: "var(--color-iced)" }}>
+            Distribuidora atacadista<br />
+            <span style={{ color: "var(--color-blue-300)" }}>conectando indústria</span><br />
+            ao revendedor real.
           </h1>
-          <p className="body-lead mt-10 max-w-2xl">
-            A Repon Plataforma de Comércio nasceu em 2024 com a tese de que
-            o atacado B2B brasileiro tem espaço para distribuidoras que
-            tratam o canal com seriedade: mix consistente, condição comercial
-            estável e respeito à precificação de revenda do fornecedor.
+          <p className="body-lead mt-10 max-w-2xl" style={{ color: "rgba(243,241,237,0.82)" }}>
+            A Repon Plataforma de Comércio nasceu em abril de 2024 com uma tese específica:
+            atender o revendedor pequeno e médio que está esquecido entre o marketplace genérico
+            e a distribuidora grande que exige volume mínimo alto.
           </p>
         </div>
       </section>
 
-      {/* FICHA TÉCNICA — institucional dois colunas */}
-      <section>
-        <div className="container-rp py-24 md:py-32">
+      {/* O QUE SOMOS — fatos objetivos */}
+      <section style={{ background: "var(--color-iced)" }}>
+        <div className="container-rp py-20 md:py-28">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div className="lg:col-span-5">
+              <div className="eyebrow">O que somos, em fatos</div>
+              <h2 className="h-section mt-5">A operação, sem floreio.</h2>
+            </div>
+            <div className="lg:col-span-7">
+              <ul className="divide-y border-y" style={{ borderColor: "var(--color-line)" }}>
+                {[
+                  { label: "Fundação", value: "Abril de 2024", sub: "Matriz aberta em Navegantes/SC" },
+                  { label: "Expansão", value: "Fevereiro de 2025", sub: "Abertura da filial em São Paulo/SP" },
+                  { label: "Operação", value: "2 centros logísticos", sub: "Modelo 3PL com parceiros especializados (Simplilog + Centralize Hub)" },
+                  { label: "Cobertura", value: "Sudeste + Sul", sub: "SP, RJ, MG, ES, PR, SC, RS" },
+                  { label: "Mix", value: "4 verticais ativas", sub: "Papelaria, higiene, informática e eletroeletrônicos" },
+                  { label: "Catálogo", value: "14 CNAEs registradas", sub: "Atacado e varejo especializado" },
+                  { label: "Canal", value: "B2B direto", sub: "Cadastro PJ exclusivo, sem competição em marketplace" },
+                  { label: "Atendimento", value: "WhatsApp comercial", sub: "Segunda a sexta, das 8h às 18h" },
+                ].map((f) => (
+                  <li key={f.label} className="py-5 grid grid-cols-12 gap-4 items-baseline" style={{ borderColor: "var(--color-line)" }}>
+                    <div className="col-span-4 md:col-span-3">
+                      <div className="eyebrow">{f.label}</div>
+                    </div>
+                    <div className="col-span-8 md:col-span-9">
+                      <p className="text-[1.0625rem] font-bold leading-snug" style={{ color: "var(--color-petrol)" }}>
+                        {f.value}
+                      </p>
+                      <p className="mt-1 text-[0.8125rem]" style={{ color: "var(--color-ink-500)" }}>
+                        {f.sub}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FICHA JURÍDICA */}
+      <section style={{ background: "var(--color-iced-warm)", borderTop: "1px solid var(--color-line)", borderBottom: "1px solid var(--color-line)" }}>
+        <div className="container-rp py-20 md:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
             <div className="lg:col-span-5">
               <div className="eyebrow">Ficha jurídica</div>
-              <h2 className="h-section mt-5">
-                Dados institucionais
-              </h2>
+              <h2 className="h-section mt-5">Dados institucionais.</h2>
               <p className="body-prose mt-6 max-w-md">
-                Todas as operações da Repon ocorrem sob CNPJs ativos,
-                regularmente registrados na Receita Federal e nas
-                administrações municipais. Transparência institucional é a
-                primeira camada de confiança no atacado B2B.
+                Operações sob CNPJs ativos, regularmente registrados na Receita Federal e
+                nas administrações municipais. Transparência institucional é a primeira
+                camada de confiança no atacado B2B.
               </p>
             </div>
 
@@ -53,50 +88,47 @@ export default function SobrePage() {
               <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-10">
                 <div>
                   <dt className="eyebrow mb-2.5">Razão social</dt>
-                  <dd className="text-[1.0625rem] text-ink font-medium leading-snug">
+                  <dd className="text-[1.0625rem] font-bold leading-snug" style={{ color: "var(--color-petrol)" }}>
                     {site.brand.legalName}
                   </dd>
                 </div>
                 <div>
                   <dt className="eyebrow mb-2.5">Natureza jurídica</dt>
-                  <dd className="text-[1.0625rem] text-ink font-medium leading-snug">
+                  <dd className="text-[1.0625rem] font-bold leading-snug" style={{ color: "var(--color-petrol)" }}>
                     Sociedade Empresária Limitada
                   </dd>
                 </div>
                 <div>
                   <dt className="eyebrow mb-2.5">CNPJ Matriz · SC</dt>
-                  <dd className="font-mono text-[0.9375rem] text-ink">
+                  <dd className="font-mono text-[0.9375rem]" style={{ color: "var(--color-petrol)" }}>
                     {site.fiscal.matriz.cnpj}
                   </dd>
-                  <dd className="text-[0.8125rem] text-ink-500 mt-1">
+                  <dd className="text-[0.8125rem] mt-1" style={{ color: "var(--color-ink-500)" }}>
                     Aberta em {site.fiscal.matriz.abertura}
                   </dd>
                 </div>
                 <div>
                   <dt className="eyebrow mb-2.5">CNPJ Filial · SP</dt>
-                  <dd className="font-mono text-[0.9375rem] text-ink">
+                  <dd className="font-mono text-[0.9375rem]" style={{ color: "var(--color-petrol)" }}>
                     {site.fiscal.filial.cnpj}
                   </dd>
-                  <dd className="text-[0.8125rem] text-ink-500 mt-1">
+                  <dd className="text-[0.8125rem] mt-1" style={{ color: "var(--color-ink-500)" }}>
                     Aberta em {site.fiscal.filial.abertura}
                   </dd>
                 </div>
                 <div>
                   <dt className="eyebrow mb-2.5">Atividade principal</dt>
-                  <dd className="font-mono text-[0.8125rem] text-ink-700 leading-snug">
+                  <dd className="font-mono text-[0.8125rem] leading-snug" style={{ color: "var(--color-ink-700)" }}>
                     CNAE {site.fiscal.cnaePrincipal.code}
                   </dd>
-                  <dd className="text-[0.8125rem] text-ink-500 mt-1.5 leading-snug">
+                  <dd className="text-[0.8125rem] mt-1.5 leading-snug" style={{ color: "var(--color-ink-500)" }}>
                     {site.fiscal.cnaePrincipal.label}
                   </dd>
                 </div>
                 <div>
-                  <dt className="eyebrow mb-2.5">CNAEs registradas</dt>
-                  <dd className="text-[1.0625rem] text-ink font-medium">
-                    {site.fiscal.cnaeTotalCount} no total
-                  </dd>
-                  <dd className="text-[0.8125rem] text-ink-500 mt-1">
-                    Atacado e varejo especializado
+                  <dt className="eyebrow mb-2.5">CCM Filial SP</dt>
+                  <dd className="font-mono text-[0.9375rem]" style={{ color: "var(--color-petrol)" }}>
+                    {site.fiscal.filial.ccm}
                   </dd>
                 </div>
               </dl>
@@ -105,84 +137,38 @@ export default function SobrePage() {
         </div>
       </section>
 
-      {/* MANIFESTO institucional dark */}
-      <section className="section-dark">
-        <div className="container-rp py-24 md:py-32">
-          <div className="max-w-4xl">
-            <div className="eyebrow">Posicionamento</div>
-            <h2 className="h-section mt-5 mb-10">
-              Por que existimos.
-            </h2>
-            <div className="space-y-6 text-[1.0625rem] text-paper/80 leading-relaxed">
-              <p>
-                O mercado de distribuição no Brasil é desigual. De um lado,
-                grandes distribuidoras que atendem apenas redes e clientes
-                com volume mínimo elevado. Do outro, marketplaces que
-                pulverizam o preço de revenda e queimam a marca do
-                fornecedor.
-              </p>
-              <p>
-                No meio, milhares de revendedores — papelarias, lojas
-                técnicas, mini-mercados e bazaristas — que precisam de
-                condição comercial real, atendimento humano e mix coerente.
-                Esse é o cliente da Repon.
-              </p>
-              <p>
-                Operamos com infraestrutura logística enxuta em duas
-                regiões estratégicas, mix vertical orientado pelo perfil de
-                compra do revendedor, e disciplina comercial que protege a
-                marca de quem distribuímos. Atacado B2B feito com a régua
-                certa.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CAPACIDADE LOGÍSTICA */}
       <section>
-        <div className="container-rp py-24 md:py-32">
+        <div className="container-rp py-20 md:py-28">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
             <div className="lg:col-span-5">
               <div className="eyebrow">Capacidade logística</div>
               <h2 className="h-section mt-5">
                 Operação 3PL integrada,<br />
-                cobertura nacional<br />
-                no Sudeste e Sul.
+                cobertura Sudeste e Sul.
               </h2>
               <p className="body-prose mt-8 max-w-md">
-                A escolha por modelo 3PL com parceiros especializados é
-                deliberada: permite escalar volume sem CapEx morto em
-                armazém, mantém custo logístico competitivo e garante
-                operação técnica em padrão de mercado.
+                A escolha por modelo 3PL com parceiros especializados é deliberada:
+                permite escalar volume sem CapEx morto em armazém, mantém custo
+                logístico competitivo e garante operação em padrão de mercado.
               </p>
 
               <div className="mt-12 grid grid-cols-1 gap-6 max-w-md">
                 {site.locations.map((l) => (
-                  <div
-                    key={l.slug}
-                    className="card-hairline p-6 flex flex-col"
-                  >
+                  <div key={l.slug} className="card-hairline p-6 flex flex-col">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="eyebrow text-accent">
-                        {l.label}
-                      </span>
-                      <span className="font-mono text-[0.6875rem] text-ink-500 tracking-wider">
+                      <span className="eyebrow" style={{ color: "var(--color-blue)" }}>{l.label}</span>
+                      <span className="font-mono text-[0.6875rem] tracking-wider" style={{ color: "var(--color-ink-500)" }}>
                         {l.role.toUpperCase()}
                       </span>
                     </div>
-                    <h3 className="h-card mb-2">
-                      {l.city} / {l.state}
-                    </h3>
-                    <p className="text-[0.9375rem] text-ink-600 leading-relaxed">
-                      {l.address}<br />
-                      CEP {l.zip}
+                    <h3 className="h-card mb-2">{l.city} / {l.state}</h3>
+                    <p className="text-[0.9375rem] leading-relaxed" style={{ color: "var(--color-ink-700)" }}>
+                      {l.address}<br />CEP {l.zip}
                     </p>
-                    <div className="mt-4 pt-4 border-t border-line">
+                    <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--color-line)" }}>
                       <div className="eyebrow mb-1.5">Operação 3PL</div>
-                      <p className="text-[0.9375rem] text-ink font-medium">
-                        {l.partner}
-                      </p>
+                      <p className="text-[0.9375rem] font-bold" style={{ color: "var(--color-petrol)" }}>{l.partner}</p>
                     </div>
                   </div>
                 ))}
@@ -198,30 +184,29 @@ export default function SobrePage() {
         </div>
       </section>
 
-      {/* PRINCÍPIOS OPERACIONAIS */}
-      <section className="bg-paper-100 border-y border-line">
-        <div className="container-rp py-24 md:py-32">
-          <div className="max-w-4xl mb-16">
+      {/* COMO OPERAMOS — 4 princípios curtos */}
+      <section className="section-blue">
+        <div className="container-rp py-20 md:py-28">
+          <div className="max-w-3xl mb-12">
             <div className="eyebrow">Como operamos</div>
-            <h2 className="h-section mt-5">
+            <h2 className="h-section mt-5" style={{ color: "var(--color-iced)" }}>
               Quatro princípios que orientam a Repon.
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-line">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-px" style={{ background: "rgba(243,241,237,0.2)" }}>
             {operatingPrinciples.map((p, i) => (
-              <article
-                key={p.title}
-                className="bg-paper p-10 md:p-12"
-              >
-                <div className="flex items-baseline justify-between mb-6">
-                  <span className="eyebrow text-accent">Princípio</span>
-                  <span className="font-mono text-[0.6875rem] text-ink-500 tracking-wider">
+              <article key={p.title} className="p-8 md:p-10" style={{ background: "var(--color-blue)" }}>
+                <div className="flex items-baseline justify-between mb-5">
+                  <span className="eyebrow" style={{ color: "var(--color-iced)", opacity: 0.85 }}>Princípio</span>
+                  <span className="font-mono text-[0.6875rem] tracking-wider" style={{ color: "rgba(243,241,237,0.55)" }}>
                     0{i + 1}
                   </span>
                 </div>
-                <h3 className="h-card mb-4">{p.title}</h3>
-                <p className="body-prose">{p.body}</p>
+                <h3 className="font-display font-bold text-[1.25rem] mb-3 leading-tight" style={{ color: "var(--color-iced)" }}>
+                  {p.title}
+                </h3>
+                <p className="text-[0.9375rem] leading-relaxed" style={{ color: "rgba(243,241,237,0.88)" }}>{p.body}</p>
               </article>
             ))}
           </div>
@@ -230,20 +215,19 @@ export default function SobrePage() {
 
       {/* CTA */}
       <section>
-        <div className="container-rp py-24 md:py-32">
+        <div className="container-rp py-20 md:py-28">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-            <h2 className="h-section">
-              Quer entender com<br />profundidade?
-            </h2>
+            <h2 className="h-section">Continuou interessado?</h2>
             <div>
               <p className="body-lead mb-8">
-                A apresentação institucional completa, com política de MAP,
-                fluxo de atendimento, condições por canal e cobertura
-                operacional, é enviada mediante contato comercial.
+                A apresentação institucional completa, com política de MAP, fluxo
+                comercial detalhado e cronograma operacional, é enviada por e-mail
+                mediante contato. Mande sua dúvida ou proposta no WhatsApp comercial.
               </p>
-              <Link href="/fornecedores" className="btn-primary">
-                Solicitar apresentação institucional
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link href="/fornecedores" className="btn-primary">Apresentação institucional</Link>
+                <a href={site.contact.whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn-ghost">WhatsApp comercial</a>
+              </div>
             </div>
           </div>
         </div>
@@ -255,11 +239,11 @@ export default function SobrePage() {
 const operatingPrinciples = [
   {
     title: "Mix vertical, não pulverizado.",
-    body: "Operamos em quatro verticais conectadas pelo mesmo perfil de comprador. Especialização gera condição comercial real com fornecedor e simplifica o relacionamento com o revendedor.",
+    body: "Quatro verticais conectadas pelo mesmo perfil de comprador. Especialização gera condição comercial real com fornecedor e simplifica o relacionamento com o revendedor.",
   },
   {
     title: "Condição comercial coerente com volume.",
-    body: "Tabelas por faixa de pedido, prazo no boleto a partir de R$ 1.500, frete subsidiado em pedidos consolidados. Sem leilão de centavo, sem promoção destrutiva.",
+    body: "Tabelas por faixa de pedido, prazo no boleto a partir do segundo pedido, frete subsidiado em pedidos consolidados. Sem leilão de centavo.",
   },
   {
     title: "Política comercial que protege o fornecedor.",

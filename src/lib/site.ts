@@ -97,7 +97,8 @@ export const site = {
       number: "01",
       title: "Papelaria & Escritório",
       summary:
-        "Material escolar, suprimentos de papelaria, escritura, organização, equipamentos de escritório e correlatos.",
+        "Material escolar, suprimentos de papelaria e equipamentos de escritório. Vertical âncora do mix — onde a Repon nasceu.",
+      examples: "Cadernos, lápis, canetas, mochilas, kits escolares, agendas, blocos, pastas, calculadoras, grampeadores, organizadores.",
       cnae: ["46.47-8/01", "47.89-0/07"],
       topics: [
         "Material escolar e didático",
@@ -111,7 +112,8 @@ export const site = {
       number: "02",
       title: "Higiene Pessoal",
       summary:
-        "Linha completa de higiene pessoal e perfumaria de uso doméstico, com mix orientado para revenda em papelaria, mini-mercado e bazar.",
+        "Linha completa de higiene e perfumaria. Mix curado para o revendedor que já vende papelaria e quer expandir ticket.",
+      examples: "Cremes dentais, escovas, sabonetes, shampoos, condicionadores, desodorantes, fraldas, papel higiênico, absorventes, perfumaria leve.",
       cnae: ["46.46-0/02", "47.72-5/00"],
       topics: [
         "Higiene oral e cabelos",
@@ -125,7 +127,8 @@ export const site = {
       number: "03",
       title: "Informática",
       summary:
-        "Equipamentos e suprimentos de informática para revendas, lojas técnicas e papelarias com setor digital.",
+        "Suprimentos, periféricos e conectividade. Para loja técnica e papelaria com setor digital.",
+      examples: "Mouses, teclados, fones de ouvido, cabos USB e HDMI, adaptadores, pendrives, cartões SD, capas de notebook, hubs.",
       cnae: ["46.51-6/01", "46.51-6/02", "47.51-2/01"],
       topics: [
         "Suprimentos de informática",
@@ -139,7 +142,8 @@ export const site = {
       number: "04",
       title: "Eletroeletrônicos",
       summary:
-        "Eletroeletrônicos de uso pessoal e doméstico, com curadoria de mix orientada para revendedor de bazar e papelaria expandida.",
+        "Eletroportáteis e áudio-vídeo de uso pessoal. Mix orientado para bazar expandido e papelaria com setor de eletro.",
+      examples: "Caixas de som Bluetooth, fones sem fio, ventiladores portáteis, secadores, depiladores, barbeadores, lâmpadas, pilhas, carregadores.",
       cnae: ["46.49-4/01", "46.49-4/02", "47.53-9/00", "47.57-1/00"],
       topics: [
         "Pequenos eletrodomésticos",
@@ -168,6 +172,74 @@ export const site = {
       title: "Quatro verticais, um cliente",
       body:
         "Papelaria, higiene, informática e eletroeletrônicos — categorias que o mesmo revendedor compra. Profundidade vertical, simplicidade no relacionamento.",
+    },
+  ],
+
+  // ============================================================
+  // O que a Repon faz, na prática — copy explícito
+  // ============================================================
+  whatWeDo: {
+    headline: "Repon compra com a indústria, estoca em SC e SP, e vende direto para o revendedor.",
+    summary:
+      "Atuamos como o elo entre fabricantes e revendedores que não cabem no atendimento das grandes redes nem encontram condição saudável em marketplace. Sem intermediário, sem leilão de centavo, com NF na entrega.",
+    points: [
+      {
+        title: "O que distribuímos",
+        body: "Papelaria, material escolar, higiene pessoal, informática, eletroportáteis e bazar leve.",
+      },
+      {
+        title: "Quem atendemos",
+        body: "Revendedor PJ com CNPJ ativo — papelaria, loja escolar, mini-mercado, bazar e loja técnica.",
+      },
+      {
+        title: "Como entregamos",
+        body: "Pedido direto via WhatsApp ou catálogo. Despacho em até 48h. Sudeste em 3 a 5 dias úteis, Sul em 2 a 3.",
+      },
+    ],
+  },
+
+  // ============================================================
+  // Como funciona — 3 etapas concretas
+  // ============================================================
+  howItWorks: [
+    {
+      step: "01",
+      title: "Cadastro PJ",
+      body: "CNPJ ativo enviado por WhatsApp ou e-mail. Validação interna em até 24h. Sem mensalidade, sem fidelidade.",
+    },
+    {
+      step: "02",
+      title: "Pedido direto",
+      body: "Pedido mínimo de R$ 800. Faça pelo WhatsApp comercial ou pelo catálogo digital. Tabela de preços por faixa de volume.",
+    },
+    {
+      step: "03",
+      title: "Entrega e pagamento",
+      body: "Despacho em até 48h. Pagamento via PIX, boleto à vista ou prazo de 21 dias para clientes recorrentes.",
+    },
+  ],
+
+  // ============================================================
+  // Para quem é — 3 perfis concretos
+  // ============================================================
+  audience: [
+    {
+      icon: "01",
+      profile: "Papelaria de bairro",
+      pitch: "Reposição quinzenal de mix completo (escolar + escritório + higiene + bazar) em ticket entre R$ 800 e R$ 5 mil.",
+      pain: "Distribuidor grande não atende. Marketplace mata margem.",
+    },
+    {
+      icon: "02",
+      profile: "Loja escolar",
+      pitch: "Mix didático e escolar consolidado, pedidos maiores na sazonal (jan/fev e jul) com prazo no boleto.",
+      pain: "Volta às aulas exige condição comercial real e prazo de pagamento.",
+    },
+    {
+      icon: "03",
+      profile: "Bazar expandido",
+      pitch: "Mix multi-categoria (escolar + higiene + informática + eletroportátil) em um único fornecedor, sem dispersar pedidos.",
+      pain: "Trabalhar com 4 distribuidores diferentes é caro e fragmenta logística.",
     },
   ],
 
