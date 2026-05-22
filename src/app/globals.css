@@ -267,3 +267,66 @@
   outline: 2px solid var(--color-blue);
   outline-offset: 3px;
 }
+
+/* ============================================================
+   Mobile refinements — viewport ≤ 768px
+   ============================================================ */
+@media (max-width: 768px) {
+  .h-display {
+    font-size: clamp(2.25rem, 11vw, 3.75rem);
+    line-height: 0.96;
+    letter-spacing: -0.03em;
+  }
+  .h-section {
+    font-size: clamp(1.625rem, 7vw, 2.25rem);
+    line-height: 1.02;
+  }
+  .h-card {
+    font-size: 1.125rem;
+  }
+  .stat-num {
+    font-size: clamp(2.5rem, 12vw, 3.5rem);
+  }
+  .body-lead {
+    font-size: 1.0625rem;
+    line-height: 1.5;
+  }
+  /* Container respira menos no mobile */
+  :root { --container-gutter: 1.25rem; }
+  /* Botões em mobile: full-width, touch target maior */
+  .btn-primary, .btn-ghost, .btn-green {
+    width: 100%;
+    justify-content: center;
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+  }
+  /* Header height menor em mobile */
+  header > div:first-child {
+    height: 64px;
+  }
+}
+
+@media (max-width: 480px) {
+  .h-display {
+    font-size: clamp(2rem, 13vw, 3.25rem);
+  }
+  .eyebrow {
+    font-size: 0.625rem;
+    letter-spacing: 0.16em;
+  }
+}
+
+/* Smooth tap highlight remove (iOS) */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Min touch target 44px (iOS HIG) */
+@media (max-width: 768px) {
+  a, button, [role="button"] {
+    min-height: 44px;
+  }
+  nav a {
+    padding-block: 0.5rem;
+  }
+}

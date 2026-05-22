@@ -33,7 +33,9 @@ export function Header() {
     >
       <div className="container-rp flex items-center justify-between h-20">
         <Link href="/" className="flex items-center" aria-label="Repon — página inicial">
-          <Logo variant="blue" shape="full" priority width={120} height={36} />
+          <span className="block">
+            <Logo variant="blue" shape="full" priority width={136} height={40} />
+          </span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-10">

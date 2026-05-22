@@ -7,7 +7,7 @@ export default function HomePage() {
     <>
       {/* ===== HERO PETROL — slogan oficial ===== */}
       <section className="section-petrol relative overflow-hidden">
-        <div className="container-rp pt-28 md:pt-36 pb-24 md:pb-32">
+        <div className="container-rp pt-14 md:pt-36 pb-20 md:pb-32">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
             <div className="lg:col-span-9">
               <div className="eyebrow reveal">
@@ -24,7 +24,7 @@ export default function HomePage() {
                 estratégicos e mix vertical orientado por categoria de cliente.
               </p>
 
-              <div className="mt-12 flex flex-col sm:flex-row gap-4 reveal reveal-delay-3">
+              <div className="mt-10 md:mt-12 flex flex-col sm:flex-row gap-3 sm:gap-4 reveal reveal-delay-3">
                 <Link href="/fornecedores" className="btn-primary">
                   Apresentação para fornecedores
                   <ArrowRight />

@@ -17,11 +17,11 @@ export function CoverageMap({
   variant?: "light" | "dark";
 }) {
   const isDark = variant === "dark";
-  const stateFill = isDark ? "#1F2A44" : "#F2F0EA";
+  const stateFill = isDark ? "#1A2247" : "#EAE5DA";
   const stateStroke = isDark ? "#2F3B58" : "#D9D4C7";
-  const stateText = isDark ? "#8892A4" : "#5A6678";
-  const accent = "#A3672E";
-  const accentSoft = isDark ? "#C99B6E" : "#834F1F";
+  const stateText = isDark ? "#8892A4" : "#4A5070";
+  const accent = "#0464D5";
+  const accentSoft = isDark ? "#6FA9E8" : "#034FA8";
 
   // Estados — formas simplificadas em viewBox 600x720.
   const states = [
@@ -56,9 +56,9 @@ export function CoverageMap({
             <g key={s.code}>
               <path
                 d={s.d}
-                fill={isActive ? (isDark ? "#2F3B58" : "#E9E4D8") : stateFill}
-                stroke={stateStroke}
-                strokeWidth={1}
+                fill={isActive ? (isDark ? "#0464D5" : "#DCEAF9") : stateFill}
+                stroke={isActive ? "#0464D5" : stateStroke}
+                strokeWidth={isActive ? 1.5 : 1}
                 strokeLinejoin="round"
                 strokeLinecap="round"
               />
@@ -66,11 +66,11 @@ export function CoverageMap({
                 x={s.label.x}
                 y={s.label.y}
                 textAnchor="middle"
-                fontFamily="JetBrains Mono, ui-monospace, monospace"
-                fontSize="10.5"
-                fontWeight="500"
-                letterSpacing="0.16em"
-                fill={isActive ? (isDark ? "#FAFAF7" : "#0B1220") : stateText}
+                fontFamily="Funnel Sans, ui-monospace, monospace"
+                fontSize="11"
+                fontWeight={isActive ? 700 : 600}
+                letterSpacing="0.18em"
+                fill={isActive ? (isDark ? "#FAFAF7" : "#01092D") : stateText}
               >
                 {s.code}
               </text>
@@ -116,7 +116,7 @@ export function CoverageMap({
               <text
                 x="0"
                 y="0"
-                fontFamily="IBM Plex Serif, Georgia, serif"
+                fontFamily="Funnel Display, sans-serif"
                 fontSize="13"
                 fontWeight="500"
                 fill={isDark ? "#FAFAF7" : "#0B1220"}
@@ -126,7 +126,7 @@ export function CoverageMap({
               <text
                 x="0"
                 y="16"
-                fontFamily="JetBrains Mono, ui-monospace, monospace"
+                fontFamily="Funnel Sans, ui-monospace, monospace"
                 fontSize="9.5"
                 fontWeight="500"
                 letterSpacing="0.14em"
@@ -144,7 +144,7 @@ export function CoverageMap({
           <text
             x="40"
             y="50"
-            fontFamily="JetBrains Mono, ui-monospace, monospace"
+            fontFamily="Funnel Sans, ui-monospace, monospace"
             fontSize="9.5"
             fontWeight="500"
             letterSpacing="0.18em"
@@ -159,7 +159,7 @@ export function CoverageMap({
           <text
             x="40"
             y="740"
-            fontFamily="JetBrains Mono, ui-monospace, monospace"
+            fontFamily="Funnel Sans, ui-monospace, monospace"
             fontSize="9"
             fontWeight="400"
             letterSpacing="0.14em"
