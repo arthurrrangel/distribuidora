@@ -13,6 +13,7 @@ export const site = {
   brand: {
     name: "Repon",
     legalName: "Repon Plataforma de Comércio Ltda.",
+    slogan: "O fluxo que mantém seu negócio ativo.",
     tagline: "Distribuidora atacadista B2B",
     descriptor:
       "Centros logísticos em Santa Catarina e São Paulo, atendendo Sudeste e Sul.",
@@ -84,6 +85,10 @@ export const site = {
     domain: "repondistribuidora.com",
     siteUrl: "https://distribuidora-two.vercel.app",
     businessHours: "Segunda a sexta, das 8h às 18h (horário comercial)",
+    social: {
+      instagram: "@repon.distribui",
+      instagramUrl: "https://instagram.com/repon.distribui",
+    },
   },
 
   verticals: [

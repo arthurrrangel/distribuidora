@@ -1,29 +1,11 @@
-// src/app/robots.ts
-// Robots dinâmico — substitui o /public/robots.txt estático para garantir
-// que o sitemap seja apontado corretamente no domínio em produção.
-
 import type { MetadataRoute } from "next";
-
-const SITE_URL = "https://repon.com.br";
+import { site } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
+  const base = site.contact.siteUrl.replace(/\/$/, "");
   return {
-    rules: [
-      {
-        userAgent: "*",
-        allow: "/",
-        disallow: [
-          "/minha-conta",
-          "/meus-pedidos",
-          "/carrinho",
-          "/checkout",
-          "/login",
-          "/register",
-          "/api/",
-        ],
-      },
-    ],
-    sitemap: `${SITE_URL}/sitemap.xml`,
-    host: SITE_URL,
+    rules: { userAgent: "*", allow: "/" },
+    sitemap: `${base}/sitemap.xml`,
+    host: base,
   };
 }

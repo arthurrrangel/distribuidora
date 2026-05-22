@@ -1,72 +1,103 @@
-// src/components/Footer.tsx
-// Footer Repon v2: preto profundo, tipografia editorial, "Repon." gigante como assinatura.
-
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { site } from "@/lib/site";
 
 export function Footer() {
   return (
-    <footer className="bg-ink text-paper-100 mt-20">
-      <div className="max-w-[1280px] mx-auto px-4 md:px-8 pt-20 pb-12">
-        <div className="grid md:grid-cols-12 gap-10 pb-16 border-b hairline-strong border-ink-800">
+    <footer className="section-petrol mt-32">
+      <div className="container-rp py-20">
+        {/* Top — slogan oficial */}
+        <div className="pb-16 border-b border-petrol-80" style={{ borderColor: "var(--color-petrol-80)" }}>
+          <Logo variant="white" shape="full" width={180} height={54} />
+          <p
+            className="mt-10 font-display"
+            style={{
+              fontWeight: 800,
+              fontSize: "clamp(2rem, 4vw, 3.5rem)",
+              lineHeight: 1,
+              letterSpacing: "-0.03em",
+              color: "var(--color-iced)",
+              maxWidth: "720px",
+            }}
+          >
+            O fluxo que mantém<br/>seu negócio ativo.
+          </p>
+        </div>
+
+        {/* Navegação + contato */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 py-16 border-b" style={{ borderColor: "var(--color-petrol-80)" }}>
           <div className="md:col-span-5">
-            <Logo variant="branca" shape="full" width={140} height={36} className="h-9 w-auto" />
-            <p className="font-display text-2xl md:text-3xl font-light tracking-tighter mt-8 max-w-md leading-snug">
-              Atacado de papelaria <br />
-              direto da fábrica <br />
-              pra revenda do Rio.
+            <p className="text-[0.9375rem] leading-relaxed max-w-md" style={{ color: "rgba(243,241,237,0.75)" }}>
+              {site.brand.legalName}. Distribuidora atacadista B2B com operação logística integrada em
+              Santa Catarina e São Paulo, atendendo revendedores em todo o Sudeste e Sul.
             </p>
-          </div>
-
-          <div className="md:col-span-2">
-            <p className="label text-ink-400 mb-5">Comprar</p>
-            <ul className="space-y-2.5 text-sm">
-              <li><Link href="/departamento/papelaria" className="ul-anim hover:text-paper">Papelaria</Link></li>
-              <li><Link href="/departamento/escritorio" className="ul-anim hover:text-paper">Escritório</Link></li>
-              <li><Link href="/departamento/escolar" className="ul-anim hover:text-paper">Escolar</Link></li>
-              <li><Link href="/fabricantes" className="ul-anim hover:text-paper">Marcas</Link></li>
-              <li><Link href="/produtos" className="ul-anim hover:text-paper">Ofertas</Link></li>
-            </ul>
-          </div>
-
-          <div className="md:col-span-2">
-            <p className="label text-ink-400 mb-5">Empresa</p>
-            <ul className="space-y-2.5 text-sm">
-              <li><Link href="/sobre" className="ul-anim hover:text-paper">Sobre</Link></li>
-              <li><Link href="/fabricantes" className="ul-anim hover:text-paper">Fabricantes</Link></li>
-              <li><Link href="/parceiros" className="ul-anim hover:text-paper">Parceiros</Link></li>
-              <li><Link href="/faq" className="ul-anim hover:text-paper">FAQ</Link></li>
-            </ul>
+            <div className="mt-6 flex flex-col gap-1 text-[0.8125rem] font-mono" style={{ color: "rgba(243,241,237,0.55)" }}>
+              <span>CNPJ Matriz: {site.fiscal.matriz.cnpj}</span>
+              <span>CNPJ Filial: {site.fiscal.filial.cnpj}</span>
+            </div>
           </div>
 
           <div className="md:col-span-3">
-            <p className="label text-ink-400 mb-5">Atendimento</p>
-            <ul className="space-y-2.5 text-sm">
-              <li className="font-mono text-xs">contato@repon.com.br</li>
-              <li className="font-mono text-xs">+55 21 99594-6491</li>
-              <li className="font-mono text-xs text-ink-400 mt-3">SEG–SÁB · 09H–18H</li>
+            <div className="eyebrow mb-5" style={{ color: "var(--color-blue-300)" }}>Institucional</div>
+            <ul className="flex flex-col gap-3 text-[0.9375rem]">
+              <li><Link href="/sobre"        className="hover:opacity-100 transition-opacity" style={{ color: "rgba(243,241,237,0.85)" }}>A Repon</Link></li>
+              <li><Link href="/verticais"    className="hover:opacity-100 transition-opacity" style={{ color: "rgba(243,241,237,0.85)" }}>Verticais</Link></li>
+              <li><Link href="/fornecedores" className="hover:opacity-100 transition-opacity" style={{ color: "rgba(243,241,237,0.85)" }}>Para Fornecedores</Link></li>
+              <li><Link href="/contato"      className="hover:opacity-100 transition-opacity" style={{ color: "rgba(243,241,237,0.85)" }}>Contato</Link></li>
+            </ul>
+          </div>
+
+          <div className="md:col-span-4">
+            <div className="eyebrow mb-5" style={{ color: "var(--color-blue-300)" }}>Contato</div>
+            <ul className="flex flex-col gap-3 text-[0.9375rem]" style={{ color: "rgba(243,241,237,0.85)" }}>
+              <li><a href={`mailto:${site.contact.emails.comercial}`} className="hover:opacity-100">{site.contact.emails.comercial}</a></li>
+              <li><a href={`mailto:${site.contact.emails.sac}`}       className="hover:opacity-100">{site.contact.emails.sac}</a></li>
+              <li className="font-mono text-[0.8125rem]" style={{ color: "rgba(243,241,237,0.7)" }}>{site.contact.phone}</li>
+              <li>
+                <a
+                  href={site.contact.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 border-b pb-px hover:opacity-100"
+                  style={{ borderColor: "rgba(243,241,237,0.4)" }}
+                >
+                  WhatsApp comercial
+                </a>
+              </li>
+              <li className="font-mono text-[0.8125rem]" style={{ color: "rgba(243,241,237,0.7)" }}>{site.contact.social.instagram}</li>
             </ul>
           </div>
         </div>
 
-        <div className="pt-10 flex flex-wrap items-center justify-between gap-6 text-xs text-ink-500">
-          <p className="font-mono">
-            © {new Date().getFullYear()} Repon Plataforma de Comércio Ltda · CNPJ 54.563.438/0001-07
-          </p>
-          <div className="flex gap-6">
-            <Link href="/privacidade" className="ul-anim hover:text-paper">Privacidade</Link>
-            <Link href="/termos" className="ul-anim hover:text-paper">Termos</Link>
-            <Link href="/trocas" className="ul-anim hover:text-paper">Política de troca</Link>
-          </div>
+        {/* Endereços */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 py-16 border-b" style={{ borderColor: "var(--color-petrol-80)" }}>
+          {site.locations.map((loc) => (
+            <div key={loc.slug}>
+              <div className="eyebrow mb-3" style={{ color: "var(--color-blue-300)" }}>
+                {loc.label} · {loc.role}
+              </div>
+              <h3 className="h-card mb-2" style={{ color: "var(--color-iced)" }}>
+                {loc.city} / {loc.state}
+              </h3>
+              <p className="text-[0.9375rem] leading-relaxed" style={{ color: "rgba(243,241,237,0.75)" }}>
+                {loc.address}<br/>CEP {loc.zip}
+              </p>
+              <p className="mt-3 text-[0.8125rem] font-mono" style={{ color: "rgba(243,241,237,0.55)" }}>
+                Operação 3PL · {loc.partner}
+              </p>
+            </div>
+          ))}
         </div>
 
-        {/* Assinatura tipográfica */}
-        <p
-          className="font-display text-[100px] md:text-[180px] font-extrabold leading-none tracking-tightest text-ink-800 mt-12 md:mt-16 select-none pointer-events-none"
-          aria-hidden="true"
-        >
-          Repon.
-        </p>
+        {/* Bottom */}
+        <div className="pt-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <p className="text-[0.8125rem]" style={{ color: "rgba(243,241,237,0.5)" }}>
+            © {new Date().getFullYear()} {site.brand.legalName}. Todos os direitos reservados.
+          </p>
+          <p className="text-[0.75rem] font-mono tracking-wider uppercase" style={{ color: "rgba(243,241,237,0.4)" }}>
+            Atacado B2B · Sudeste + Sul
+          </p>
+        </div>
       </div>
     </footer>
   );

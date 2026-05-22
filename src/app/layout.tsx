@@ -1,115 +1,103 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { site } from "@/lib/site";
 import "./globals.css";
 
-import { AuthProvider } from "@/contexts/AuthContext";
-import { CartProvider } from "@/contexts/CartContext";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { Analytics } from "@/components/Analytics";
-import {
-  StructuredData,
-  organizationSchema,
-  localBusinessSchema,
-  websiteSchema,
-} from "@/components/StructuredData";
-
 export const metadata: Metadata = {
-  title: "Repon | Papelaria e escritório no atacado",
+  metadataBase: new URL(site.contact.siteUrl),
+  title: {
+    default: `${site.brand.name} — ${site.brand.slogan}`,
+    template: `%s — ${site.brand.name}`,
+  },
   description:
-    "Plataforma B2B de papelaria e material de escritório com CNPJ. Preço de atacado, frete grátis e entrega em 24h no Rio de Janeiro.",
+    "Distribuidora atacadista B2B com operação logística em Santa Catarina e São Paulo. Papelaria, higiene, informática e eletroeletrônicos para revendedores no Sudeste e Sul. O fluxo que mantém seu negócio ativo.",
   keywords: [
+    "Repon",
+    "distribuidora atacadista",
+    "atacado B2B",
     "papelaria atacado",
-    "material escritório CNPJ",
-    "distribuidora papelaria RJ",
-    "Repon distribuidora",
-    "papelaria B2B",
-    "material escritório atacado",
+    "higiene pessoal atacado",
+    "informática atacado",
+    "eletroeletrônicos atacado",
+    "Sudeste",
+    "Sul",
+    "Santa Catarina",
+    "São Paulo",
   ],
-  authors: [{ name: "Repon Plataforma de Comércio Ltda" }],
-  creator: "Repon",
-  metadataBase: new URL("https://repon.com.br"),
+  authors: [{ name: site.brand.legalName }],
+  creator: site.brand.legalName,
+  publisher: site.brand.legalName,
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "pt_BR",
-    url: "https://repon.com.br",
-    siteName: "Repon",
-    title: "Repon | Papelaria e escritório no atacado",
-    description:
-      "Compre papelaria e material de escritório no atacado com CNPJ. Frete grátis, entrega em 24h, nota fiscal em todo pedido.",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Repon — Papelaria e escritório no atacado",
-      },
-    ],
+    url: site.contact.siteUrl,
+    siteName: site.brand.name,
+    title: `${site.brand.name} — ${site.brand.slogan}`,
+    description: site.brand.descriptor,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Repon | Papelaria e escritório no atacado",
-    description:
-      "Compre papelaria e material de escritório no atacado com CNPJ. Frete grátis, entrega em 24h.",
-    images: ["/og-image.png"],
+    title: `${site.brand.name} — ${site.brand.slogan}`,
+    description: site.brand.descriptor,
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/repon-mark-blue.svg", type: "image/svg+xml" },
+      { url: "/favicon.svg",         type: "image/svg+xml" },
     ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
-    shortcut: "/favicon.svg",
-  },
-  manifest: "/site.webmanifest",
-  alternates: {
-    canonical: "/",
-  },
-  category: "shopping",
-  applicationName: "Repon",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
+    shortcut: "/repon-mark-blue.svg",
+    apple: "/apple-touch-icon.png",
   },
 };
 
-export const viewport = {
-  themeColor: "#0464D5",
+export const viewport: Viewport = {
+  themeColor: "#01092D",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 5,
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const orgJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: site.brand.legalName,
+    alternateName: site.brand.name,
+    slogan: site.brand.slogan,
+    url: site.contact.siteUrl,
+    legalName: site.brand.legalName,
+    foundingDate: "2024-04-02",
+    taxID: site.fiscal.matriz.cnpj,
+    email: site.contact.emails.comercial,
+    telephone: `+55${site.contact.phoneRaw.slice(2)}`,
+    address: site.locations.map((l) => ({
+      "@type": "PostalAddress",
+      streetAddress: l.address,
+      addressLocality: l.city,
+      addressRegion: l.state,
+      postalCode: l.zip,
+      addressCountry: "BR",
+    })),
+    areaServed: site.coverage.states.map((s) => ({ "@type": "State", name: s })),
+    sameAs: [site.contact.social.instagramUrl],
+  };
+
   return (
     <html lang="pt-BR">
-      <head>
-        <StructuredData
-          data={[organizationSchema, localBusinessSchema, websiteSchema]}
+      <body className="min-h-screen flex flex-col antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
         />
-      </head>
-      <body className="bg-white antialiased">
-        <Analytics />
-        <AuthProvider>
-          <CartProvider>
-            {children}
-            <WhatsAppButton />
-          </CartProvider>
-        </AuthProvider>
+        <Header />
+        <main className="flex-1">{children}</main>
+        <Footer />
       </body>
     </html>
   );

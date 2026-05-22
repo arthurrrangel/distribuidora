@@ -1,11 +1,19 @@
-// src/components/Logo.tsx
-// Logo Repon oficial — usa os SVGs em /public/.
-// Variantes: azul (default), branca (sobre escuro), escura.
-// Formato: full (logotipo Repon) ou mark (apenas R).
-
 import Image from "next/image";
 
-type LogoVariant = "azul" | "branca" | "escura";
+/**
+ * Logo oficial Repon.
+ * Variantes oficiais (Apresentação Pavloworks 2026):
+ *   - blue    : azul Repon #0464D5 (default, sobre fundos claros/petrol)
+ *   - petrol  : azul escuro #01092D (sobre fundos iced/verde)
+ *   - white   : branco/iced (sobre fundos azul/petrol)
+ *   - green   : verde #A6D97A (variante secundária)
+ *
+ * Formato:
+ *   - full : logotipo completo "Repon"
+ *   - mark : símbolo "R" (uso compacto)
+ */
+
+type LogoVariant = "blue" | "petrol" | "white" | "green";
 type LogoShape = "full" | "mark";
 
 interface LogoProps {
@@ -18,22 +26,14 @@ interface LogoProps {
 }
 
 const SRC_MAP: Record<LogoVariant, Record<LogoShape, string>> = {
-  azul: {
-    full: "/repon-logo-azul.svg",
-    mark: "/repon-logo-azul-r.svg",
-  },
-  branca: {
-    full: "/repon-logo-branca.svg",
-    mark: "/repon-logo-branca-r.svg",
-  },
-  escura: {
-    full: "/repon-logo-escuro.svg",
-    mark: "/repon-logo-escuro-r.svg",
-  },
+  blue:   { full: "/repon-logo-blue.svg",   mark: "/repon-mark-blue.svg"   },
+  petrol: { full: "/repon-logo-petrol.svg", mark: "/repon-mark-petrol.svg" },
+  white:  { full: "/repon-logo-white.svg",  mark: "/repon-mark-white.svg"  },
+  green:  { full: "/repon-logo-green.svg",  mark: "/repon-mark-green.svg"  },
 };
 
 export function Logo({
-  variant = "azul",
+  variant = "blue",
   shape = "full",
   className = "",
   priority = false,
@@ -41,8 +41,8 @@ export function Logo({
   height,
 }: LogoProps) {
   const src = SRC_MAP[variant][shape];
-  const defaultWidth = shape === "full" ? 96 : 24;
-  const defaultHeight = shape === "full" ? 28 : 24;
+  const defaultWidth  = shape === "full" ? 120 : 32;
+  const defaultHeight = shape === "full" ? 36  : 32;
 
   return (
     <Image
