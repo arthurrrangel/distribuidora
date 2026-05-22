@@ -1,119 +1,84 @@
+// src/components/Hero.tsx
+// Hero Repon v2: tipografia massiva, paleta paper/ink, mosaico editorial à direita.
+
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
-
-const perks = [
-  "Frete grátis pra CNPJ",
-  "Entrega em até 24h",
-  "Sem pedido mínimo",
-];
 
 export function Hero() {
-  const { user, loading } = useAuth();
-
   return (
-    <section className="bg-white py-12 md:py-20">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
-
-          {/* ── Texto ───────────────────────────────────────────────── */}
-          <div className="flex-1 text-center md:text-left">
-
-            {/* Badge */}
-            <span className="inline-block bg-blue-50 text-[#0464D5] text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-6">
-              Atacado B2B · Só pra CNPJ
-            </span>
-
-            {/* Heading */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-5">
-              Papelaria e escritório<br className="hidden md:block" />{" "}
-              <span className="text-[#0464D5]">no atacado</span>{" "}
-              pra sua empresa.
-            </h1>
-
-            {/* Sub */}
-            <p className="text-gray-500 text-lg mb-8 max-w-md leading-relaxed mx-auto md:mx-0">
-              Preço de atacado direto no site, sem precisar ligar, sem pedido mínimo e com entrega rápida no Rio de Janeiro.
-            </p>
-
-            {/* CTAs */}
-            {!loading && (
-              <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start mb-8">
-                {user ? (
-                  <Link
-                    href="/produtos"
-                    className="inline-flex items-center justify-center gap-2 bg-[#0464D5] text-white px-8 py-3.5 rounded-lg font-bold hover:bg-[#0353b4] transition-colors shadow-md shadow-[#0464D5]/20 text-base"
-                  >
-                    Começar a comprar
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                ) : (
-                  <>
-                    <Link
-                      href="/register"
-                      className="inline-flex items-center justify-center gap-2 bg-[#0464D5] text-white px-8 py-3.5 rounded-lg font-bold hover:bg-[#0353b4] transition-colors shadow-md shadow-[#0464D5]/20 text-base"
-                    >
-                      Criar uma conta
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                    <Link
-                      href="/login"
-                      className="inline-flex items-center justify-center gap-2 border border-gray-200 text-gray-700 px-8 py-3.5 rounded-lg font-semibold hover:bg-gray-50 transition-colors text-base"
-                    >
-                      Já tenho conta
-                    </Link>
-                  </>
-                )}
-              </div>
-            )}
-            {loading && <div className="h-[52px] w-44 bg-gray-100 rounded-lg animate-pulse mb-8" />}
-
-            {/* Perks — inline, sem repetição */}
-            <div className="flex flex-wrap gap-x-6 gap-y-2 justify-center md:justify-start">
-              {perks.map((p) => (
-                <span key={p} className="flex items-center gap-1.5 text-sm text-gray-500">
-                  <CheckCircle2 className="w-4 h-4 text-[#0464D5] shrink-0" />
-                  {p}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* ── Imagem ──────────────────────────────────────────────── */}
-          <div className="flex-1 hidden md:block relative">
-            <div
-              className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden"
-              style={{
-                maskImage:
-                  "linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
-                maskComposite: "intersect",
-              }}
+    <section className="bg-paper grain border-b hairline">
+      <div className="max-w-[1280px] mx-auto px-4 md:px-8 pt-20 md:pt-28 pb-24 md:pb-32 grid md:grid-cols-12 gap-12 md:gap-16">
+        <div className="md:col-span-7">
+          <p className="label text-ink-500 flex items-center gap-3">
+            <span className="w-6 h-px bg-ink-400"></span>
+            Atacado de papelaria · só CNPJ
+          </p>
+          <h1 className="font-display font-extrabold text-[56px] sm:text-[72px] md:text-[96px] lg:text-[112px] leading-[0.92] tracking-tightest mt-6 md:mt-8">
+            O preço<br />
+            que <span className="italic font-light text-ink-500">só atacado</span><br />
+            te dá.
+          </h1>
+          <p className="text-ink-600 text-base md:text-lg mt-8 md:mt-10 max-w-md leading-relaxed">
+            Filipaper, Filimail, Usapel, Spiral — direto da fábrica,
+            com nota fiscal e entrega no Rio em 24h. Sem mínimo,
+            sem mensalidade, sem volta.
+          </p>
+          <div className="mt-10 md:mt-12 flex flex-wrap items-center gap-x-8 gap-y-4">
+            <Link
+              href="/register"
+              className="h-14 px-7 bg-ink text-paper text-sm font-semibold hover:bg-accent transition-colors duration-300 flex items-center gap-3"
             >
-              <Image
-                src="/covers/repon-principal.png"
-                alt="Produtos de papelaria e escritório Repon"
-                fill
-                className="object-cover"
-                priority
-              />
+              Criar conta CNPJ
+              <span className="font-mono">→</span>
+            </Link>
+            <Link
+              href="/produtos"
+              className="text-sm font-semibold ul-anim"
+            >
+              Ver catálogo
+            </Link>
+          </div>
+        </div>
+
+        <div className="md:col-span-5">
+          <div className="space-y-3">
+            <figure className="aspect-[4/5] prod-a relative overflow-hidden">
+              <div className="absolute bottom-0 left-0 right-0 p-5 flex items-end justify-between gap-4">
+                <div>
+                  <p className="label text-ink-700">Em destaque</p>
+                  <p className="font-display text-xl md:text-2xl font-bold leading-tight mt-1">
+                    Caderno<br />Universitário<br />200f
+                  </p>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="font-mono text-[10px] text-ink-500">a partir de</p>
+                  <p className="font-display text-2xl md:text-3xl font-extrabold tabular tracking-tighter">
+                    R$&nbsp;18,90
+                  </p>
+                </div>
+              </div>
+            </figure>
+            <div className="grid grid-cols-2 gap-3">
+              <figure className="aspect-square prod-b relative">
+                <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between gap-2">
+                  <p className="font-display text-xs sm:text-sm font-bold leading-tight">
+                    Caneta<br />BIC 50un
+                  </p>
+                  <p className="font-mono text-xs">R$&nbsp;47</p>
+                </div>
+              </figure>
+              <figure className="aspect-square prod-dark relative text-paper">
+                <div className="absolute inset-0 p-4 flex flex-col justify-between">
+                  <span className="label">Entrega</span>
+                  <p className="font-display text-[40px] sm:text-[48px] font-extrabold leading-none tracking-tightest">
+                    24h
+                    <span className="text-ink-400 text-xl sm:text-2xl align-top">↗</span>
+                  </p>
+                </div>
+              </figure>
             </div>
           </div>
-
-          {/* Mobile: imagem compacta */}
-          <div className="md:hidden w-full rounded-xl overflow-hidden shadow-sm">
-            <Image
-              src="/hero_stationery.png"
-              alt="Produtos Repon"
-              width={400}
-              height={220}
-              className="w-full object-cover"
-              priority
-            />
-          </div>
-
         </div>
       </div>
     </section>

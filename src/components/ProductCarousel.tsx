@@ -1,104 +1,101 @@
 "use client";
 
-import { ChevronRight, ChevronLeft } from "lucide-react";
 import { ProductCard } from "./ProductCard";
 import { useRef } from "react";
 import { Product } from "@/types/shopify";
+import Link from "next/link";
 
 interface ProductCarouselProps {
   products: Product[];
-  title: string;
-  collection: string;
+  title?: string;
+  collection?: string;
+  hideHeader?: boolean;
 }
 
 export function ProductCarousel({
   products,
   title,
   collection,
+  hideHeader = false,
 }: ProductCarouselProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollLeft = () => {
-    scrollContainerRef.current?.scrollBy({ left: -320, behavior: "smooth" });
+    scrollContainerRef.current?.scrollBy({ left: -360, behavior: "smooth" });
   };
 
   const scrollRight = () => {
-    scrollContainerRef.current?.scrollBy({ left: 320, behavior: "smooth" });
+    scrollContainerRef.current?.scrollBy({ left: 360, behavior: "smooth" });
   };
 
   if (!products || products.length === 0) return null;
 
   return (
-    <section className="py-6">
-      {/* HEADER */}
-      <div className="flex items-center justify-between mb-5 px-1">
-        <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
-
-        <div className="flex items-center gap-3">
-          <a
-            href={`/departamento/${collection}`}
-            className="text-[#0464D5] font-semibold text-sm hover:underline"
-          >
-            Ver todos
-          </a>
-
-          <div className="flex gap-1.5">
+    <div>
+      {!hideHeader && title && (
+        <div className="max-w-[1280px] mx-auto px-4 md:px-8 flex items-end justify-between gap-6 mb-8">
+          <h2 className="font-display font-extrabold text-3xl md:text-4xl tracking-tighter">
+            {title}
+          </h2>
+          <div className="flex items-center gap-3 shrink-0">
+            {collection && (
+              <Link
+                href={`/departamento/${collection}`}
+                className="text-sm font-semibold ul-anim hidden sm:inline"
+              >
+                Ver todos
+              </Link>
+            )}
             <button
               onClick={scrollLeft}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-500 transition-all active:scale-95"
+              className="w-10 h-10 border hairline-strong hover:border-ink flex items-center justify-center transition"
               aria-label="Anterior"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <span className="font-mono">←</span>
             </button>
             <button
               onClick={scrollRight}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-500 transition-all active:scale-95"
+              className="w-10 h-10 bg-ink text-paper hover:bg-accent flex items-center justify-center transition"
               aria-label="Próximo"
             >
-              <ChevronRight className="w-4 h-4" />
+              <span className="font-mono">→</span>
             </button>
           </div>
         </div>
+      )}
+
+      <div
+        ref={scrollContainerRef}
+        className="flex gap-px bg-ink-200 border-y hairline overflow-x-auto no-scrollbar scroll-smooth"
+      >
+        {products.map((p) => {
+          const variant = p.variants.edges[0]?.node;
+          if (!variant) return null;
+
+          return (
+            <div
+              key={p.id}
+              className="bg-paper min-w-[240px] sm:min-w-[260px] shrink-0"
+            >
+              <ProductCard
+                id={variant.id}
+                productId={p.id}
+                title={p.title}
+                handle={p.handle}
+                price={parseFloat(variant.price.amount)}
+                originalPrice={
+                  variant.compareAtPrice
+                    ? parseFloat(variant.compareAtPrice.amount)
+                    : undefined
+                }
+                image={p.images.edges[0]?.node.url || null}
+                coverInfo={p.coverInfo?.value}
+                quantityAvailable={variant.quantityAvailable}
+              />
+            </div>
+          );
+        })}
       </div>
-
-      {/* CARROSSEL */}
-      <div className="relative">
-        <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-white to-transparent z-10" />
-        <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-white to-transparent z-10" />
-
-        <div
-          ref={scrollContainerRef}
-          className="flex gap-3 overflow-x-auto no-scrollbar py-3 px-4 scroll-smooth"
-        >
-          {products.map((p) => {
-            const variant = p.variants.edges[0]?.node;
-            if (!variant) return null;
-
-            return (
-              <div
-                key={p.id}
-                className="min-w-[190px] sm:min-w-[200px] shrink-0"
-              >
-                <ProductCard
-                  id={variant.id}
-                  productId={p.id}
-                  title={p.title}
-                  handle={p.handle}
-                  price={parseFloat(variant.price.amount)}
-                  originalPrice={
-                    variant.compareAtPrice
-                      ? parseFloat(variant.compareAtPrice.amount)
-                      : undefined
-                  }
-                  image={p.images.edges[0]?.node.url || ""}
-                  coverInfo={p.coverInfo?.value}
-                  quantityAvailable={variant.quantityAvailable}
-                />
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
+    </div>
   );
 }
