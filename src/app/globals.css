@@ -254,6 +254,49 @@
   @keyframes reveal-in { to { opacity: 1; transform: translateY(0); } }
 }
 
+/* Onda decorativa do hero — animação infinita */
+.wave-path {
+  animation: wave-drift 18s ease-in-out infinite;
+  transform-origin: center;
+}
+@keyframes wave-drift {
+  0%, 100% { transform: translateY(0px) skewX(-2deg); }
+  50%      { transform: translateY(-18px) skewX(2deg); }
+}
+
+/* Smooth scroll */
+html { scroll-behavior: smooth; }
+
+/* Card vertical hover dramático — color flood + arrow slide */
+.vertical-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 400ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+.vertical-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-blue);
+  transform: translateY(100%);
+  transition: transform 480ms cubic-bezier(0.76, 0, 0.24, 1);
+  z-index: 0;
+}
+.vertical-card:hover::before { transform: translateY(0); }
+.vertical-card > * { position: relative; z-index: 1; transition: color 280ms ease; }
+.vertical-card:hover h3,
+.vertical-card:hover p,
+.vertical-card:hover .eyebrow,
+.vertical-card:hover .vertical-arrow { color: var(--color-iced) !important; }
+.vertical-card:hover .vertical-arrow { transform: translateX(8px); }
+.vertical-arrow { transition: transform 320ms cubic-bezier(0.25, 1, 0.5, 1); }
+
+/* Botão primary com micro-bump */
+.btn-primary:active, .btn-ghost:active { transform: scale(0.98); }
+
+/* Selection */
+::selection { background: var(--color-blue); color: var(--color-iced); }
+
 .map-marker-pulse {
   animation: marker-pulse 2.4s ease-out infinite;
   transform-origin: center;
