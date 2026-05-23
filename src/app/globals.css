@@ -372,4 +372,40 @@ html { scroll-behavior: smooth; }
   nav a {
     padding-block: 0.5rem;
   }
+
+  /* Wave decorativa menos intensa em mobile (performance + foco no texto) */
+  .wave-path {
+    animation-duration: 26s;
+  }
+
+  /* Vertical card: usa :active no mobile (sem hover) */
+  .vertical-card:active::before { transform: translateY(0); }
+  .vertical-card:active h3,
+  .vertical-card:active p,
+  .vertical-card:active .eyebrow,
+  .vertical-card:active .vertical-arrow { color: var(--color-iced) !important; }
+
+  /* Headers mobile com espaçamento confortável */
+  .h-display { line-height: 1.04; }
+
+  /* Garantir que reveals respeitem prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .wave-path { animation: none !important; }
+    .reveal, .map-marker-pulse { animation: none !important; opacity: 1 !important; transform: none !important; }
+  }
+}
+
+/* Em viewports muito pequenos (≤ 400px), wave fica ainda mais sutil */
+@media (max-width: 400px) {
+  .wave-path { opacity: 0.55; }
+}
+
+/* Native momentum scroll iOS */
+body {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Smooth scroll desativa em mobile pra não conflitar com gesture */
+@media (max-width: 768px) {
+  html { scroll-behavior: auto; }
 }

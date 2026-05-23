@@ -10,8 +10,13 @@ export default function HomePage() {
     <>
       {/* ===== HERO PETROL com WAVE ===== */}
       <section className="section-petrol relative overflow-hidden">
-        <WaveBackground variant="petrol" opacity={0.45} />
-        <div className="container-rp pt-24 md:pt-44 pb-28 md:pb-44 relative z-10">
+        <div className="hidden md:block">
+          <WaveBackground variant="petrol" opacity={0.45} />
+        </div>
+        <div className="md:hidden">
+          <WaveBackground variant="petrol" opacity={0.3} />
+        </div>
+        <div className="container-rp pt-16 md:pt-44 pb-24 md:pb-44 relative z-10">
           <div className="max-w-4xl">
             <Reveal>
               <div className="eyebrow">Atacado B2B · Sudeste e Sul</div>
@@ -102,7 +107,9 @@ export default function HomePage() {
 
       {/* ===== PRA QUEM É ===== */}
       <section className="section-petrol relative overflow-hidden">
-        <WaveBackground variant="petrol" opacity={0.3} />
+        <div className="hidden md:block">
+          <WaveBackground variant="petrol" opacity={0.3} />
+        </div>
         <div className="container-rp py-28 md:py-44 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             <Reveal className="lg:col-span-4">
@@ -260,7 +267,9 @@ export default function HomePage() {
 
       {/* ===== CTA com wave ===== */}
       <section className="section-blue relative overflow-hidden">
-        <WaveBackground variant="blue" opacity={0.4} />
+        <div className="hidden md:block">
+          <WaveBackground variant="blue" opacity={0.4} />
+        </div>
         <div className="container-rp py-28 md:py-44 relative z-10">
           <Reveal>
             <div className="max-w-3xl">
