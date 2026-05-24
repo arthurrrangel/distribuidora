@@ -5,21 +5,22 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 /**
  * Mask reveal — texto entra de baixo com clip.
  * Use múltiplas linhas com delays escalonados pra criar hero cinematográfico.
+ *
+ * Renderiza como <span style={{display:'block'}}> pra ser usável dentro de
+ * <h1>/<h2> (block dentro de inline phrasing) sem quebrar a semântica visual.
  */
 export function SequencedLine({
   children,
   delay = 0,
   className = "",
-  as: Tag = "span",
   accent = false,
 }: {
   children: ReactNode;
   delay?: number;
   className?: string;
-  as?: "span" | "div";
   accent?: boolean;
 }) {
-  const outerRef = useRef<HTMLElement | null>(null);
+  const outerRef = useRef<HTMLSpanElement>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -37,10 +38,9 @@ export function SequencedLine({
     return () => observer.disconnect();
   }, []);
 
-  const Outer = Tag as typeof Tag;
   return (
-    <Outer
-      ref={outerRef as React.RefObject<HTMLElement>}
+    <span
+      ref={outerRef}
       className={className}
       style={{
         display: "block",
@@ -60,6 +60,6 @@ export function SequencedLine({
       >
         {children}
       </span>
-    </Outer>
+    </span>
   );
 }
