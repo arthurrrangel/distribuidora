@@ -4,6 +4,7 @@ import { CoverageMap } from "@/components/CoverageMap";
 import { WaveBackground } from "@/components/WaveBackground";
 import { Counter } from "@/components/Counter";
 import { Reveal } from "@/components/Reveal";
+import { HeroAmbient } from "@/components/HeroAmbient";
 
 export default function HomePage() {
   return (
@@ -12,6 +13,7 @@ export default function HomePage() {
       <section className="section-petrol relative overflow-hidden">
         <div className="hidden md:block">
           <WaveBackground variant="petrol" opacity={0.45} />
+          <HeroAmbient />
         </div>
         <div className="md:hidden">
           <WaveBackground variant="petrol" opacity={0.3} />
@@ -115,14 +117,14 @@ export default function HomePage() {
             <Reveal className="lg:col-span-4">
               <div className="eyebrow">Para quem é</div>
               <h2 className="h-section mt-6" style={{ color: "var(--color-iced)" }}>
-                Três perfis<br/>de revendedor.
+                Três formas<br/>de comprar.
               </h2>
             </Reveal>
             <div className="lg:col-span-8">
               <ul className="divide-y" style={{ borderColor: "var(--color-petrol-80)" }}>
                 {site.audience.map((a, i) => (
                   <Reveal key={a.profile} delay={i * 100} as="li">
-                    <div className="py-10" style={{ borderColor: "var(--color-petrol-80)" }}>
+                    <div className="py-10 audience-row" style={{ borderColor: "var(--color-petrol-80)" }}>
                       <h3 className="font-display text-[1.5rem] md:text-[1.875rem]" style={{ fontWeight: 500, letterSpacing: "-0.022em", color: "var(--color-iced)" }}>
                         {a.profile}
                       </h3>

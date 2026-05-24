@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
+import { StickyCTA } from "@/components/StickyCTA";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -100,6 +101,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="flex-1">{children}</main>
         <Footer />
         <WhatsAppFloat />
+        <StickyCTA />
       </body>
     </html>
   );

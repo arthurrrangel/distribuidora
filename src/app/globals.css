@@ -409,3 +409,49 @@ body {
 @media (max-width: 768px) {
   html { scroll-behavior: auto; }
 }
+/* ============================================================
+   Melhorias visuais — orbes drift + audience hover + reduced-motion
+   ============================================================ */
+
+@keyframes orb-drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(-40px, 30px) scale(1.06); }
+}
+@keyframes orb-drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(50px, -20px) scale(1.08); }
+}
+.hero-orb-1 { animation: orb-drift-1 14s ease-in-out infinite; }
+.hero-orb-2 { animation: orb-drift-2 17s ease-in-out infinite; }
+
+/* Audience row — hover slide + border accent */
+.audience-row {
+  position: relative;
+  transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1), padding-left 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.audience-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--color-blue-300);
+  transform: translateY(-50%);
+  transition: width 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.audience-row:hover {
+  padding-left: 32px;
+}
+.audience-row:hover::before {
+  width: 20px;
+}
+.audience-row:hover h3 {
+  color: var(--color-blue-300);
+  transition: color 280ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-orb-1, .hero-orb-2 { animation: none; }
+  .audience-row, .audience-row::before { transition: none; }
+}
