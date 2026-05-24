@@ -5,6 +5,9 @@ import { WaveBackground } from "@/components/WaveBackground";
 import { Counter } from "@/components/Counter";
 import { Reveal } from "@/components/Reveal";
 import { HeroAmbient } from "@/components/HeroAmbient";
+import { WordRotator } from "@/components/WordRotator";
+import { HeroTicker } from "@/components/HeroTicker";
+import { FlowLines } from "@/components/FlowLines";
 
 export default function HomePage() {
   return (
@@ -14,6 +17,7 @@ export default function HomePage() {
         <div className="hidden md:block">
           <WaveBackground variant="petrol" opacity={0.45} />
           <HeroAmbient />
+          <FlowLines />
         </div>
         <div className="md:hidden">
           <WaveBackground variant="petrol" opacity={0.3} />
@@ -26,7 +30,7 @@ export default function HomePage() {
             <Reveal delay={100}>
               <h1 className="h-display mt-8" style={{ color: "var(--color-iced)" }}>
                 Atacado direto para o<br />
-                <span style={{ color: "var(--color-blue-300)" }}>revendedor que não cabe</span><br />
+                <span style={{ color: "var(--color-blue-300)" }}><WordRotator words={["revendedor que não cabe","revendedor que decide","revendedor que importa","revendedor que escala"]} /></span><br />
                 no marketplace.
               </h1>
             </Reveal>
@@ -42,13 +46,14 @@ export default function HomePage() {
                   href={site.contact.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-primary"
+                  className="btn-green"
                 >
                   Cadastrar pelo WhatsApp
                   <ArrowRight />
                 </a>
               </div>
             </Reveal>
+            <HeroTicker />
             <Reveal delay={500}>
               <p className="mt-16 text-[0.75rem] font-mono tracking-[0.18em] uppercase" style={{ color: "var(--color-blue-300)" }}>
                 — {site.brand.slogan}
@@ -124,7 +129,7 @@ export default function HomePage() {
               <ul className="divide-y" style={{ borderColor: "var(--color-petrol-80)" }}>
                 {site.audience.map((a, i) => (
                   <Reveal key={a.profile} delay={i * 100} as="li">
-                    <div className="py-10 audience-row" style={{ borderColor: "var(--color-petrol-80)" }}>
+                    <div className="py-10 audience-row relative" style={{ borderColor: "var(--color-petrol-80)" }} data-num={a.icon}>
                       <h3 className="font-display text-[1.5rem] md:text-[1.875rem]" style={{ fontWeight: 500, letterSpacing: "-0.022em", color: "var(--color-iced)" }}>
                         {a.profile}
                       </h3>
@@ -147,7 +152,7 @@ export default function HomePage() {
             {site.numbers.map((n, i) => (
               <Reveal key={n.label} delay={i * 80}>
                 <div className="flex flex-col">
-                  <div className="stat-num">
+                  <div className={n.value === "04" ? "stat-num accent-green" : "stat-num"}>
                     <Counter value={n.value} />
                   </div>
                   <div className="mt-4 text-[0.9375rem] font-medium" style={{ color: "var(--color-petrol)" }}>{n.label}</div>

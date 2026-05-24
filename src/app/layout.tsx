@@ -3,6 +3,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { StickyCTA } from "@/components/StickyCTA";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -97,6 +98,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
         />
+        <ScrollProgress />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
