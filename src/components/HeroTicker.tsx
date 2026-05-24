@@ -13,33 +13,20 @@ export function HeroTicker() {
       <div
         className="hero-ticker"
         style={{
-          marginTop: 28,
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 0,
-          borderTop: "1px solid rgba(82,159,237,0.18)",
-          borderBottom: "1px solid rgba(82,159,237,0.18)",
-          paddingTop: 16,
-          paddingBottom: 16,
-          maxWidth: 640,
+          marginTop: 56,
+          display: "grid",
+          gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+          gap: "24px",
+          maxWidth: 560,
         }}
       >
-        {ITEMS.map((it, i) => (
-          <div
-            key={it.label}
-            style={{
-              flex: 1,
-              minWidth: 90,
-              paddingLeft: i === 0 ? 0 : 18,
-              paddingRight: 18,
-              borderLeft: i === 0 ? "none" : "1px solid rgba(82,159,237,0.14)",
-            }}
-          >
+        {ITEMS.map((it) => (
+          <div key={it.label} style={{ minWidth: 0 }}>
             <div
               style={{
                 fontFamily: "var(--font-display, inherit)",
-                fontSize: "1.625rem",
-                fontWeight: 600,
+                fontSize: "clamp(1.25rem, 2.4vw, 1.625rem)",
+                fontWeight: 500,
                 letterSpacing: "-0.02em",
                 color: "var(--color-iced)",
                 lineHeight: 1,
@@ -49,12 +36,12 @@ export function HeroTicker() {
             </div>
             <div
               style={{
-                marginTop: 4,
+                marginTop: 8,
                 fontSize: "0.6875rem",
                 fontWeight: 600,
                 letterSpacing: "0.18em",
                 textTransform: "uppercase",
-                color: "var(--color-blue-300)",
+                color: "rgba(243,241,237,0.55)",
               }}
             >
               {it.label}

@@ -35,9 +35,10 @@ export function CoverageMap({
   ];
 
   // Pinpoints — coordinates normalizadas para o viewBox.
+  // pulse: só no centro principal (SP) — secundário fica estático pra evitar ruído.
   const pinpoints = [
-    { x: 285, y: 355, label: "São Paulo / SP", sublabel: "Centralize Hub", slug: "sp" },
-    { x: 305, y: 565, label: "Navegantes / SC", sublabel: "Simplilog",      slug: "sc" },
+    { x: 285, y: 355, label: "São Paulo / SP", sublabel: "Centralize Hub", slug: "sp", pulse: true },
+    { x: 305, y: 565, label: "Navegantes / SC", sublabel: "Simplilog",      slug: "sc", pulse: false },
   ];
 
   return (
@@ -78,8 +79,8 @@ export function CoverageMap({
           );
         })}
 
-        {/* Pulses */}
-        {pinpoints.map((p) => (
+        {/* Pulses — apenas no centro principal */}
+        {pinpoints.filter((p) => p.pulse).map((p) => (
           <g key={`pulse-${p.slug}`}>
             <circle
               cx={p.x}

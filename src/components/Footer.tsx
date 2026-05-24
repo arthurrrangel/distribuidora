@@ -4,9 +4,8 @@ import { site } from "@/lib/site";
 
 export function Footer() {
   return (
-    <footer className="section-petrol mt-32" style={{ position: "relative", overflow: "hidden" }}>
-      <div aria-hidden style={{ position: "absolute", left: "-2%", bottom: "-14%", right: 0, lineHeight: 0.78, whiteSpace: "nowrap", zIndex: 0 }} className="footer-mega">REPON</div>
-      <div className="container-rp py-20 md:py-24" style={{ position: "relative", zIndex: 1 }}>
+    <footer className="section-petrol mt-32">
+      <div className="container-rp py-24 md:py-28">
         {/* Slogan + logo */}
         <div className="pb-14 mb-14 border-b" style={{ borderColor: "var(--color-petrol-80)" }}>
           <Logo variant="white" shape="full" width={140} height={42} />

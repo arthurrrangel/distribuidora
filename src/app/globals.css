@@ -33,7 +33,7 @@
   --color-iced-warm:     #EAE5DA;
   --color-iced-soft:     #FAFAF7;
 
-  --color-green:         #A6D97A;   /* SECUNDÁRIA — accent positivo */
+  --color-green:         #A6D97A;   /* mantido só para casos pontuais */
   --color-green-700:     #6CA847;
 
   /* Tokens semânticos */
@@ -256,12 +256,12 @@
 
 /* Onda decorativa do hero — animação infinita */
 .wave-path {
-  animation: wave-drift 18s ease-in-out infinite;
+  animation: wave-drift 22s ease-in-out infinite;
   transform-origin: center;
 }
 @keyframes wave-drift {
-  0%, 100% { transform: translateY(0px) skewX(-2deg); }
-  50%      { transform: translateY(-18px) skewX(2deg); }
+  0%, 100% { transform: translateY(0px) skewX(-1.5deg); }
+  50%      { transform: translateY(-14px) skewX(1.5deg); }
 }
 
 /* Smooth scroll */
@@ -297,18 +297,54 @@ html { scroll-behavior: smooth; }
 /* Selection */
 ::selection { background: var(--color-blue); color: var(--color-iced); }
 
+/* Pulse no centro principal do mapa — sutil */
 .map-marker-pulse {
-  animation: marker-pulse 2.4s ease-out infinite;
+  animation: marker-pulse 2.8s ease-out infinite;
   transform-origin: center;
 }
 @keyframes marker-pulse {
-  0%   { transform: scale(0.6); opacity: 0.9; }
-  100% { transform: scale(3);   opacity: 0;   }
+  0%   { transform: scale(0.6); opacity: 0.6; }
+  100% { transform: scale(2.6); opacity: 0;   }
 }
 
 :focus-visible {
   outline: 2px solid var(--color-blue);
   outline-offset: 3px;
+}
+
+/* ============================================================
+   Audience row — hover sutil (desktop apenas)
+   ============================================================ */
+.audience-row {
+  position: relative;
+  overflow: hidden;
+  transition: padding-left 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.audience-row::after {
+  content: attr(data-num);
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-display);
+  font-size: clamp(72px, 11vw, 160px);
+  font-weight: 200;
+  color: rgba(111,169,232,0.06);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  pointer-events: none;
+  transition: color 380ms ease, transform 380ms cubic-bezier(0.22,1,0.36,1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .audience-row:hover { padding-left: 24px; }
+  .audience-row:hover::after {
+    color: rgba(111,169,232,0.13);
+    transform: translateY(-50%) translateX(-8px);
+  }
+  .audience-row:hover h3 {
+    color: var(--color-blue-300);
+    transition: color 280ms ease;
+  }
 }
 
 /* ============================================================
@@ -328,7 +364,7 @@ html { scroll-behavior: smooth; }
     font-size: 1.125rem;
   }
   .stat-num {
-    font-size: clamp(2.5rem, 12vw, 3.5rem);
+    font-size: clamp(2.25rem, 10vw, 3.25rem);
   }
   .body-lead {
     font-size: 1.0625rem;
@@ -347,6 +383,13 @@ html { scroll-behavior: smooth; }
   header > div:first-child {
     height: 64px;
   }
+
+  /* Mobile: numeração ghost menor e mais discreta */
+  .audience-row::after {
+    font-size: clamp(56px, 18vw, 96px);
+    color: rgba(111,169,232,0.05);
+    right: 0;
+  }
 }
 
 @media (max-width: 480px) {
@@ -356,6 +399,11 @@ html { scroll-behavior: smooth; }
   .eyebrow {
     font-size: 0.625rem;
     letter-spacing: 0.16em;
+  }
+  /* Hero ticker mais compacto */
+  .hero-ticker {
+    margin-top: 40px !important;
+    gap: 16px !important;
   }
 }
 
@@ -375,7 +423,7 @@ html { scroll-behavior: smooth; }
 
   /* Wave decorativa menos intensa em mobile (performance + foco no texto) */
   .wave-path {
-    animation-duration: 26s;
+    animation-duration: 30s;
   }
 
   /* Vertical card: usa :active no mobile (sem hover) */
@@ -387,17 +435,11 @@ html { scroll-behavior: smooth; }
 
   /* Headers mobile com espaçamento confortável */
   .h-display { line-height: 1.04; }
-
-  /* Garantir que reveals respeitem prefers-reduced-motion */
-  @media (prefers-reduced-motion: reduce) {
-    .wave-path { animation: none !important; }
-    .reveal, .map-marker-pulse { animation: none !important; opacity: 1 !important; transform: none !important; }
-  }
 }
 
 /* Em viewports muito pequenos (≤ 400px), wave fica ainda mais sutil */
 @media (max-width: 400px) {
-  .wave-path { opacity: 0.55; }
+  .wave-path { opacity: 0.5; }
 }
 
 /* Native momentum scroll iOS */
@@ -409,143 +451,16 @@ body {
 @media (max-width: 768px) {
   html { scroll-behavior: auto; }
 }
-/* ============================================================
-   Melhorias visuais — orbes drift + audience hover + reduced-motion
-   ============================================================ */
 
-@keyframes orb-drift-1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50%      { transform: translate(-40px, 30px) scale(1.06); }
-}
-@keyframes orb-drift-2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50%      { transform: translate(50px, -20px) scale(1.08); }
-}
-.hero-orb-1 { animation: orb-drift-1 14s ease-in-out infinite; }
-.hero-orb-2 { animation: orb-drift-2 17s ease-in-out infinite; }
-
-/* Audience row — hover slide + border accent */
-.audience-row {
-  position: relative;
-  transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1), padding-left 380ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-.audience-row::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 0;
-  height: 2px;
-  background: var(--color-blue-300);
-  transform: translateY(-50%);
-  transition: width 380ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-.audience-row:hover {
-  padding-left: 32px;
-}
-.audience-row:hover::before {
-  width: 20px;
-}
-.audience-row:hover h3 {
-  color: var(--color-blue-300);
-  transition: color 280ms ease;
-}
-
+/* Reduced motion — desliga tudo de animado decorativo */
 @media (prefers-reduced-motion: reduce) {
-  .hero-orb-1, .hero-orb-2 { animation: none; }
-  .audience-row, .audience-row::before { transition: none; }
-}
-/* ============================================================
-   Word rotator
-   ============================================================ */
-@keyframes word-in {
-  0%   { opacity: 0; transform: translateY(18px) skewY(2deg); filter: blur(3px); }
-  100% { opacity: 1; transform: translateY(0) skewY(0);    filter: blur(0); }
-}
-
-/* ============================================================
-   Flow lines no hero — atravessam horizontalmente
-   ============================================================ */
-@keyframes flow-x {
-  0%   { transform: translateX(-50%); }
-  100% { transform: translateX(160%); }
-}
-.flow-line {
-  animation-name: flow-x;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-/* ============================================================
-   Audience row — número decorativo gigante atrás
-   ============================================================ */
-.audience-row {
-  overflow: hidden;
-}
-.audience-row::after {
-  content: attr(data-num);
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: var(--font-display, inherit);
-  font-size: clamp(96px, 14vw, 200px);
-  font-weight: 200;
-  color: rgba(82,159,237,0.08);
-  line-height: 1;
-  letter-spacing: -0.04em;
-  pointer-events: none;
-  transition: color 380ms ease, transform 380ms cubic-bezier(0.22,1,0.36,1);
-}
-.audience-row:hover::after {
-  color: rgba(82,159,237,0.18);
-  transform: translateY(-50%) translateX(-12px);
-}
-
-/* ============================================================
-   Footer mega — REPON gigante no fundo
-   ============================================================ */
-.footer-mega {
-  font-family: var(--font-display, inherit);
-  font-weight: 200;
-  font-size: clamp(120px, 22vw, 380px);
-  line-height: 0.85;
-  letter-spacing: -0.05em;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(82,159,237,0.25);
-  text-stroke: 1px rgba(82,159,237,0.25);
-  user-select: none;
-  pointer-events: none;
-}
-
-/* ============================================================
-   Coverage map — pulse nas cidades
-   ============================================================ */
-@keyframes pulse-city {
-  0%, 100% { transform: scale(1);   opacity: 0.9; }
-  50%      { transform: scale(1.6); opacity: 0.3; }
-}
-.coverage-pulse {
-  transform-origin: center;
-  transform-box: fill-box;
-  animation: pulse-city 2.6s ease-in-out infinite;
-}
-.coverage-pulse-2 { animation-delay: 1.3s; }
-@keyframes flow-route {
-  0%   { stroke-dashoffset: 200; opacity: 0.1; }
-  50%  { opacity: 0.85; }
-  100% { stroke-dashoffset: 0;   opacity: 0.1; }
-}
-.coverage-route {
-  stroke-dasharray: 12 8;
-  animation: flow-route 3.4s ease-in-out infinite;
-}
-
-/* ============================================================
-   Number 04 accent verde
-   ============================================================ */
-.stat-num.accent-green { color: var(--color-green) !important; }
-
-@media (prefers-reduced-motion: reduce) {
-  .flow-line, .coverage-pulse, .coverage-route { animation: none; }
+  .wave-path,
+  .map-marker-pulse { animation: none !important; }
+  .reveal {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .audience-row { transition: none !important; }
+  .vertical-card::before { transition: none !important; }
 }
