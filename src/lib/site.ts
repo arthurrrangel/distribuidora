@@ -259,21 +259,21 @@ export const site = {
   audience: [
     {
       icon: "01",
-      profile: "Papelaria de bairro",
-      pitch: "Reposição quinzenal de mix completo (escolar + escritório + higiene + bazar) em ticket entre R$ 800 e R$ 5 mil.",
-      pain: "Distribuidor grande não atende. Marketplace mata margem.",
+      profile: "Reposição contínua",
+      pitch: "Pedido recorrente quinzenal ou mensal, mix amplo, ticket de R$ 500 a R$ 5 mil. Papelaria, bazar, conveniência, presente, mini-mercado — qualquer loja física que abastece o tempo todo.",
+      pain: "Distribuidor grande exige volume que loja pequena não dá. Marketplace mata margem.",
     },
     {
       icon: "02",
-      profile: "Loja escolar",
-      pitch: "Mix didático e escolar consolidado, pedidos maiores na sazonal (jan/fev e jul) com prazo no boleto.",
-      pain: "Volta às aulas exige condição comercial real e prazo de pagamento.",
+      profile: "Compra sazonal",
+      pitch: "Pedidos grandes em janelas curtas: volta às aulas, fim de ano, datas comemorativas. Condição comercial e prazo no boleto pra encaixar no fluxo de caixa.",
+      pain: "Sazonal exige capital de giro que a loja não tem na hora de comprar.",
     },
     {
       icon: "03",
-      profile: "Bazar expandido",
-      pitch: "Mix multi-categoria (escolar + higiene + informática + eletroportátil) em um único fornecedor, sem dispersar pedidos.",
-      pain: "Trabalhar com 4 distribuidores diferentes é caro e fragmenta logística.",
+      profile: "Pedido consolidado",
+      pitch: "Escolar, escritório, higiene, informática, eletroportátil num fornecedor só. Mix multi-categoria sem precisar gerenciar 4 distribuidores diferentes.",
+      pain: "Fragmentar compra encarece frete, embarala prazo e some com margem.",
     },
   ],
 
