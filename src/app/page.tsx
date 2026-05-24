@@ -5,67 +5,91 @@ import { WaveBackground } from "@/components/WaveBackground";
 import { Counter } from "@/components/Counter";
 import { Reveal } from "@/components/Reveal";
 import { HeroTicker } from "@/components/HeroTicker";
+import { SectionMarker } from "@/components/SectionMarker";
+import { MagneticButton } from "@/components/MagneticButton";
+import { SequencedLine } from "@/components/SequencedLine";
 
 export default function HomePage() {
   return (
     <>
-      {/* ===== HERO PETROL com WAVE ===== */}
+      {/* ===== HERO PETROL ===== */}
       <section className="section-petrol relative overflow-hidden">
         <div className="hidden md:block">
-          <WaveBackground variant="petrol" opacity={0.35} />
+          <WaveBackground variant="petrol" opacity={0.32} />
         </div>
         <div className="md:hidden">
-          <WaveBackground variant="petrol" opacity={0.25} />
+          <WaveBackground variant="petrol" opacity={0.22} />
         </div>
-        <div className="container-rp pt-20 md:pt-56 pb-28 md:pb-56 relative z-10">
-          <div className="max-w-4xl">
-            <Reveal>
-              <div className="eyebrow">Atacado B2B · Sudeste e Sul</div>
-            </Reveal>
-            <Reveal delay={100}>
-              <h1 className="h-display mt-10" style={{ color: "var(--color-iced)" }}>
-                Atacado direto para o<br />
-                <span style={{ color: "var(--color-blue-300)" }}>revendedor que decide</span><br />
-                no marketplace.
-              </h1>
-            </Reveal>
-            <Reveal delay={200}>
-              <p className="body-lead mt-12 max-w-xl" style={{ color: "rgba(243,241,237,0.78)" }}>
+        <div className="container-rp pt-24 md:pt-56 pb-28 md:pb-56 relative z-10">
+          <div className="max-w-5xl">
+            <SectionMarker number="00" label="Atacado B2B · Sudeste e Sul" variant="light" />
+
+            <h1 className="h-display mt-10" style={{ color: "var(--color-iced)" }}>
+              <SequencedLine delay={80}>Atacado direto para o</SequencedLine>
+              <SequencedLine delay={220} accent>revendedor que decide</SequencedLine>
+              <SequencedLine delay={360}>no marketplace.</SequencedLine>
+            </h1>
+
+            <Reveal delay={520}>
+              <p className="body-lead mt-12 max-w-xl" style={{ color: "rgba(243,241,237,0.74)" }}>
                 Papelaria, higiene, informática e eletro para papelarias, lojas escolares e
                 bazares. Pedido mínimo R$ 800. Despacho em 48h.
               </p>
             </Reveal>
-            <Reveal delay={300}>
+
+            <Reveal delay={620}>
               <div className="mt-14">
-                <a
-                  href={site.contact.whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary"
-                >
-                  Cadastrar pelo WhatsApp
-                  <ArrowRight />
-                </a>
+                <MagneticButton strength={8}>
+                  <a
+                    href={site.contact.whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-primary"
+                  >
+                    Cadastrar pelo WhatsApp
+                    <ArrowRight />
+                  </a>
+                </MagneticButton>
               </div>
             </Reveal>
+
             <HeroTicker />
           </div>
         </div>
       </section>
 
-      {/* ===== O QUE A REPON FAZ ===== */}
+      {/* ===== O QUE A REPON FAZ — asymmetric grid ===== */}
       <section style={{ background: "var(--color-iced)" }}>
         <div className="container-rp py-32 md:py-48">
-          <Reveal>
-            <div className="max-w-4xl">
-              <div className="eyebrow">O que a Repon faz</div>
-              <h2 className="h-section mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+            <Reveal className="lg:col-span-4">
+              <SectionMarker number="01" label="A Repon" />
+              <div
+                className="font-display"
+                style={{
+                  fontWeight: 200,
+                  fontSize: "clamp(5rem, 14vw, 11rem)",
+                  lineHeight: 0.85,
+                  letterSpacing: "-0.06em",
+                  color: "var(--color-blue-100)",
+                }}
+              >
+                01
+              </div>
+            </Reveal>
+            <Reveal delay={140} className="lg:col-span-8">
+              <h2 className="h-section mt-2 lg:mt-12">
                 Compra com a indústria,<br />
-                estoca em SC e SP, vende<br />
-                direto pro revendedor.
+                estoca em SC e SP,<br />
+                vende direto pro revendedor.
               </h2>
-            </div>
-          </Reveal>
+              <p className="body-lead mt-10 max-w-2xl">
+                Não somos marketplace, não somos representante. Compramos volume da fábrica,
+                guardamos em centro logístico próprio e entregamos pra loja física no Sudeste
+                e Sul.
+              </p>
+            </Reveal>
+          </div>
         </div>
       </section>
 
@@ -74,8 +98,8 @@ export default function HomePage() {
         <div className="container-rp py-32 md:py-48">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             <Reveal className="lg:col-span-4">
-              <div className="eyebrow">Como funciona</div>
-              <h2 className="h-section mt-6">Três passos.<br/>Sem fricção.</h2>
+              <SectionMarker number="02" label="Como funciona" />
+              <h2 className="h-section mt-2">Três passos.<br/>Sem fricção.</h2>
             </Reveal>
             <div className="lg:col-span-8">
               <ul className="divide-y" style={{ borderColor: "var(--color-line)" }}>
@@ -105,12 +129,13 @@ export default function HomePage() {
       {/* ===== PRA QUEM É ===== */}
       <section className="section-petrol relative overflow-hidden">
         <div className="hidden md:block">
-          <WaveBackground variant="petrol" opacity={0.22} />
+          <WaveBackground variant="petrol" opacity={0.2} />
         </div>
         <div className="container-rp py-32 md:py-48 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             <Reveal className="lg:col-span-4">
-              <h2 className="h-section mt-6" style={{ color: "var(--color-iced)" }}>
+              <SectionMarker number="03" label="Para quem é" variant="light" />
+              <h2 className="h-section mt-2" style={{ color: "var(--color-iced)" }}>
                 Três formas<br/>de comprar.
               </h2>
             </Reveal>
@@ -134,18 +159,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== NÚMEROS com counters ===== */}
+      {/* ===== NÚMEROS ===== */}
       <section style={{ background: "var(--color-iced)" }}>
-        <div className="container-rp py-28 md:py-40">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-14">
+        <div className="container-rp py-32 md:py-44">
+          <Reveal>
+            <SectionMarker number="04" label="Operação real" />
+          </Reveal>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-14 mt-10">
             {site.numbers.map((n, i) => (
-              <Reveal key={n.label} delay={i * 80}>
+              <Reveal key={n.label} delay={i * 100}>
                 <div className="flex flex-col">
                   <div className="stat-num">
                     <Counter value={n.value} />
                   </div>
-                  <div className="mt-4 text-[0.9375rem] font-medium" style={{ color: "var(--color-petrol)" }}>{n.label}</div>
-                  <div className="mt-1 text-[0.8125rem]" style={{ color: "var(--color-ink-500)", lineHeight: 1.5 }}>{n.sub}</div>
+                  <div className="mt-5 text-[0.9375rem] font-medium" style={{ color: "var(--color-petrol)" }}>{n.label}</div>
+                  <div className="mt-1.5 text-[0.8125rem]" style={{ color: "var(--color-ink-500)", lineHeight: 1.5 }}>{n.sub}</div>
                 </div>
               </Reveal>
             ))}
@@ -158,8 +186,8 @@ export default function HomePage() {
         <div className="container-rp py-32 md:py-48">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
             <Reveal className="lg:col-span-5">
-              <div className="eyebrow">Operação</div>
-              <h2 className="h-section mt-6">
+              <SectionMarker number="05" label="Cobertura" />
+              <h2 className="h-section mt-2">
                 Dois centros,<br />
                 cobertura Sudeste<br />
                 e Sul.
@@ -185,13 +213,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== VERTICAIS — hover dramático ===== */}
+      {/* ===== VERTICAIS ===== */}
       <section style={{ background: "var(--color-iced-warm)", borderTop: "1px solid var(--color-line)" }}>
         <div className="container-rp py-32 md:py-48">
           <Reveal>
+            <SectionMarker number="06" label="Catálogo" />
             <div className="max-w-3xl mb-16">
-              <div className="eyebrow">Verticais</div>
-              <h2 className="h-section mt-6">
+              <h2 className="h-section mt-2">
                 Quatro categorias.<br/>
                 Um único comprador.
               </h2>
@@ -204,17 +232,16 @@ export default function HomePage() {
                 <Link
                   href={`/verticais#${v.slug}`}
                   className="vertical-card block p-10 md:p-14"
-                  style={{ background: "var(--color-iced-soft)" }}
                 >
                   <div className="flex items-baseline justify-between mb-6">
                     <span className="font-mono text-[0.875rem] eyebrow" style={{ color: "var(--color-blue)" }}>
                       Vertical {v.number}
                     </span>
-                    <span className="vertical-arrow" style={{ color: "var(--color-blue)" }}>
+                    <span className="vertical-arrow" style={{ color: "var(--color-petrol-60)" }}>
                       <ArrowRight />
                     </span>
                   </div>
-                  <h3 className="font-display text-[1.75rem] md:text-[2.25rem] mb-5" style={{ fontWeight: 500, letterSpacing: "-0.025em", color: "var(--color-petrol)" }}>
+                  <h3 className="font-display text-[1.75rem] md:text-[2.25rem] mb-5" style={{ fontWeight: 400, letterSpacing: "-0.03em", color: "var(--color-petrol)" }}>
                     {v.title}
                   </h3>
                   <p className="text-[0.9375rem] max-w-md" style={{ color: "var(--color-ink-700)", lineHeight: 1.55 }}>
@@ -232,8 +259,8 @@ export default function HomePage() {
         <div className="container-rp py-32 md:py-48">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             <Reveal className="lg:col-span-4">
-              <div className="eyebrow">Perguntas comuns</div>
-              <h2 className="h-section mt-6">
+              <SectionMarker number="07" label="FAQ" />
+              <h2 className="h-section mt-2">
                 Antes de mandar<br/>o CNPJ.
               </h2>
             </Reveal>
@@ -261,26 +288,29 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== CTA com wave ===== */}
+      {/* ===== CTA FINAL ===== */}
       <section className="section-blue relative overflow-hidden">
         <div className="hidden md:block">
-          <WaveBackground variant="blue" opacity={0.32} />
+          <WaveBackground variant="blue" opacity={0.3} />
         </div>
         <div className="container-rp py-32 md:py-48 relative z-10">
           <Reveal>
+            <SectionMarker number="08" label="Próximo passo" variant="light" />
             <div className="max-w-3xl">
-              <h2 className="h-section mt-6 mb-10" style={{ color: "var(--color-iced)" }}>
+              <h2 className="h-section mt-2 mb-12" style={{ color: "var(--color-iced)" }}>
                 Mande seu CNPJ pelo WhatsApp.<br />
                 Devolvemos tabela em 24h.
               </h2>
               <div className="flex flex-col sm:flex-row gap-3">
-                <a href={site.contact.whatsappUrl} target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-[0.9375rem] font-bold transition-colors"
-                  style={{ background: "var(--color-iced)", color: "var(--color-petrol)" }}>
-                  WhatsApp comercial <ArrowRight />
-                </a>
+                <MagneticButton strength={6}>
+                  <a href={site.contact.whatsappUrl} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2.5 px-7 py-4 text-[0.9375rem] font-semibold transition-colors"
+                    style={{ background: "var(--color-iced)", color: "var(--color-petrol)" }}>
+                    WhatsApp comercial <ArrowRight />
+                  </a>
+                </MagneticButton>
                 <Link href="/fornecedores"
-                  className="inline-flex items-center justify-center gap-2 border px-6 py-3.5 text-[0.9375rem] font-medium transition-colors"
+                  className="inline-flex items-center justify-center gap-2 border px-7 py-4 text-[0.9375rem] font-medium transition-colors hover:bg-white/10"
                   style={{ borderColor: "var(--color-iced)", color: "var(--color-iced)" }}>
                   Sou indústria
                 </Link>

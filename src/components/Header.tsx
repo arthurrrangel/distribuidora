@@ -17,13 +17,12 @@ export function Header() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Lock scroll quando menu mobile aberto
   useEffect(() => {
     if (open) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "";
@@ -33,13 +32,13 @@ export function Header() {
   return (
     <>
       <header
-        className={`sticky top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300 ${
+        className={`sticky top-0 z-50 transition-[background-color,border-color,backdrop-filter,padding] duration-300 ${
           scrolled
             ? "bg-iced/85 backdrop-blur-md border-b border-line"
             : "bg-transparent border-b border-transparent"
         }`}
       >
-        <div className="container-rp flex items-center justify-between h-16 md:h-20">
+        <div className={`container-rp flex items-center justify-between transition-[height] duration-300 ${scrolled ? "h-14 md:h-16" : "h-16 md:h-20"}`}>
           <Link href="/" className="flex items-center" aria-label="Repon — página inicial" onClick={() => setOpen(false)}>
             <Logo variant="blue" shape="full" priority width={120} height={36} />
           </Link>
@@ -49,7 +48,7 @@ export function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-[0.9375rem] font-medium hover:text-blue transition-colors duration-200"
+                className="link-underline text-[0.9375rem] font-medium"
                 style={{ color: "var(--color-petrol)" }}
               >
                 {item.label}
@@ -57,15 +56,15 @@ export function Header() {
             ))}
           </nav>
 
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-5">
             <a
               href={`mailto:${site.contact.emails.comercial}`}
-              className="text-[0.8125rem] hover:text-petrol transition-colors"
+              className="link-underline text-[0.8125rem]"
               style={{ color: "var(--color-petrol-60)" }}
             >
               {site.contact.emails.comercial}
             </a>
-            <Link href="/fornecedores" className="btn-primary text-[0.8125rem] py-2.5 px-4">
+            <Link href="/fornecedores" className="btn-primary text-[0.8125rem]" style={{ padding: "0.625rem 1rem" }}>
               Apresentação
             </Link>
           </div>
@@ -102,7 +101,7 @@ export function Header() {
         </div>
       </header>
 
-      {/* Menu mobile slide-in premium */}
+      {/* Menu mobile */}
       <div
         className="md:hidden fixed inset-0 z-40 transition-opacity duration-300"
         style={{
@@ -127,8 +126,8 @@ export function Header() {
                   borderColor: "var(--color-petrol-80)",
                   color: "var(--color-iced)",
                   fontSize: "1.875rem",
-                  fontWeight: 500,
-                  letterSpacing: "-0.022em",
+                  fontWeight: 400,
+                  letterSpacing: "-0.03em",
                   opacity: open ? 1 : 0,
                   transform: open ? "translateY(0)" : "translateY(20px)",
                   transition: `opacity 500ms ease ${100 + i * 80}ms, transform 500ms cubic-bezier(0.25, 1, 0.5, 1) ${100 + i * 80}ms`,
@@ -156,7 +155,7 @@ export function Header() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setOpen(false)}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-[0.9375rem] font-bold mt-4"
+              className="inline-flex items-center justify-center gap-2 px-6 py-4 text-[0.9375rem] font-semibold mt-4"
               style={{
                 background: "var(--color-blue)",
                 color: "var(--color-iced)",

@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* ── Funnel Display — Display oficial Repon ───────────────────────────── */
+/* ── Funnel Display ───────────────────────────── */
 @font-face { font-family: 'Funnel Display'; src: url('/fonts/FunnelDisplay-Light.ttf')     format('truetype'); font-weight: 300; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Funnel Display'; src: url('/fonts/FunnelDisplay-Regular.ttf')   format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Funnel Display'; src: url('/fonts/FunnelDisplay-Medium.ttf')    format('truetype'); font-weight: 500; font-style: normal; font-display: swap; }
@@ -8,7 +8,7 @@
 @font-face { font-family: 'Funnel Display'; src: url('/fonts/FunnelDisplay-Bold.ttf')      format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Funnel Display'; src: url('/fonts/FunnelDisplay-ExtraBold.ttf') format('truetype'); font-weight: 800; font-style: normal; font-display: swap; }
 
-/* ── Funnel Sans — Sans oficial Repon ─────────────────────────────────── */
+/* ── Funnel Sans ─────────────────────────────────── */
 @font-face { font-family: 'Funnel Sans'; src: url('/fonts/FunnelSans-Light.ttf')      format('truetype'); font-weight: 300; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Funnel Sans'; src: url('/fonts/FunnelSans-Regular.ttf')    format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Funnel Sans'; src: url('/fonts/FunnelSans-Medium.ttf')     format('truetype'); font-weight: 500; font-style: normal; font-display: swap; }
@@ -17,29 +17,26 @@
 @font-face { font-family: 'Funnel Sans'; src: url('/fonts/FunnelSans-ExtraBold.ttf')  format('truetype'); font-weight: 800; font-style: normal; font-display: swap; }
 
 @theme {
-  /* ============================================================
-     Paleta oficial Repon — fonte: Apresentação Pavloworks 2026
-     ============================================================ */
-  --color-petrol:        #01092D;   /* PRIMÁRIA  — backgrounds institucionais */
+  /* Paleta oficial Repon */
+  --color-petrol:        #01092D;
   --color-petrol-80:     #1A2247;
   --color-petrol-60:     #4A5070;
 
-  --color-blue:          #0464D5;   /* SECUNDÁRIA — accent principal */
+  --color-blue:          #0464D5;
   --color-blue-700:      #034FA8;
   --color-blue-300:      #6FA9E8;
   --color-blue-100:      #DCEAF9;
 
-  --color-iced:          #F3F1ED;   /* SECUNDÁRIA — background paper */
+  --color-iced:          #F3F1ED;
   --color-iced-warm:     #EAE5DA;
   --color-iced-soft:     #FAFAF7;
 
-  --color-green:         #A6D97A;   /* mantido só para casos pontuais */
+  --color-green:         #A6D97A;
   --color-green-700:     #6CA847;
 
-  /* Tokens semânticos */
   --color-paper:         #F3F1ED;
   --color-paper-50:      #FAFAF7;
-  --color-paper-100:     #EAE5DA;
+  --color-paper-100:    #EAE5DA;
 
   --color-ink:           #01092D;
   --color-ink-700:       #1A2247;
@@ -54,9 +51,6 @@
   --color-accent-700:    #034FA8;
   --color-accent-soft:   #6FA9E8;
 
-  /* ============================================================
-     Tipografia oficial — Funnel Display + Funnel Sans
-     ============================================================ */
   --font-display: "Funnel Display", "Funnel Sans", -apple-system, sans-serif;
   --font-sans:    "Funnel Sans", "Funnel Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono:    "JetBrains Mono", "SF Mono", "Menlo", monospace;
@@ -64,15 +58,14 @@
   --container-max: 1280px;
   --container-gutter: clamp(1.25rem, 3vw, 3rem);
 
-  --ease-out-quart:    cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo:  cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @layer base {
   :root { color-scheme: light; }
 
-  html, body, * {
-    font-family: var(--font-sans);
-  }
+  html, body, * { font-family: var(--font-sans); }
 
   html {
     -webkit-font-smoothing: antialiased;
@@ -91,8 +84,8 @@
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-weight: 500;
-    letter-spacing: -0.025em;
+    font-weight: 400;
+    letter-spacing: -0.03em;
     line-height: 1;
     color: var(--color-petrol);
   }
@@ -101,20 +94,22 @@
   .font-sans    { font-family: var(--font-sans); }
   .font-mono    { font-family: var(--font-mono); }
 
+  /* Display — Hero principal. Mais bruto, mais leve. */
   .h-display {
     font-family: var(--font-display);
-    font-weight: 500;
-    font-size: clamp(2.5rem, 6.5vw, 5.75rem);
-    line-height: 1;
-    letter-spacing: -0.035em;
+    font-weight: 300;
+    font-size: clamp(2.5rem, 7.5vw, 6.75rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
   }
 
+  /* Section H2. */
   .h-section {
     font-family: var(--font-display);
-    font-weight: 500;
-    font-size: clamp(1.875rem, 3.6vw, 3rem);
-    line-height: 1.02;
-    letter-spacing: -0.028em;
+    font-weight: 400;
+    font-size: clamp(1.875rem, 4.2vw, 3.5rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
   }
 
   .h-card {
@@ -136,8 +131,8 @@
 
   .body-lead {
     font-family: var(--font-sans);
-    font-size: clamp(1.125rem, 1.4vw, 1.3125rem);
-    line-height: 1.5;
+    font-size: clamp(1.0625rem, 1.3vw, 1.25rem);
+    line-height: 1.55;
     color: var(--color-ink-700);
     font-weight: 400;
   }
@@ -159,19 +154,24 @@
 
   .hairline { border-color: var(--color-line); }
 
+  /* ============================================================
+     Botões
+     ============================================================ */
   .btn-primary {
     display: inline-flex;
     align-items: center;
     gap: 0.625rem;
     background: var(--color-blue);
     color: var(--color-iced);
-    padding: 0.875rem 1.5rem;
-    font-weight: 700;
+    padding: 1rem 1.75rem;
+    font-weight: 600;
     font-size: 0.9375rem;
+    letter-spacing: -0.005em;
     border: 1px solid var(--color-blue);
-    transition: background-color 240ms var(--ease-out-quart), border-color 240ms var(--ease-out-quart);
+    transition: background-color 280ms var(--ease-out-quart), border-color 280ms var(--ease-out-quart), transform 280ms var(--ease-out-quart);
   }
   .btn-primary:hover { background: var(--color-blue-700); border-color: var(--color-blue-700); }
+  .btn-primary:active { transform: scale(0.985); }
 
   .btn-ghost {
     display: inline-flex;
@@ -179,11 +179,12 @@
     gap: 0.625rem;
     background: transparent;
     color: var(--color-petrol);
-    padding: 0.875rem 1.5rem;
-    font-weight: 700;
+    padding: 1rem 1.75rem;
+    font-weight: 600;
     font-size: 0.9375rem;
+    letter-spacing: -0.005em;
     border: 1px solid var(--color-petrol);
-    transition: background-color 240ms var(--ease-out-quart), color 240ms var(--ease-out-quart);
+    transition: background-color 280ms var(--ease-out-quart), color 280ms var(--ease-out-quart);
   }
   .btn-ghost:hover { background: var(--color-petrol); color: var(--color-iced); }
 
@@ -193,33 +194,39 @@
     gap: 0.625rem;
     background: var(--color-green);
     color: var(--color-petrol);
-    padding: 0.875rem 1.5rem;
+    padding: 1rem 1.75rem;
     font-weight: 700;
     font-size: 0.9375rem;
+    letter-spacing: -0.005em;
     border: 1px solid var(--color-green);
     transition: background-color 240ms var(--ease-out-quart);
   }
   .btn-green:hover { background: var(--color-green-700); }
 
-  .btn-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--color-blue);
-    font-weight: 700;
-    font-size: 0.9375rem;
-    border-bottom: 1px solid var(--color-blue);
-    padding-bottom: 0.125rem;
-    transition: color 200ms var(--ease-out-quart), border-color 200ms var(--ease-out-quart);
+  /* Link inline com underline animada */
+  .link-underline {
+    position: relative;
+    display: inline-block;
+    color: inherit;
+    transition: color 220ms var(--ease-out-quart);
   }
-  .btn-link:hover { color: var(--color-blue-700); border-color: var(--color-blue-700); }
-
-  .card-hairline {
-    background: var(--color-iced-soft);
-    border: 1px solid var(--color-line);
-    transition: border-color 240ms var(--ease-out-quart);
+  .link-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform 320ms var(--ease-out-expo);
   }
-  .card-hairline:hover { border-color: var(--color-blue); }
+  .link-underline:hover::after,
+  .link-underline:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
 
   .section-petrol {
     background: var(--color-petrol);
@@ -237,15 +244,16 @@
 
   .stat-num {
     font-family: var(--font-display);
-    font-weight: 400;
-    font-size: clamp(2.5rem, 5vw, 4.25rem);
-    line-height: 0.95;
-    letter-spacing: -0.04em;
+    font-weight: 300;
+    font-size: clamp(2.75rem, 5.5vw, 4.75rem);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
     color: var(--color-petrol);
   }
   .section-petrol .stat-num,
   .section-blue .stat-num { color: var(--color-iced); }
 
+  /* Reveal padrão */
   .reveal { opacity: 0; transform: translateY(14px); animation: reveal-in 700ms var(--ease-out-quart) forwards; }
   .reveal-delay-1 { animation-delay: 80ms; }
   .reveal-delay-2 { animation-delay: 160ms; }
@@ -254,57 +262,55 @@
   @keyframes reveal-in { to { opacity: 1; transform: translateY(0); } }
 }
 
-/* Onda decorativa do hero — animação infinita */
+/* Wave decorativa */
 .wave-path {
-  animation: wave-drift 22s ease-in-out infinite;
+  animation: wave-drift 24s ease-in-out infinite;
   transform-origin: center;
 }
 @keyframes wave-drift {
-  0%, 100% { transform: translateY(0px) skewX(-1.5deg); }
-  50%      { transform: translateY(-14px) skewX(1.5deg); }
+  0%, 100% { transform: translateY(0px) skewX(-1.2deg); }
+  50%      { transform: translateY(-12px) skewX(1.2deg); }
 }
 
-/* Smooth scroll */
 html { scroll-behavior: smooth; }
 
-/* Card vertical hover dramático — color flood + arrow slide */
+/* ============================================================
+   Vertical card — refined: sem flood agressivo
+   Bordas que crescem, arrow que desliza, background sutil.
+   ============================================================ */
 .vertical-card {
   position: relative;
   overflow: hidden;
-  transition: transform 400ms cubic-bezier(0.25, 1, 0.5, 1);
+  background: var(--color-iced-soft);
+  transition: background-color 480ms var(--ease-out-expo);
 }
-.vertical-card::before {
+.vertical-card::after {
   content: "";
   position: absolute;
-  inset: 0;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0;
   background: var(--color-blue);
-  transform: translateY(100%);
-  transition: transform 480ms cubic-bezier(0.76, 0, 0.24, 1);
-  z-index: 0;
+  transition: width 520ms var(--ease-out-expo);
 }
-.vertical-card:hover::before { transform: translateY(0); }
-.vertical-card > * { position: relative; z-index: 1; transition: color 280ms ease; }
-.vertical-card:hover h3,
-.vertical-card:hover p,
-.vertical-card:hover .eyebrow,
-.vertical-card:hover .vertical-arrow { color: var(--color-iced) !important; }
-.vertical-card:hover .vertical-arrow { transform: translateX(8px); }
-.vertical-arrow { transition: transform 320ms cubic-bezier(0.25, 1, 0.5, 1); }
+.vertical-card:hover { background: var(--color-iced-warm); }
+.vertical-card:hover::after { width: 100%; }
+.vertical-card:hover h3 { color: var(--color-blue); }
+.vertical-card h3 { transition: color 320ms ease; }
+.vertical-card:hover .vertical-arrow { transform: translateX(10px); color: var(--color-blue); }
+.vertical-arrow { transition: transform 360ms var(--ease-out-expo), color 320ms ease; }
 
-/* Botão primary com micro-bump */
-.btn-primary:active, .btn-ghost:active { transform: scale(0.98); }
-
-/* Selection */
 ::selection { background: var(--color-blue); color: var(--color-iced); }
 
-/* Pulse no centro principal do mapa — sutil */
+/* Pulse no centro principal do mapa */
 .map-marker-pulse {
-  animation: marker-pulse 2.8s ease-out infinite;
+  animation: marker-pulse 3s ease-out infinite;
   transform-origin: center;
 }
 @keyframes marker-pulse {
-  0%   { transform: scale(0.6); opacity: 0.6; }
-  100% { transform: scale(2.6); opacity: 0;   }
+  0%   { transform: scale(0.6); opacity: 0.55; }
+  100% { transform: scale(2.8); opacity: 0;    }
 }
 
 :focus-visible {
@@ -313,12 +319,12 @@ html { scroll-behavior: smooth; }
 }
 
 /* ============================================================
-   Audience row — hover sutil (desktop apenas)
+   Audience row — hover sutil desktop only
    ============================================================ */
 .audience-row {
   position: relative;
   overflow: hidden;
-  transition: padding-left 380ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: padding-left 420ms var(--ease-out-expo);
 }
 .audience-row::after {
   content: attr(data-num);
@@ -327,19 +333,19 @@ html { scroll-behavior: smooth; }
   top: 50%;
   transform: translateY(-50%);
   font-family: var(--font-display);
-  font-size: clamp(72px, 11vw, 160px);
+  font-size: clamp(72px, 11vw, 150px);
   font-weight: 200;
   color: rgba(111,169,232,0.06);
   line-height: 1;
   letter-spacing: -0.04em;
   pointer-events: none;
-  transition: color 380ms ease, transform 380ms cubic-bezier(0.22,1,0.36,1);
+  transition: color 420ms ease, transform 420ms var(--ease-out-expo);
 }
 @media (hover: hover) and (pointer: fine) {
-  .audience-row:hover { padding-left: 24px; }
+  .audience-row:hover { padding-left: 28px; }
   .audience-row:hover::after {
-    color: rgba(111,169,232,0.13);
-    transform: translateY(-50%) translateX(-8px);
+    color: rgba(111,169,232,0.16);
+    transform: translateY(-50%) translateX(-10px);
   }
   .audience-row:hover h3 {
     color: var(--color-blue-300);
@@ -348,111 +354,96 @@ html { scroll-behavior: smooth; }
 }
 
 /* ============================================================
+   Section marker (visual decorativo numérico)
+   ============================================================ */
+.section-marker {
+  margin-bottom: 32px;
+}
+
+/* ============================================================
    Mobile refinements — viewport ≤ 768px
    ============================================================ */
 @media (max-width: 768px) {
   .h-display {
-    font-size: clamp(2.25rem, 11vw, 3.75rem);
-    line-height: 0.96;
-    letter-spacing: -0.03em;
+    font-size: clamp(2.5rem, 12vw, 4rem);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
   }
   .h-section {
-    font-size: clamp(1.625rem, 7vw, 2.25rem);
-    line-height: 1.02;
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
   }
-  .h-card {
-    font-size: 1.125rem;
-  }
+  .h-card { font-size: 1.125rem; }
   .stat-num {
-    font-size: clamp(2.25rem, 10vw, 3.25rem);
+    font-size: clamp(2.25rem, 11vw, 3.5rem);
   }
-  .body-lead {
-    font-size: 1.0625rem;
-    line-height: 1.5;
-  }
-  /* Container respira menos no mobile */
+  .body-lead { font-size: 1.0625rem; line-height: 1.5; }
   :root { --container-gutter: 1.25rem; }
-  /* Botões em mobile: full-width, touch target maior */
+
+  /* Botões mobile: full width, touch target maior */
   .btn-primary, .btn-ghost, .btn-green {
     width: 100%;
     justify-content: center;
-    padding: 1rem 1.25rem;
+    padding: 1.0625rem 1.25rem;
     font-size: 1rem;
   }
-  /* Header height menor em mobile */
-  header > div:first-child {
-    height: 64px;
-  }
+  header > div:first-child { height: 64px; }
 
-  /* Mobile: numeração ghost menor e mais discreta */
+  /* Audience ghost number mais discreto no mobile */
   .audience-row::after {
     font-size: clamp(56px, 18vw, 96px);
     color: rgba(111,169,232,0.05);
     right: 0;
   }
+
+  /* Section marker mobile: hairline mais curta */
+  .section-marker { margin-bottom: 24px; }
+  .section-marker > span:nth-child(2) { width: 32px !important; }
 }
 
 @media (max-width: 480px) {
-  .h-display {
-    font-size: clamp(2rem, 13vw, 3.25rem);
-  }
+  .h-display { font-size: clamp(2.125rem, 13.5vw, 3.5rem); }
   .eyebrow {
     font-size: 0.625rem;
     letter-spacing: 0.16em;
   }
-  /* Hero ticker mais compacto */
   .hero-ticker {
-    margin-top: 40px !important;
+    margin-top: 36px !important;
     gap: 16px !important;
   }
+  /* Section marker em viewport bem pequeno: number + label sem hairline */
+  .section-marker > span:nth-child(2) { display: none; }
 }
 
-/* Smooth tap highlight remove (iOS) */
-* {
-  -webkit-tap-highlight-color: transparent;
-}
+* { -webkit-tap-highlight-color: transparent; }
 
-/* Min touch target 44px (iOS HIG) */
 @media (max-width: 768px) {
-  a, button, [role="button"] {
-    min-height: 44px;
-  }
-  nav a {
-    padding-block: 0.5rem;
-  }
+  a, button, [role="button"] { min-height: 44px; }
+  nav a { padding-block: 0.5rem; }
 
-  /* Wave decorativa menos intensa em mobile (performance + foco no texto) */
-  .wave-path {
-    animation-duration: 30s;
-  }
+  .wave-path { animation-duration: 32s; }
 
-  /* Vertical card: usa :active no mobile (sem hover) */
-  .vertical-card:active::before { transform: translateY(0); }
-  .vertical-card:active h3,
-  .vertical-card:active p,
-  .vertical-card:active .eyebrow,
-  .vertical-card:active .vertical-arrow { color: var(--color-iced) !important; }
+  /* Vertical card touch */
+  .vertical-card:active { background: var(--color-iced-warm); }
+  .vertical-card:active::after { width: 100%; }
+  .vertical-card:active h3 { color: var(--color-blue); }
+  .vertical-card:active .vertical-arrow { transform: translateX(10px); color: var(--color-blue); }
 
-  /* Headers mobile com espaçamento confortável */
-  .h-display { line-height: 1.04; }
+  .h-display { line-height: 1.02; }
 }
 
-/* Em viewports muito pequenos (≤ 400px), wave fica ainda mais sutil */
 @media (max-width: 400px) {
-  .wave-path { opacity: 0.5; }
+  .wave-path { opacity: 0.48; }
 }
 
-/* Native momentum scroll iOS */
-body {
-  -webkit-overflow-scrolling: touch;
-}
+body { -webkit-overflow-scrolling: touch; }
 
-/* Smooth scroll desativa em mobile pra não conflitar com gesture */
 @media (max-width: 768px) {
   html { scroll-behavior: auto; }
 }
 
-/* Reduced motion — desliga tudo de animado decorativo */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .wave-path,
   .map-marker-pulse { animation: none !important; }
@@ -461,6 +452,8 @@ body {
     opacity: 1 !important;
     transform: none !important;
   }
-  .audience-row { transition: none !important; }
-  .vertical-card::before { transition: none !important; }
+  .audience-row,
+  .vertical-card,
+  .vertical-card::after,
+  .link-underline::after { transition: none !important; }
 }
