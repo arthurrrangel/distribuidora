@@ -71,6 +71,9 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    /* Font features: kerning + ligatures + contextual alternates + ss01 */
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "ss01" 1;
+    font-kerning: normal;
   }
 
   body {
@@ -80,7 +83,11 @@
     line-height: 1.5;
   }
 
+  /* Números com tabular-nums por padrão em monoespaços */
+  .font-mono, .tabular-nums { font-variant-numeric: tabular-nums; }
+
   ::selection { background: var(--color-blue); color: var(--color-iced); }
+  ::-moz-selection { background: var(--color-blue); color: var(--color-iced); }
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
@@ -443,6 +450,78 @@ body { -webkit-overflow-scrolling: touch; }
   html { scroll-behavior: auto; }
 }
 
+/* ============================================================
+   Custom scrollbar — desktop only, refinado
+   ============================================================ */
+@media (hover: hover) and (pointer: fine) {
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(74, 80, 112, 0.18);
+    border-radius: 10px;
+    border: 3px solid var(--color-iced);
+    background-clip: padding-box;
+    transition: background-color 240ms ease;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(4, 100, 213, 0.4); background-clip: padding-box; }
+  /* Firefox */
+  html { scrollbar-width: thin; scrollbar-color: rgba(74,80,112,0.22) transparent; }
+}
+
+/* ============================================================
+   Scroll cue (linha vertical animada no bottom do hero)
+   ============================================================ */
+@keyframes scroll-cue-flow {
+  0%   { background-position: 0% 100%; }
+  100% { background-position: 0% -100%; }
+}
+
+/* ============================================================
+   Stat hero — destaque pra 1-2 números mais importantes
+   ============================================================ */
+.stat-hero {
+  font-family: var(--font-display);
+  font-weight: 200;
+  font-size: clamp(4rem, 8.5vw, 7.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.055em;
+  color: var(--color-petrol);
+  font-variant-numeric: tabular-nums;
+}
+.section-petrol .stat-hero,
+.section-blue   .stat-hero { color: var(--color-iced); }
+
+.stat-num { font-variant-numeric: tabular-nums; }
+
+/* Eyebrow ligeiramente refinado */
+.eyebrow {
+  font-feature-settings: "kern" 1, "tnum" 1;
+}
+
+/* ============================================================
+   Footer links — hover refinado
+   ============================================================ */
+.footer-link {
+  position: relative;
+  display: inline-block;
+  color: rgba(243,241,237,0.82);
+  transition: color 220ms ease;
+}
+.footer-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 320ms var(--ease-out-expo);
+}
+.footer-link:hover { color: var(--color-iced); }
+.footer-link:hover::after { transform: scaleX(1); transform-origin: left; }
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .wave-path,
@@ -455,5 +534,6 @@ body { -webkit-overflow-scrolling: touch; }
   .audience-row,
   .vertical-card,
   .vertical-card::after,
-  .link-underline::after { transition: none !important; }
+  .link-underline::after,
+  .footer-link::after { transition: none !important; }
 }

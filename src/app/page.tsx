@@ -8,6 +8,8 @@ import { HeroTicker } from "@/components/HeroTicker";
 import { SectionMarker } from "@/components/SectionMarker";
 import { MagneticButton } from "@/components/MagneticButton";
 import { SequencedLine } from "@/components/SequencedLine";
+import { ScrollCue } from "@/components/ScrollCue";
+import { SectionDivider } from "@/components/SectionDivider";
 
 export default function HomePage() {
   return (
@@ -74,6 +76,7 @@ export default function HomePage() {
             <HeroTicker />
           </div>
         </div>
+        <ScrollCue />
       </section>
 
       {/* ===== O QUE A REPON FAZ (SEO body) — asymmetric grid ===== */}
@@ -124,8 +127,11 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ===== DIVIDER ===== */}
+      <SectionDivider />
+
       {/* ===== COMO FUNCIONA ===== */}
-      <section style={{ background: "var(--color-iced)", borderTop: "1px solid var(--color-line)" }}>
+      <section style={{ background: "var(--color-iced)" }}>
         <div className="container-rp py-32 md:py-48">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             <Reveal className="lg:col-span-4">
@@ -213,18 +219,35 @@ export default function HomePage() {
           <Reveal>
             <SectionMarker number="04" label="Operação real" />
           </Reveal>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-14 mt-10">
-            {site.numbers.map((n, i) => (
-              <Reveal key={n.label} delay={i * 100}>
-                <div className="flex flex-col">
-                  <div className="stat-num">
-                    <Counter value={n.value} />
+          <div className="grid grid-cols-2 md:grid-cols-12 gap-x-6 gap-y-14 mt-10">
+            {site.numbers.map((n, i) => {
+              const isHero = i === 0;
+              return (
+                <Reveal
+                  key={n.label}
+                  delay={i * 100}
+                  className={isHero ? "md:col-span-5" : "md:col-span-2 md:col-start-auto"}
+                >
+                  <div className="flex flex-col h-full justify-end">
+                    <div className={isHero ? "stat-hero" : "stat-num"}>
+                      <Counter value={n.value} />
+                    </div>
+                    <div
+                      className={`mt-5 font-medium ${isHero ? "text-[1.0625rem]" : "text-[0.9375rem]"}`}
+                      style={{ color: "var(--color-petrol)" }}
+                    >
+                      {n.label}
+                    </div>
+                    <div
+                      className="mt-1.5 text-[0.8125rem]"
+                      style={{ color: "var(--color-ink-500)", lineHeight: 1.5 }}
+                    >
+                      {n.sub}
+                    </div>
                   </div>
-                  <div className="mt-5 text-[0.9375rem] font-medium" style={{ color: "var(--color-petrol)" }}>{n.label}</div>
-                  <div className="mt-1.5 text-[0.8125rem]" style={{ color: "var(--color-ink-500)", lineHeight: 1.5 }}>{n.sub}</div>
-                </div>
-              </Reveal>
-            ))}
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>

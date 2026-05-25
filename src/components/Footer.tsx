@@ -28,21 +28,21 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 mb-14">
           <div className="md:col-span-4">
             <div className="eyebrow mb-5" style={{ color: "var(--color-blue-300)" }}>Institucional</div>
-            <ul className="flex flex-col gap-3 text-[0.9375rem]" style={{ color: "rgba(243,241,237,0.82)" }}>
-              <li><Link href="/sobre" className="hover:text-iced">A Repon</Link></li>
-              <li><Link href="/verticais" className="hover:text-iced">Verticais</Link></li>
-              <li><Link href="/fornecedores" className="hover:text-iced">Fornecedores</Link></li>
-              <li><Link href="/contato" className="hover:text-iced">Contato</Link></li>
+            <ul className="flex flex-col gap-3 text-[0.9375rem]">
+              <li><Link href="/sobre" className="footer-link">A Repon</Link></li>
+              <li><Link href="/verticais" className="footer-link">Verticais</Link></li>
+              <li><Link href="/fornecedores" className="footer-link">Fornecedores</Link></li>
+              <li><Link href="/contato" className="footer-link">Contato</Link></li>
             </ul>
           </div>
 
           <div className="md:col-span-4">
             <div className="eyebrow mb-5" style={{ color: "var(--color-blue-300)" }}>Contato</div>
-            <ul className="flex flex-col gap-3 text-[0.9375rem]" style={{ color: "rgba(243,241,237,0.82)" }}>
-              <li><a href={`mailto:${site.contact.emails.comercial}`}>{site.contact.emails.comercial}</a></li>
-              <li><a href={`mailto:${site.contact.emails.sac}`}>{site.contact.emails.sac}</a></li>
+            <ul className="flex flex-col gap-3 text-[0.9375rem]">
+              <li><a href={`mailto:${site.contact.emails.comercial}`} className="footer-link">{site.contact.emails.comercial}</a></li>
+              <li><a href={`mailto:${site.contact.emails.sac}`} className="footer-link">{site.contact.emails.sac}</a></li>
               <li className="font-mono text-[0.8125rem]" style={{ color: "rgba(243,241,237,0.7)" }}>{site.contact.phone}</li>
-              <li><a href={site.contact.social.instagramUrl} target="_blank" rel="noopener noreferrer" className="font-mono text-[0.8125rem]">{site.contact.social.instagram}</a></li>
+              <li><a href={site.contact.social.instagramUrl} target="_blank" rel="noopener noreferrer" className="footer-link font-mono text-[0.8125rem]">{site.contact.social.instagram}</a></li>
             </ul>
           </div>
 
