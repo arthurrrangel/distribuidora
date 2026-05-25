@@ -451,6 +451,55 @@ body { -webkit-overflow-scrolling: touch; }
 }
 
 /* ============================================================
+   Mesh gradient blobs — drift longo, propósito decorativo profundo
+   ============================================================ */
+@keyframes mesh-drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(8%, -4%) scale(1.08); }
+  66%      { transform: translate(-5%, 6%) scale(0.95); }
+}
+@keyframes mesh-drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(-6%, 8%) scale(1.12); }
+}
+@keyframes mesh-drift-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40%      { transform: translate(10%, -6%) scale(0.92); }
+  80%      { transform: translate(-4%, 4%) scale(1.05); }
+}
+.mesh-blob {
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.mesh-blob-1 { animation-name: mesh-drift-1; animation-duration: 64s; }
+.mesh-blob-2 { animation-name: mesh-drift-2; animation-duration: 78s; }
+.mesh-blob-3 { animation-name: mesh-drift-3; animation-duration: 92s; }
+
+/* ============================================================
+   Constellation — fluxo entre hubs (CDs)
+   ============================================================ */
+@keyframes constellation-flow {
+  0%   { stroke-dashoffset: 6;  opacity: 0.25; }
+  50%  { opacity: 0.9; }
+  100% { stroke-dashoffset: 0;  opacity: 0.25; }
+}
+@keyframes constellation-hub-pulse {
+  0%, 100% { transform: scale(1);   opacity: 0.2; }
+  50%      { transform: scale(2.4); opacity: 0; }
+}
+.constellation-line {
+  animation: constellation-flow 4.5s ease-in-out infinite;
+}
+.constellation-line-primary {
+  animation-duration: 3.2s;
+}
+.constellation-hub-pulse {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: constellation-hub-pulse 3.6s ease-out infinite;
+}
+
+/* ============================================================
    Custom scrollbar — desktop only, refinado
    ============================================================ */
 @media (hover: hover) and (pointer: fine) {
@@ -536,4 +585,7 @@ body { -webkit-overflow-scrolling: touch; }
   .vertical-card::after,
   .link-underline::after,
   .footer-link::after { transition: none !important; }
+  .mesh-blob,
+  .constellation-line,
+  .constellation-hub-pulse { animation: none !important; }
 }

@@ -10,18 +10,23 @@ import { MagneticButton } from "@/components/MagneticButton";
 import { SequencedLine } from "@/components/SequencedLine";
 import { ScrollCue } from "@/components/ScrollCue";
 import { SectionDivider } from "@/components/SectionDivider";
+import { GradientMesh } from "@/components/GradientMesh";
+import { ConstellationNetwork } from "@/components/ConstellationNetwork";
+import { GrainOverlay } from "@/components/GrainOverlay";
 
 export default function HomePage() {
   return (
     <>
       {/* ===== HERO PETROL ===== */}
       <section className="section-petrol relative overflow-hidden">
+        {/* Camada 1 — Mesh gradient (atmosfera, profundidade) */}
+        <GradientMesh opacity={0.62} />
+        {/* Camada 2 — Constellation network (rede de cobertura, propósito narrativo) */}
         <div className="hidden md:block">
-          <WaveBackground variant="petrol" opacity={0.32} />
+          <ConstellationNetwork />
         </div>
-        <div className="md:hidden">
-          <WaveBackground variant="petrol" opacity={0.22} />
-        </div>
+        {/* Camada 3 — Grain overlay (textura premium) */}
+        <GrainOverlay opacity={0.05} blendMode="overlay" />
         <div className="container-rp pt-24 md:pt-56 pb-28 md:pb-56 relative z-10">
           <div className="max-w-5xl mx-auto md:mx-0 text-center md:text-left">
             <div className="flex justify-center md:justify-start">
