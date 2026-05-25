@@ -79,7 +79,7 @@ export default async function Image() {
               marginTop: 16,
             }}
           >
-            Papelaria, higiene, informática e eletro. Centros em SC e SP. Despacho em 48h.
+            Centros logísticos em SC e SP. Pedido mínimo R$ 800. Despacho em 48h.
           </div>
         </div>
 

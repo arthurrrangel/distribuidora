@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     template: `%s — ${site.brand.name}`,
   },
   description:
-    "Distribuidora atacadista B2B com centros logísticos em Santa Catarina e São Paulo. Papelaria, higiene, informática e eletro para revendedores no Sudeste e Sul. Pedido mínimo R$ 800. Despacho em 48h.",
+    "Distribuidora atacadista B2B para revendedores no Sudeste e Sul. Centros logísticos em Santa Catarina e São Paulo. Pedido mínimo R$ 800. Despacho em 48h. Loja física ou marketplace.",
   keywords: [
     "Repon",
     "distribuidora atacadista",
@@ -42,13 +42,13 @@ export const metadata: Metadata = {
     siteName: site.brand.name,
     title: `${site.brand.name} — Distribuidora atacadista B2B`,
     description:
-      "Papelaria, higiene, informática e eletro para revendedores. Centros logísticos em SC e SP. Pedido mínimo R$ 800. Despacho em 48h.",
+      "Atacado direto para revendedores no Sudeste e Sul. Centros logísticos em SC e SP. Pedido mínimo R$ 800. Despacho em 48h.",
   },
   twitter: {
     card: "summary_large_image",
     title: `${site.brand.name} — Distribuidora atacadista B2B`,
     description:
-      "Papelaria, higiene, informática e eletro para revendedores. Centros em SC e SP.",
+      "Atacado direto para revendedores no Sudeste e Sul. Centros em SC e SP.",
   },
   robots: {
     index: true,

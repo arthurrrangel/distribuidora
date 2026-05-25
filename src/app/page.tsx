@@ -27,14 +27,14 @@ export default function HomePage() {
             </div>
 
             <h1 className="h-display mt-10" style={{ color: "var(--color-iced)" }}>
-              <SequencedLine delay={80}>Atacado direto para</SequencedLine>
-              <SequencedLine delay={220} accent>papelaria, bazar</SequencedLine>
-              <SequencedLine delay={360}>e revenda online.</SequencedLine>
+              <SequencedLine delay={80}>Atacado direto</SequencedLine>
+              <SequencedLine delay={220} accent>para revendedores</SequencedLine>
+              <SequencedLine delay={360}>no Sudeste e Sul.</SequencedLine>
             </h1>
 
             <Reveal delay={520}>
               <p className="body-lead mt-12 max-w-xl mx-auto md:mx-0" style={{ color: "rgba(243,241,237,0.78)" }}>
-                Papelaria, higiene, informática e eletro. Centros logísticos em SC e SP.
+                Distribuidora atacadista B2B. Centros logísticos em SC e SP.
                 Pedido mínimo R$ 800. Despacho em 48h.
               </p>
             </Reveal>
@@ -98,8 +98,8 @@ export default function HomePage() {
             <Reveal delay={140} className="lg:col-span-8">
               <h2 className="h-section">
                 Distribuidora atacadista B2B<br />
-                para revenda — loja física<br />
-                e marketplace.
+                — direto da indústria<br />
+                pro revendedor.
               </h2>
               <p className="body-lead mt-10 max-w-2xl">
                 A Repon é uma distribuidora atacadista B2B com operação logística em Santa
@@ -108,16 +108,16 @@ export default function HomePage() {
                 em até 48h úteis após o pedido.
               </p>
               <p className="body-prose mt-6 max-w-2xl">
-                Atendemos quatro verticais de produto: papelaria e escritório, higiene
-                pessoal, informática e eletroportátil. Mix consolidado em um único
-                fornecedor — você compra escolar, higiene e eletro sem precisar gerenciar
-                três distribuidores diferentes. Pedido mínimo de R$ 800. Frete subsidiado
-                acima de R$ 1.500. Prazo de boleto em 21 dias a partir do segundo pedido.
+                Mix consolidado num único fornecedor: você compra categorias diferentes sem
+                precisar gerenciar vários distribuidores. Pedido mínimo de R$ 800. Frete
+                subsidiado acima de R$ 1.500. Prazo de boleto em 21 dias a partir do
+                segundo pedido.
               </p>
               <p className="body-prose mt-6 max-w-2xl">
-                Trabalhamos com lojista de bairro, papelaria escolar, bazar, mini-mercado,
-                conveniência e seller de marketplace (Mercado Livre, Shopee, Amazon). A
-                política comercial é a mesma — o que muda é o mix recomendado por canal.
+                Atendemos revendedor pequeno e médio — loja física ou seller de
+                marketplace (Mercado Livre, Shopee, Amazon). A política comercial é a
+                mesma; o que muda é o mix recomendado por canal. Operação preparada pra
+                incorporar novas verticais e novos canais conforme a demanda do mercado.
               </p>
             </Reveal>
           </div>
