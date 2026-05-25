@@ -151,7 +151,7 @@ export function CoverageMap({
             letterSpacing="0.18em"
             fill={stateText}
           >
-            COBERTURA — {site.coverage.label.toUpperCase()}
+            COBERTURA · {site.coverage.label.toUpperCase()}
           </text>
         </g>
 
