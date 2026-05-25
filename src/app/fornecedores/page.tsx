@@ -118,7 +118,7 @@ export default function FornecedoresPage() {
             </h2>
             <p className="body-lead mb-12 max-w-2xl" style={{ color: "rgba(243,241,237,0.85)" }}>
               Apresentação institucional completa, política de MAP e proposta comercial
-              customizada — tudo enviado mediante contato pelo e-mail comercial.
+              customizada. Enviado mediante contato pelo e-mail comercial.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <a href={`mailto:${site.contact.emails.comercial}?subject=Proposta%20de%20representa%C3%A7%C3%A3o%20%E2%80%94%20Repon`} className="btn-primary">

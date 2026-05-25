@@ -48,7 +48,7 @@ export const site = {
       label: "Centro Logístico Sul",
       city: "Navegantes",
       state: "SC",
-      address: "Rodovia BR-470 (Ingo Hering), 4449 — Machados",
+      address: "Rodovia BR-470 (Ingo Hering), 4449, Machados",
       zip: "88371-624",
       partner: "Simplilog",
       role: "Matriz",
@@ -60,7 +60,7 @@ export const site = {
       label: "Centro Logístico Sudeste",
       city: "São Paulo",
       state: "SP",
-      address: "R. Antonio Clemente, 119 — Jardim São Paulo (Zona Norte)",
+      address: "R. Antonio Clemente, 119, Jardim São Paulo (Zona Norte)",
       zip: "02039-020",
       partner: "Centralize Hub",
       role: "Filial",
@@ -97,7 +97,7 @@ export const site = {
       number: "01",
       title: "Papelaria & Escritório",
       summary:
-        "Material escolar, suprimentos de papelaria e equipamentos de escritório. Vertical âncora do mix — onde a Repon nasceu.",
+        "Material escolar, suprimentos de papelaria e equipamentos de escritório. Vertical âncora do mix. Onde a Repon nasceu.",
       examples: "Cadernos, lápis, canetas, mochilas, kits escolares, agendas, blocos, pastas, calculadoras, grampeadores, organizadores.",
       cnae: ["46.47-8/01", "47.89-0/07"],
       topics: [
@@ -171,7 +171,7 @@ export const site = {
       eyebrow: "Mix",
       title: "Quatro verticais, um cliente",
       body:
-        "Papelaria, higiene, informática e eletroeletrônicos — categorias que o mesmo revendedor compra. Profundidade vertical, simplicidade no relacionamento.",
+        "Papelaria, higiene, informática e eletroeletrônicos. Categorias que o mesmo revendedor compra. Profundidade vertical, simplicidade no relacionamento.",
     },
   ],
 
@@ -189,7 +189,7 @@ export const site = {
       },
       {
         title: "Quem atendemos",
-        body: "Revendedor PJ com CNPJ ativo — papelaria, loja escolar, mini-mercado, bazar e loja técnica.",
+        body: "Revendedor PJ com CNPJ ativo. Atende papelaria, loja escolar, mini-mercado, bazar e loja técnica.",
       },
       {
         title: "Como entregamos",
@@ -260,7 +260,7 @@ export const site = {
     {
       icon: "01",
       profile: "Reposição contínua",
-      pitch: "Pedido recorrente quinzenal ou mensal, mix amplo, ticket de R$ 500 a R$ 5 mil. Papelaria, bazar, conveniência, presente, mini-mercado — qualquer loja física que abastece o tempo todo.",
+      pitch: "Pedido recorrente quinzenal ou mensal, mix amplo, ticket de R$ 500 a R$ 5 mil. Papelaria, bazar, conveniência, presente, mini-mercado, qualquer loja física que abastece o tempo todo.",
       pain: "Distribuidor grande exige volume que loja pequena não dá. Marketplace mata margem.",
     },
     {

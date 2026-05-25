@@ -10,8 +10,8 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(site.contact.siteUrl),
   title: {
-    default: `${site.brand.name} — Distribuidora atacadista B2B em SP e SC`,
-    template: `%s — ${site.brand.name}`,
+    default: `${site.brand.name} · Distribuidora atacadista B2B em SP e SC`,
+    template: `%s · ${site.brand.name}`,
   },
   description:
     "Distribuidora atacadista B2B para revendedores no Sudeste e Sul. Centros logísticos em Santa Catarina e São Paulo. Pedido mínimo R$ 800. Despacho em 48h. Loja física ou marketplace.",
@@ -40,13 +40,13 @@ export const metadata: Metadata = {
     locale: "pt_BR",
     url: site.contact.siteUrl,
     siteName: site.brand.name,
-    title: `${site.brand.name} — Distribuidora atacadista B2B`,
+    title: `${site.brand.name} · Distribuidora atacadista B2B`,
     description:
       "Atacado direto para revendedores no Sudeste e Sul. Centros logísticos em SC e SP. Pedido mínimo R$ 800. Despacho em 48h.",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.brand.name} — Distribuidora atacadista B2B`,
+    title: `${site.brand.name} · Distribuidora atacadista B2B`,
     description:
       "Atacado direto para revendedores no Sudeste e Sul. Centros em SC e SP.",
   },
@@ -102,7 +102,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "@id": `${site.contact.siteUrl}#${l.slug}`,
-    name: `${site.brand.name} — ${l.label}`,
+    name: `${site.brand.name} · ${l.label}`,
     image: `${site.contact.siteUrl}/repon-mark-blue.svg`,
     address: {
       "@type": "PostalAddress",

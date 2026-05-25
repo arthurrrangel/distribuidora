@@ -33,7 +33,7 @@ const operatingPrinciples = [
   },
   {
     title: "Política comercial que protege o fornecedor.",
-    body: "MAP (Minimum Advertised Price) respeitado em todos os canais. A Repon não compete por preço-piso em marketplace genérico — opera por relacionamento direto.",
+    body: "MAP (Minimum Advertised Price) respeitado em todos os canais. A Repon não compete por preço-piso em marketplace genérico. Opera por relacionamento direto.",
   },
   {
     title: "Atendimento humano, com SLA real.",
