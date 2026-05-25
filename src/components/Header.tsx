@@ -6,7 +6,7 @@ import { Logo } from "@/components/Logo";
 import { site } from "@/lib/site";
 
 const navItems = [
-  { href: "/sobre",        label: "A Repon" },
+  { href: "/como-comprar", label: "Como comprar" },
   { href: "/verticais",    label: "Verticais" },
   { href: "/fornecedores", label: "Fornecedores" },
   { href: "/contato",      label: "Contato" },
