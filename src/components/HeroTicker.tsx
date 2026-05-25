@@ -11,7 +11,7 @@ export function HeroTicker() {
   return (
     <Reveal delay={400}>
       <div
-        className="hero-ticker"
+        className="hero-ticker mx-auto md:mx-0"
         style={{
           marginTop: 56,
           display: "grid",
@@ -21,7 +21,7 @@ export function HeroTicker() {
         }}
       >
         {ITEMS.map((it) => (
-          <div key={it.label} style={{ minWidth: 0 }}>
+          <div key={it.label} style={{ minWidth: 0 }} className="text-center md:text-left">
             <div
               style={{
                 fontFamily: "var(--font-display, inherit)",

@@ -10,23 +10,26 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(site.contact.siteUrl),
   title: {
-    default: `${site.brand.name} — ${site.brand.slogan}`,
+    default: `${site.brand.name} — Distribuidora atacadista B2B em SP e SC`,
     template: `%s — ${site.brand.name}`,
   },
   description:
-    "Distribuidora atacadista B2B com operação logística em Santa Catarina e São Paulo. Papelaria, higiene, informática e eletroeletrônicos para revendedores no Sudeste e Sul. O fluxo que mantém seu negócio ativo.",
+    "Distribuidora atacadista B2B com centros logísticos em Santa Catarina e São Paulo. Papelaria, higiene, informática e eletro para revendedores no Sudeste e Sul. Pedido mínimo R$ 800. Despacho em 48h.",
   keywords: [
     "Repon",
     "distribuidora atacadista",
-    "atacado B2B",
-    "papelaria atacado",
-    "higiene pessoal atacado",
-    "informática atacado",
-    "eletroeletrônicos atacado",
-    "Sudeste",
-    "Sul",
-    "Santa Catarina",
-    "São Paulo",
+    "distribuidora atacadista B2B",
+    "atacado papelaria",
+    "atacado higiene pessoal",
+    "atacado informática",
+    "atacado eletro",
+    "distribuidora SP",
+    "distribuidora SC",
+    "atacadista Sudeste",
+    "atacadista Sul",
+    "revenda papelaria",
+    "atacado para marketplace",
+    "fornecedor papelaria",
   ],
   authors: [{ name: site.brand.legalName }],
   creator: site.brand.legalName,
@@ -37,13 +40,15 @@ export const metadata: Metadata = {
     locale: "pt_BR",
     url: site.contact.siteUrl,
     siteName: site.brand.name,
-    title: `${site.brand.name} — ${site.brand.slogan}`,
-    description: site.brand.descriptor,
+    title: `${site.brand.name} — Distribuidora atacadista B2B`,
+    description:
+      "Papelaria, higiene, informática e eletro para revendedores. Centros logísticos em SC e SP. Pedido mínimo R$ 800. Despacho em 48h.",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.brand.name} — ${site.brand.slogan}`,
-    description: site.brand.descriptor,
+    title: `${site.brand.name} — Distribuidora atacadista B2B`,
+    description:
+      "Papelaria, higiene, informática e eletro para revendedores. Centros em SC e SP.",
   },
   robots: {
     index: true,
@@ -67,6 +72,7 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // ─────────── Organization ───────────
   const orgJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -91,6 +97,65 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     sameAs: [site.contact.social.instagramUrl],
   };
 
+  // ─────────── LocalBusiness × N ───────────
+  const localBusinessesJsonLd = site.locations.map((l) => ({
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": `${site.contact.siteUrl}#${l.slug}`,
+    name: `${site.brand.name} — ${l.label}`,
+    image: `${site.contact.siteUrl}/repon-mark-blue.svg`,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: l.address,
+      addressLocality: l.city,
+      addressRegion: l.state,
+      postalCode: l.zip,
+      addressCountry: "BR",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: l.coords.lat,
+      longitude: l.coords.lng,
+    },
+    telephone: `+55${site.contact.phoneRaw.slice(2)}`,
+    email: site.contact.emails.comercial,
+    url: site.contact.siteUrl,
+    openingHoursSpecification: [
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        opens: "08:00",
+        closes: "18:00",
+      },
+    ],
+    areaServed: site.coverage.states.map((s) => ({ "@type": "State", name: s })),
+    priceRange: "$$",
+  }));
+
+  // ─────────── FAQPage ───────────
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: site.faq.map((q) => ({
+      "@type": "Question",
+      name: q.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: q.a,
+      },
+    })),
+  };
+
+  // ─────────── WebSite (SearchAction opcional) ───────────
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: site.brand.name,
+    url: site.contact.siteUrl,
+    inLanguage: "pt-BR",
+    publisher: { "@type": "Organization", name: site.brand.legalName },
+  };
+
   return (
     <html lang="pt-BR">
       <body className="min-h-screen flex flex-col antialiased">
@@ -98,6 +163,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+        {localBusinessesJsonLd.map((lb, i) => (
+          <script
+            key={i}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(lb) }}
+          />
+        ))}
         <ScrollProgress />
         <Header />
         <main className="flex-1">{children}</main>

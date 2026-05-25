@@ -21,24 +21,26 @@ export default function HomePage() {
           <WaveBackground variant="petrol" opacity={0.22} />
         </div>
         <div className="container-rp pt-24 md:pt-56 pb-28 md:pb-56 relative z-10">
-          <div className="max-w-5xl">
-            <SectionMarker number="00" label="Atacado B2B · Sudeste e Sul" variant="light" />
+          <div className="max-w-5xl mx-auto md:mx-0 text-center md:text-left">
+            <div className="flex justify-center md:justify-start">
+              <SectionMarker number="00" label="Distribuidora atacadista B2B" variant="light" />
+            </div>
 
             <h1 className="h-display mt-10" style={{ color: "var(--color-iced)" }}>
-              <SequencedLine delay={80}>Atacado direto para o</SequencedLine>
-              <SequencedLine delay={220} accent>revendedor que decide</SequencedLine>
-              <SequencedLine delay={360}>no marketplace.</SequencedLine>
+              <SequencedLine delay={80}>Atacado direto para</SequencedLine>
+              <SequencedLine delay={220} accent>papelaria, bazar</SequencedLine>
+              <SequencedLine delay={360}>e revenda online.</SequencedLine>
             </h1>
 
             <Reveal delay={520}>
-              <p className="body-lead mt-12 max-w-xl" style={{ color: "rgba(243,241,237,0.74)" }}>
-                Papelaria, higiene, informática e eletro para papelarias, lojas escolares e
-                bazares. Pedido mínimo R$ 800. Despacho em 48h.
+              <p className="body-lead mt-12 max-w-xl mx-auto md:mx-0" style={{ color: "rgba(243,241,237,0.78)" }}>
+                Papelaria, higiene, informática e eletro. Centros logísticos em SC e SP.
+                Pedido mínimo R$ 800. Despacho em 48h.
               </p>
             </Reveal>
 
             <Reveal delay={620}>
-              <div className="mt-14">
+              <div className="mt-14 flex flex-col sm:flex-row gap-3 sm:items-center justify-center md:justify-start">
                 <MagneticButton strength={8}>
                   <a
                     href={site.contact.whatsappUrl}
@@ -46,11 +48,27 @@ export default function HomePage() {
                     rel="noopener noreferrer"
                     className="btn-primary"
                   >
-                    Cadastrar pelo WhatsApp
+                    Mandar CNPJ pelo WhatsApp
                     <ArrowRight />
                   </a>
                 </MagneticButton>
+                <Link
+                  href="/verticais"
+                  className="link-underline text-[0.9375rem] font-medium inline-flex items-center gap-2 justify-center sm:justify-start"
+                  style={{ color: "var(--color-blue-300)", padding: "1rem 0.5rem" }}
+                >
+                  Ver catálogo por categoria <ArrowRight />
+                </Link>
               </div>
+            </Reveal>
+
+            <Reveal delay={700}>
+              <p
+                className="mt-5 text-[0.75rem] font-mono tracking-[0.16em] uppercase"
+                style={{ color: "rgba(243,241,237,0.5)" }}
+              >
+                Resposta em 24h · Sem fidelidade · Tabela em PDF
+              </p>
             </Reveal>
 
             <HeroTicker />
@@ -58,14 +76,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== O QUE A REPON FAZ — asymmetric grid ===== */}
+      {/* ===== O QUE A REPON FAZ (SEO body) — asymmetric grid ===== */}
       <section style={{ background: "var(--color-iced)" }}>
         <div className="container-rp py-32 md:py-48">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
             <Reveal className="lg:col-span-4">
               <SectionMarker number="01" label="A Repon" />
               <div
-                className="font-display"
+                className="font-display mt-6 hidden lg:block"
                 style={{
                   fontWeight: 200,
                   fontSize: "clamp(5rem, 14vw, 11rem)",
@@ -78,15 +96,28 @@ export default function HomePage() {
               </div>
             </Reveal>
             <Reveal delay={140} className="lg:col-span-8">
-              <h2 className="h-section mt-2 lg:mt-12">
-                Compra com a indústria,<br />
-                estoca em SC e SP,<br />
-                vende direto pro revendedor.
+              <h2 className="h-section">
+                Distribuidora atacadista B2B<br />
+                para revenda — loja física<br />
+                e marketplace.
               </h2>
               <p className="body-lead mt-10 max-w-2xl">
-                Não somos marketplace, não somos representante. Compramos volume da fábrica,
-                guardamos em centro logístico próprio e entregamos pra loja física no Sudeste
-                e Sul.
+                A Repon é uma distribuidora atacadista B2B com operação logística em Santa
+                Catarina e São Paulo. Compramos volume direto da indústria, estocamos em
+                centro logístico próprio e entregamos para revendedores no Sudeste e Sul
+                em até 48h úteis após o pedido.
+              </p>
+              <p className="body-prose mt-6 max-w-2xl">
+                Atendemos quatro verticais de produto: papelaria e escritório, higiene
+                pessoal, informática e eletroportátil. Mix consolidado em um único
+                fornecedor — você compra escolar, higiene e eletro sem precisar gerenciar
+                três distribuidores diferentes. Pedido mínimo de R$ 800. Frete subsidiado
+                acima de R$ 1.500. Prazo de boleto em 21 dias a partir do segundo pedido.
+              </p>
+              <p className="body-prose mt-6 max-w-2xl">
+                Trabalhamos com lojista de bairro, papelaria escolar, bazar, mini-mercado,
+                conveniência e seller de marketplace (Mercado Livre, Shopee, Amazon). A
+                política comercial é a mesma — o que muda é o mix recomendado por canal.
               </p>
             </Reveal>
           </div>
@@ -121,6 +152,23 @@ export default function HomePage() {
                   </Reveal>
                 ))}
               </ul>
+              {/* CTA intermediário */}
+              <Reveal delay={400}>
+                <div className="mt-12 flex flex-wrap items-center gap-x-6 gap-y-3">
+                  <a
+                    href={site.contact.whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link-underline text-[0.9375rem] font-semibold inline-flex items-center gap-2"
+                    style={{ color: "var(--color-blue)" }}
+                  >
+                    Mandar CNPJ agora <ArrowRight />
+                  </a>
+                  <span className="text-[0.8125rem]" style={{ color: "var(--color-ink-500)" }}>
+                    Validação interna em até 24h úteis
+                  </span>
+                </div>
+              </Reveal>
             </div>
           </div>
         </div>
@@ -251,6 +299,24 @@ export default function HomePage() {
               </Reveal>
             ))}
           </div>
+
+          {/* CTA intermediário */}
+          <Reveal delay={400}>
+            <div className="mt-16 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <a
+                href={site.contact.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-underline text-[0.9375rem] font-semibold inline-flex items-center gap-2"
+                style={{ color: "var(--color-blue)" }}
+              >
+                Receber tabela de preços <ArrowRight />
+              </a>
+              <span className="text-[0.8125rem]" style={{ color: "var(--color-ink-500)" }}>
+                Por canal e por vertical · Em PDF
+              </span>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -306,15 +372,18 @@ export default function HomePage() {
                   <a href={site.contact.whatsappUrl} target="_blank" rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-2.5 px-7 py-4 text-[0.9375rem] font-semibold transition-colors"
                     style={{ background: "var(--color-iced)", color: "var(--color-petrol)" }}>
-                    WhatsApp comercial <ArrowRight />
+                    Mandar CNPJ pelo WhatsApp <ArrowRight />
                   </a>
                 </MagneticButton>
                 <Link href="/fornecedores"
                   className="inline-flex items-center justify-center gap-2 border px-7 py-4 text-[0.9375rem] font-medium transition-colors hover:bg-white/10"
                   style={{ borderColor: "var(--color-iced)", color: "var(--color-iced)" }}>
-                  Sou indústria
+                  Sou indústria — vender pra Repon
                 </Link>
               </div>
+              <p className="mt-6 text-[0.8125rem] font-mono tracking-[0.16em] uppercase" style={{ color: "rgba(243,241,237,0.55)" }}>
+                Resposta em 24h · Sem fidelidade · Tabela em PDF
+              </p>
             </div>
           </Reveal>
         </div>

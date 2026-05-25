@@ -1,7 +1,7 @@
 /**
  * Marcador numérico de seção — "02 — Como funciona"
  * Hairline curta no meio, mono number + uppercase label.
- * Server component (sem JS).
+ * Centraliza no mobile, alinha à esquerda no desktop.
  */
 export function SectionMarker({
   number,
@@ -20,7 +20,7 @@ export function SectionMarker({
   const labelColor = isLight ? "rgba(243,241,237,0.72)" : "var(--color-petrol-60)";
 
   return (
-    <div className={`section-marker flex items-center gap-4 ${className}`}>
+    <div className={`section-marker flex items-center gap-4 justify-center md:justify-start ${className}`}>
       <span
         className="font-mono"
         style={{

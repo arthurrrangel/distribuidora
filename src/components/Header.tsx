@@ -58,15 +58,23 @@ export function Header() {
 
           <div className="hidden md:flex items-center gap-5">
             <a
-              href={`mailto:${site.contact.emails.comercial}`}
+              href={site.contact.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="link-underline text-[0.8125rem]"
               style={{ color: "var(--color-petrol-60)" }}
             >
-              {site.contact.emails.comercial}
+              {site.contact.phone}
             </a>
-            <Link href="/fornecedores" className="btn-primary text-[0.8125rem]" style={{ padding: "0.625rem 1rem" }}>
-              Apresentação
-            </Link>
+            <a
+              href={site.contact.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary text-[0.8125rem]"
+              style={{ padding: "0.625rem 1rem" }}
+            >
+              Pedir tabela
+            </a>
           </div>
 
           {/* Hamburger mobile */}
@@ -161,7 +169,7 @@ export function Header() {
                 color: "var(--color-iced)",
               }}
             >
-              Falar pelo WhatsApp →
+              Mandar CNPJ pelo WhatsApp →
             </a>
           </div>
         </div>
