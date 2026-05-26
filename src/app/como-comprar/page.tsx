@@ -220,7 +220,7 @@ export default function ComoComprarPage() {
             </div>
             <div className="lg:col-span-8">
               <ul className="divide-y" style={{ borderColor: "var(--color-line)" }}>
-                {site.faqCategories.flatMap((c) => c.items).slice(0, 7).map((item, i) => (
+                {(site.faqCategories.flatMap((c) => c.items as readonly { q: string; a: string }[])).slice(0, 7).map((item, i) => (
                   <li
                     key={i}
                     className="py-7 grid grid-cols-12 gap-6"

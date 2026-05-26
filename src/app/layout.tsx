@@ -137,7 +137,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: site.faqCategories.flatMap((c) => c.items).map((q) => ({
+    mainEntity: (site.faqCategories.flatMap((c) => c.items as readonly { q: string; a: string }[])).map((q) => ({
       "@type": "Question",
       name: q.q,
       acceptedAnswer: {
