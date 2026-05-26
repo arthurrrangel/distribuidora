@@ -81,6 +81,8 @@ export const site = {
     emails: {
       comercial: "comercial@repondistribuidora.com",
       sac: "sac@repondistribuidora.com",
+      dpo: "dpo@repondistribuidora.com",
+      ouvidoria: "ouvidoria@repondistribuidora.com",
     },
     domain: "repondistribuidora.com",
     siteUrl: "https://distribuidora-two.vercel.app",
@@ -220,38 +222,165 @@ export const site = {
   ],
 
   // ============================================================
-  // FAQ — perguntas comuns do comprador B2B
+  // FAQ — perguntas comuns do comprador B2B (28 perguntas, agrupadas)
   // ============================================================
-  faq: [
+  faqCategories: [
     {
-      q: "Qual o pedido mínimo?",
-      a: "R$ 800 no primeiro pedido. Acima de R$ 1.500, frete subsidiado para Sudeste e Sul.",
+      id: "cadastro",
+      label: "Cadastro e PJ",
+      title: "Antes de comprar.",
+      items: [
+        {
+          q: "Qual a documentação necessária para o cadastro?",
+          a: "Apenas CNPJ ativo com CNAE compatível com revenda. Validamos pela Receita Federal em até 24 horas úteis. Sem taxa, sem mensalidade.",
+        },
+        {
+          q: "Aceitam MEI?",
+          a: "Sim, desde que o CNAE registrado seja compatível com revenda. Mande o CNPJ pelo WhatsApp e validamos em até 24h.",
+        },
+        {
+          q: "Vendem para pessoa física?",
+          a: "Não. A Repon opera exclusivamente B2B. Toda venda exige cadastro PJ com CNPJ ativo.",
+        },
+        {
+          q: "Posso ter mais de um CNPJ no mesmo cadastro?",
+          a: "Sim. Cada CNPJ é uma conta separada com tabela e histórico próprios, mas pode ser administrada pela mesma pessoa.",
+        },
+        {
+          q: "O cadastro tem prazo de validade?",
+          a: "Cadastros ativos não expiram. Cadastros sem pedido por 24 meses são marcados como inativos e exigem revalidação rápida no próximo contato.",
+        },
+      ],
     },
     {
-      q: "Aceitam MEI?",
-      a: "Sim, desde que o CNAE do MEI seja compatível com revenda. Mande o CNPJ pelo WhatsApp e validamos em 24h.",
+      id: "comercial",
+      label: "Comercial",
+      title: "Pedido e tabela.",
+      items: [
+        {
+          q: "Qual o pedido mínimo?",
+          a: "R$ 800 no primeiro pedido. A partir de R$ 1.500, frete subsidiado para Sudeste e Sul.",
+        },
+        {
+          q: "Como recebo a tabela de preços?",
+          a: "Após cadastro PJ aprovado, enviamos tabela em PDF pelo WhatsApp ou e-mail. Tabela por faixa de pedido, separada por vertical.",
+        },
+        {
+          q: "A tabela varia por porte de cliente?",
+          a: "Sim. Há faixa de tabela por volume mensal de compra. Quanto mais consolidado o pedido, melhor a condição.",
+        },
+        {
+          q: "Posso negociar preço fora da tabela?",
+          a: "Em pedidos consolidados acima de R$ 5.000 com mix definido, sim. A negociação é feita com o comercial pelo WhatsApp.",
+        },
+        {
+          q: "Como faço o pedido?",
+          a: "Pelo WhatsApp comercial, com a tabela em mãos. Confirmamos disponibilidade, emitimos a proforma, você aprova e segue para faturamento.",
+        },
+      ],
     },
     {
-      q: "Qual o prazo de entrega?",
-      a: "Despacho em até 48h úteis. Sudeste em 3 a 5 dias úteis, Sul em 2 a 3 dias úteis após o despacho.",
+      id: "logistica",
+      label: "Logística",
+      title: "Prazo e entrega.",
+      items: [
+        {
+          q: "Qual o prazo de despacho?",
+          a: "Até 48 horas úteis após confirmação de pagamento ou aprovação de prazo.",
+        },
+        {
+          q: "Qual o prazo de entrega após o despacho?",
+          a: "Sul (PR, SC, RS): 2 a 3 dias úteis. Sudeste (SP, RJ, MG, ES): 3 a 5 dias úteis. Capitais costumam ser mais rápidas que interior.",
+        },
+        {
+          q: "Vocês atendem fora do Sudeste e Sul?",
+          a: "A operação está focada nessas duas regiões. Para outras regiões mande o CNPJ pra avaliarmos caso a caso.",
+        },
+        {
+          q: "Qual transportadora vocês usam?",
+          a: "Trabalhamos com múltiplas transportadoras conforme destino. A definição é feita pela operação logística (3PL) buscando melhor prazo e custo.",
+        },
+        {
+          q: "Recebo código de rastreio?",
+          a: "Sim. O código é enviado pelo mesmo canal do pedido (WhatsApp ou e-mail) no momento do despacho.",
+        },
+        {
+          q: "O que faço se o produto chegar com avaria?",
+          a: "Comunique em até 48h úteis pelo WhatsApp ou pelo SAC, com fotos do produto e da embalagem. Avaliamos e fazemos a troca ou devolução com custo coberto.",
+        },
+      ],
     },
     {
-      q: "Formas de pagamento?",
-      a: "PIX e boleto à vista no primeiro pedido. A partir do segundo pedido, boleto com prazo de 21 dias para clientes recorrentes.",
+      id: "pagamento",
+      label: "Pagamento e fiscal",
+      title: "Como você paga.",
+      items: [
+        {
+          q: "Quais as formas de pagamento?",
+          a: "PIX e boleto à vista no primeiro pedido. A partir do segundo pedido, boleto com prazo de 21 dias para clientes recorrentes em situação cadastral regular.",
+        },
+        {
+          q: "Existe taxa de boleto?",
+          a: "Não cobramos taxa adicional. O valor do boleto é exatamente o valor do pedido.",
+        },
+        {
+          q: "Como funciona a emissão de nota fiscal?",
+          a: "Toda venda gera NF-e com destaque de ICMS conforme legislação. A nota é emitida no momento do despacho.",
+        },
+        {
+          q: "E ICMS-ST?",
+          a: "Repassamos ICMS-ST conforme regime tributário do destinatário e estado de destino. A composição vem detalhada na NF-e.",
+        },
+        {
+          q: "O que acontece em caso de inadimplência?",
+          a: "Suspensão de novos pedidos até regularização. Após 30 dias, comunicação a bureaus de crédito. Após 60 dias, protesto do título nos cartórios competentes.",
+        },
+      ],
     },
     {
-      q: "Tem catálogo em PDF?",
-      a: "Sim. Catálogo digital por vertical é enviado por WhatsApp ou e-mail após cadastro PJ aprovado.",
+      id: "catalogo",
+      label: "Catálogo e produto",
+      title: "O que vendemos.",
+      items: [
+        {
+          q: "Quais categorias vocês têm?",
+          a: "Quatro verticais ativas: papelaria e escritório, higiene pessoal, informática e eletroportátil. Veja detalhes na página de verticais.",
+        },
+        {
+          q: "Vocês trabalham com marca X?",
+          a: "Temos relacionamento direto com várias indústrias. Consulta de marca específica é feita pelo WhatsApp comercial, pois o mix varia por vertical e por mês.",
+        },
+        {
+          q: "Qual a profundidade do mix?",
+          a: "Curado, não pulverizado. Selecionamos SKUs com giro alto e que fazem sentido para revenda em loja física e marketplace.",
+        },
+        {
+          q: "Posso solicitar produto que não está na tabela?",
+          a: "Sob consulta. Pedidos não recorrentes podem ser atendidos via importação parceira ou redirecionamento para indústria conforme volume.",
+        },
+      ],
     },
     {
-      q: "Vocês atendem fora do Sudeste e Sul?",
-      a: "Hoje a operação logística está focada nessas duas regiões. Para outras regiões, mande o CNPJ pra avaliarmos caso a caso.",
-    },
-    {
-      q: "Como funciona a representação de marcas?",
-      a: "Avaliamos novas representações nas quatro verticais ativas. Política de MAP formalizada em contrato. Apresentação institucional enviada por e-mail.",
+      id: "operacao",
+      label: "Política e operação",
+      title: "Como operamos.",
+      items: [
+        {
+          q: "Vocês competem com revendedor em marketplace?",
+          a: "Não. A Repon não vende em marketplace genérico. Atende exclusivamente B2B PJ por canal direto.",
+        },
+        {
+          q: "Vocês respeitam política de MAP?",
+          a: "Sim. Respeito formal a MAP (Minimum Advertised Price) em contrato com cada indústria. O preço de revenda anunciado é protegido em todos os pontos de contato.",
+        },
+        {
+          q: "Como funciona a representação de marcas?",
+          a: "Avaliamos novas representações nas quatro verticais ativas. Política de MAP formalizada em contrato. Apresentação institucional enviada por e-mail mediante contato.",
+        },
+      ],
     },
   ],
+
 
   // ============================================================
   // Para quem é — 3 perfis concretos
@@ -283,6 +412,24 @@ export const site = {
     { value: "04",  label: "Verticais ativas",      sub: "Atacado direto B2B" },
     { value: "14",  label: "CNAEs registradas",     sub: "Atacado e varejo especializado" },
   ],
+
+  // ============================================================
+  // Fornecedores / indústrias representadas
+  // ============================================================
+  suppliers: [
+    { name: "Filiperson", vertical: "Higiene e bazar" },
+    { name: "Yins Brasil", vertical: "Eletro e informática" },
+    { name: "TT Master", vertical: "Eletro e informática" },
+    { name: "CCM", vertical: "Papelaria e bazar" },
+    { name: "Toshiba", vertical: "Eletro e informática" },
+  ],
+
+  // Documentos jurídicos públicos
+  legal: {
+    privacyUpdatedAt: "25 de maio de 2026",
+    termsUpdatedAt: "25 de maio de 2026",
+    cookiesUpdatedAt: "25 de maio de 2026",
+  },
 } as const;
 
 export type VerticalSlug = (typeof site.verticals)[number]["slug"];

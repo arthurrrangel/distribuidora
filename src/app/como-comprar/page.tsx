@@ -216,10 +216,11 @@ export default function ComoComprarPage() {
             <div className="lg:col-span-4">
               <div className="eyebrow">Perguntas comuns</div>
               <h2 className="h-section mt-6">Antes de mandar<br />o CNPJ.</h2>
+              <Link href="/faq" className="btn-link mt-8 inline-flex">Ver todas as perguntas</Link>
             </div>
             <div className="lg:col-span-8">
               <ul className="divide-y" style={{ borderColor: "var(--color-line)" }}>
-                {site.faq.map((item, i) => (
+                {site.faqCategories.flatMap((c) => c.items).slice(0, 7).map((item, i) => (
                   <li
                     key={i}
                     className="py-7 grid grid-cols-12 gap-6"

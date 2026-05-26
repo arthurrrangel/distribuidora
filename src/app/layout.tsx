@@ -4,6 +4,7 @@ import { Footer } from "@/components/Footer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { StickyCTA } from "@/components/StickyCTA";
 import { ScrollProgress } from "@/components/ScrollProgress";
+import { CookieBanner } from "@/components/CookieBanner";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -136,7 +137,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: site.faq.map((q) => ({
+    mainEntity: site.faqCategories.flatMap((c) => c.items).map((q) => ({
       "@type": "Question",
       name: q.q,
       acceptedAnswer: {
@@ -184,6 +185,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <WhatsAppFloat />
         <StickyCTA />
+        <CookieBanner />
       </body>
     </html>
   );

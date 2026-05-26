@@ -153,6 +153,58 @@ export default function HomePage() {
 
       <SectionDivider />
 
+      {/* ===== INDÚSTRIAS REPRESENTADAS ===== */}
+      <section style={{ background: "var(--color-iced)" }}>
+        <div className="container-rp py-24 md:py-32">
+          <Reveal>
+            <SectionMarker number="01·5" label="Indústrias parceiras" />
+          </Reveal>
+          <Reveal delay={120}>
+            <h2 className="h-section mt-2 mb-12 max-w-2xl">
+              Marcas que distribuímos hoje.
+            </h2>
+          </Reveal>
+          <Reveal delay={200}>
+            <ul
+              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 divide-x divide-y border"
+              style={{ borderColor: "var(--color-line)" }}
+            >
+              {site.suppliers.map((s) => (
+                <li
+                  key={s.name}
+                  className="px-6 py-10 flex flex-col items-center justify-center text-center hover:bg-iced-soft transition-colors"
+                  style={{ background: "var(--color-iced-soft)" }}
+                >
+                  <span
+                    className="font-display block"
+                    style={{
+                      fontSize: "clamp(1.125rem, 1.6vw, 1.5rem)",
+                      fontWeight: 500,
+                      letterSpacing: "-0.025em",
+                      color: "var(--color-petrol)",
+                      lineHeight: 1.1,
+                    }}
+                  >
+                    {s.name}
+                  </span>
+                  <span
+                    className="mt-2 text-[0.6875rem] font-mono tracking-[0.16em] uppercase"
+                    style={{ color: "var(--color-ink-500)" }}
+                  >
+                    {s.vertical}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+          <Reveal delay={300}>
+            <p className="mt-10 text-[0.8125rem] max-w-2xl" style={{ color: "var(--color-ink-500)" }}>
+              Lista parcial das indústrias com as quais a Repon mantém relação comercial direta. Outras marcas sob consulta.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
       {/* ===== FICHA JURÍDICA ===== */}
       <section
         style={{
