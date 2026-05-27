@@ -53,7 +53,7 @@ export default function HomePage() {
         </div>
         <GrainOverlay opacity={0.05} blendMode="overlay" />
 
-        <div className="container-rp pt-24 md:pt-56 pb-28 md:pb-56 relative z-10">
+        <div className="container-rp pt-20 md:pt-56 pb-16 md:pb-44 relative z-10">
           <div className="max-w-5xl mx-auto md:mx-0 text-center md:text-left">
             <div className="flex justify-center md:justify-start">
               <SectionMarker number="00" label="A Repon em uma página" variant="light" />

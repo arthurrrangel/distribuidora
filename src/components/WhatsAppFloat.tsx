@@ -1,17 +1,33 @@
+"use client";
+import { useEffect, useState } from "react";
 import { site } from "@/lib/site";
 
 /**
- * WhatsApp flutuante — CTA persistente em todas as páginas.
- * Canto inferior direito. Touch target 56px. Funnel Sans, ícone SVG.
+ * WhatsApp flutuante — CTA persistente.
+ * Em mobile, oculta quando StickyCTA aparece (scroll > 700) pra não sobrepor.
  */
 export function WhatsAppFloat() {
+  const [hideMobile, setHideMobile] = useState(false);
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      const docH = document.documentElement.scrollHeight;
+      const winH = window.innerHeight;
+      const nearBottom = y + winH > docH - winH * 1.2;
+      setHideMobile(y > 700 && !nearBottom);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   return (
     <a
       href={site.contact.whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Falar com a Repon no WhatsApp"
-      className="fixed bottom-5 right-5 md:bottom-8 md:right-8 z-40 inline-flex items-center gap-2.5 pl-4 pr-5 py-3.5 transition-transform hover:scale-[1.02]"
+      data-hide-mobile={hideMobile}
+      className="whatsapp-float fixed bottom-5 right-5 md:bottom-8 md:right-8 z-40 inline-flex items-center gap-2.5 pl-4 pr-5 py-3.5 transition-all"
       style={{
         background: "var(--color-blue)",
         color: "var(--color-iced)",
