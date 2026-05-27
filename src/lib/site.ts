@@ -417,11 +417,30 @@ export const site = {
   // Fornecedores / indústrias representadas
   // ============================================================
   suppliers: [
-    { name: "Filiperson", vertical: "Higiene e bazar" },
-    { name: "Yins Brasil", vertical: "Eletro e informática" },
-    { name: "TT Master", vertical: "Eletro e informática" },
-    { name: "CCM", vertical: "Papelaria e bazar" },
-    { name: "Toshiba", vertical: "Eletro e informática" },
+    {
+      slug: "filiperson",
+      name: "Filiperson",
+      vertical: "Higiene e bazar",
+      descriptor: "Linha de descartáveis, higiene pessoal e bazar.",
+    },
+    {
+      slug: "ccm",
+      name: "CCM Indústria",
+      vertical: "Higiene e papelaria",
+      descriptor: "Fraldas, descartáveis adulto e infantil. Marcas Hipopó, Wellness, Pequerrucho.",
+    },
+    {
+      slug: "yins",
+      name: "Yin’s Brasil",
+      vertical: "Eletro e informática",
+      descriptor: "Eletroportáteis, periféricos de informática e acessórios.",
+    },
+    {
+      slug: "tt-master",
+      name: "TT Master",
+      vertical: "Eletro e acessórios",
+      descriptor: "Acessórios eletrônicos, periféricos e linha de proteção.",
+    },
   ],
 
   // Documentos jurídicos públicos

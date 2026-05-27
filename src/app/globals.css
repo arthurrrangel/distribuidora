@@ -643,3 +643,29 @@ body { -webkit-overflow-scrolling: touch; }
   .constellation-line,
   .constellation-hub-pulse { animation: none !important; }
 }
+
+/* ============================================================
+   Supplier card — hover refinado
+   ============================================================ */
+.supplier-card {
+  transition: background-color 360ms var(--ease-out-expo);
+  overflow: hidden;
+}
+.supplier-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0;
+  background: var(--color-blue);
+  transition: width 480ms var(--ease-out-expo);
+}
+@media (hover: hover) and (pointer: fine) {
+  .supplier-card:hover { background: var(--color-iced-warm) !important; }
+  .supplier-card:hover::after { width: 100%; }
+  .supplier-card:hover h3 { color: var(--color-blue); transition: color 280ms ease; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .supplier-card, .supplier-card::after { transition: none !important; }
+}

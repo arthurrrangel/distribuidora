@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/lib/site";
+import { SupplierGrid } from "@/components/SupplierGrid";
 
 export const metadata: Metadata = {
   title: "Para fornecedores",
@@ -77,45 +78,22 @@ export default function FornecedoresPage() {
         </div>
       </section>
 
-      {/* QUEM JÁ ESTÁ */}
+      {/* QUEM JÁ ESTÁ — wordmark grid */}
       <section style={{ background: "var(--color-iced)" }}>
         <div className="container-rp py-24 md:py-32">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-            <div className="lg:col-span-4">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-12">
+            <div className="lg:col-span-5">
               <div className="eyebrow">Quem está hoje</div>
               <h2 className="h-section mt-6">Indústrias<br />parceiras.</h2>
-              <p className="body-prose mt-6 max-w-md">
-                Relação direta com indústria, sem intermediário. Lista parcial das
-                marcas em operação no momento.
+            </div>
+            <div className="lg:col-span-7 lg:pt-12">
+              <p className="body-prose max-w-xl">
+                Relação direta com indústria, sem intermediário. Lista parcial
+                das marcas em operação no momento.
               </p>
             </div>
-            <div className="lg:col-span-8">
-              <ul className="grid grid-cols-2 sm:grid-cols-3 gap-px border" style={{ borderColor: "var(--color-line)", background: "var(--color-line)" }}>
-                {site.suppliers.map((s) => (
-                  <li key={s.name} className="px-6 py-10 flex flex-col items-center justify-center text-center" style={{ background: "var(--color-iced-soft)" }}>
-                    <span
-                      className="font-display block"
-                      style={{
-                        fontSize: "clamp(1.125rem, 1.6vw, 1.5rem)",
-                        fontWeight: 500,
-                        letterSpacing: "-0.025em",
-                        color: "var(--color-petrol)",
-                        lineHeight: 1.1,
-                      }}
-                    >
-                      {s.name}
-                    </span>
-                    <span
-                      className="mt-2 text-[0.6875rem] font-mono tracking-[0.16em] uppercase"
-                      style={{ color: "var(--color-ink-500)" }}
-                    >
-                      {s.vertical}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
           </div>
+          <SupplierGrid />
         </div>
       </section>
 
