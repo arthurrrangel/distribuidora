@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/lib/site";
+import { LeadButton } from "@/components/LeadButton";
 
 export const metadata: Metadata = {
   title: "Como comprar",
@@ -268,13 +269,9 @@ export default function ComoComprarPage() {
               >
                 WhatsApp comercial
               </a>
-              <Link
-                href="/contato"
-                className="inline-flex items-center justify-center gap-2 border px-6 py-3.5 text-[0.9375rem] font-medium transition-colors"
-                style={{ borderColor: "var(--color-iced)", color: "var(--color-iced)" }}
-              >
-                Formulário institucional
-              </Link>
+              <LeadButton source="tabela-como-comprar" className="inline-flex items-center justify-center gap-2 border px-6 py-3.5 text-[0.9375rem] font-medium transition-colors">
+                <span style={{ color: "var(--color-iced)" }}>Receber tabela por e-mail</span>
+              </LeadButton>
             </div>
           </div>
         </div>

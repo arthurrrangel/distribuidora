@@ -1,0 +1,37 @@
+{
+  "name": "Repon Distribuidora",
+  "short_name": "Repon",
+  "description": "Distribuidora atacadista B2B para revendedores no Sudeste e Sul.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#01092D",
+  "theme_color": "#01092D",
+  "orientation": "portrait",
+  "lang": "pt-BR",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/repon-mark-blue.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Como comprar",
+      "url": "/como-comprar",
+      "description": "Cadastro PJ e tabela em 24h"
+    },
+    {
+      "name": "Falar no WhatsApp",
+      "url": "https://wa.me/5521995946491"
+    }
+  ]
+}

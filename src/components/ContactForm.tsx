@@ -1,86 +1,107 @@
 "use client";
-
 import { useState } from "react";
 import { site } from "@/lib/site";
 
 type Profile = "comprador" | "fornecedor" | "outro";
 
+const inputStyle: React.CSSProperties = {
+  background: "var(--color-iced-soft)",
+  border: "1px solid var(--color-line)",
+  padding: "0.75rem 1rem",
+  fontSize: "16px",
+  color: "var(--color-petrol)",
+  fontFamily: "var(--font-sans)",
+  borderRadius: 0,
+  WebkitAppearance: "none",
+  minHeight: 48,
+  width: "100%",
+};
+
 export function ContactForm() {
   const [profile, setProfile] = useState<Profile>("comprador");
-  const [submitting, setSubmitting] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">("idle");
+  const [error, setError] = useState("");
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSubmitting(true);
-
+    setStatus("loading");
+    setError("");
     const data = new FormData(e.currentTarget);
-    const name = String(data.get("name") || "").trim();
-    const company = String(data.get("company") || "").trim();
-    const cnpj = String(data.get("cnpj") || "").trim();
-    const email = String(data.get("email") || "").trim();
-    const phone = String(data.get("phone") || "").trim();
-    const message = String(data.get("message") || "").trim();
+    const payload = {
+      name: String(data.get("name") || "").trim(),
+      email: String(data.get("email") || "").trim(),
+      cnpj: String(data.get("cnpj") || "").trim(),
+      phone: String(data.get("phone") || "").trim(),
+      message: String(data.get("message") || "").trim(),
+      source:
+        profile === "comprador"
+          ? "contato-comprador"
+          : profile === "fornecedor"
+          ? "contato-fornecedor"
+          : "contato-outro",
+    };
+    if (!payload.name || !payload.email || !payload.cnpj) {
+      setStatus("error");
+      setError("Preencha nome, e-mail e CNPJ.");
+      return;
+    }
+    try {
+      const r = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const json = await r.json();
+      if (!r.ok || !json.ok) {
+        setStatus("error");
+        setError(json.error || "Não foi possível enviar.");
+        return;
+      }
+      setStatus("ok");
+    } catch {
+      setStatus("error");
+      setError("Erro de rede. Tente o WhatsApp ou copie nosso e-mail.");
+    }
+  }
 
-    const profileLabel =
-      profile === "comprador"
-        ? "Comprador B2B / Revendedor"
-        : profile === "fornecedor"
-        ? "Indústria / Fornecedor"
-        : "Outro";
-
-    const subject = `[Contato Site Repon] ${profileLabel} — ${company || name}`;
-    const body = [
-      `Perfil: ${profileLabel}`,
-      ``,
-      `Nome: ${name}`,
-      `Empresa: ${company}`,
-      `CNPJ: ${cnpj}`,
-      `E-mail: ${email}`,
-      `Telefone: ${phone}`,
-      ``,
-      `Mensagem:`,
-      message,
-      ``,
-      `---`,
-      `Enviado pelo formulário do site institucional.`,
-    ].join("\n");
-
-    const recipient =
-      profile === "fornecedor"
-        ? site.contact.emails.comercial
-        : site.contact.emails.comercial;
-
-    const mailtoUrl = `mailto:${recipient}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-
-    window.location.href = mailtoUrl;
-
-    setTimeout(() => setSubmitting(false), 1200);
+  if (status === "ok") {
+    return (
+      <div className="card-hairline p-8 md:p-10">
+        <div className="eyebrow mb-3" style={{ color: "var(--color-blue)" }}>Mensagem enviada</div>
+        <h3 className="font-display" style={{ fontSize: "1.625rem", fontWeight: 500, letterSpacing: "-0.022em", color: "var(--color-petrol)", lineHeight: 1.1, marginBottom: 16 }}>Recebido. Resposta em até 24h úteis.</h3>
+        <p className="text-[0.9375rem]" style={{ color: "var(--color-ink-700)", lineHeight: 1.6 }}>
+          Você também pode falar agora pelo WhatsApp comercial.
+        </p>
+        <a href={site.contact.whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn-primary mt-6 inline-flex">WhatsApp comercial</a>
+      </div>
+    );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="card-hairline p-8 md:p-10">
-      {/* Perfil */}
-      <fieldset className="mb-8">
+    <form onSubmit={handleSubmit} className="card-hairline p-6 md:p-10" noValidate>
+      <fieldset className="mb-6">
         <legend className="eyebrow mb-4">Perfil de contato</legend>
-        <div className="grid grid-cols-3 gap-px bg-line border border-line">
-          {(
-            [
-              ["comprador",  "Comprador B2B"],
-              ["fornecedor", "Indústria"],
-              ["outro",      "Outro"],
-            ] as const
-          ).map(([val, label]) => (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-px" style={{ background: "var(--color-line)", border: "1px solid var(--color-line)" }}>
+          {([
+            ["comprador", "Comprador B2B"],
+            ["fornecedor", "Indústria"],
+            ["outro", "Outro"],
+          ] as const).map(([val, label]) => (
             <button
               type="button"
               key={val}
               onClick={() => setProfile(val)}
-              className={`p-3 text-[0.875rem] font-medium transition-colors ${
-                profile === val
-                  ? "bg-ink text-paper"
-                  : "bg-paper text-ink-600 hover:bg-paper-50"
-              }`}
+              aria-pressed={profile === val}
+              className="transition-colors"
+              style={{
+                background: profile === val ? "var(--color-petrol)" : "var(--color-iced-soft)",
+                color: profile === val ? "var(--color-iced)" : "var(--color-petrol)",
+                padding: "14px 12px",
+                fontSize: "0.875rem",
+                fontWeight: 500,
+                minHeight: 48,
+                touchAction: "manipulation",
+              }}
             >
               {label}
             </button>
@@ -88,114 +109,53 @@ export function ContactForm() {
         </div>
       </fieldset>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <Field label="Nome completo" name="name" required />
-        <Field label="Empresa" name="company" required />
-        <Field
-          label="CNPJ"
-          name="cnpj"
-          placeholder="00.000.000/0000-00"
-          required={profile === "comprador" || profile === "fornecedor"}
-        />
-        <Field label="E-mail" name="email" type="email" required />
-        <Field
-          label="Telefone"
-          name="phone"
-          placeholder="(00) 00000-0000"
-          className="sm:col-span-2"
-        />
-        <FieldArea
-          label="Mensagem"
-          name="message"
-          required
-          className="sm:col-span-2"
-          placeholder={
-            profile === "fornecedor"
-              ? "Marca, categoria, volume estimado, link de catálogo."
-              : profile === "comprador"
-              ? "Tipo de revenda, categorias de interesse, volume estimado."
-              : "Conte como podemos ajudar."
-          }
-        />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+        <label className="flex flex-col gap-1.5">
+          <span className="eyebrow">Nome *</span>
+          <input name="name" required autoComplete="name" autoCapitalize="words" style={inputStyle} />
+        </label>
+        <label className="flex flex-col gap-1.5">
+          <span className="eyebrow">Empresa</span>
+          <input name="company" autoComplete="organization" style={inputStyle} />
+        </label>
+        <label className="flex flex-col gap-1.5">
+          <span className="eyebrow">CNPJ *</span>
+          <input name="cnpj" required inputMode="numeric" placeholder="00.000.000/0000-00" autoComplete="off" style={inputStyle} />
+        </label>
+        <label className="flex flex-col gap-1.5">
+          <span className="eyebrow">E-mail *</span>
+          <input name="email" type="email" required inputMode="email" autoComplete="email" autoCapitalize="none" autoCorrect="off" spellCheck={false} style={inputStyle} />
+        </label>
+        <label className="flex flex-col gap-1.5 sm:col-span-2">
+          <span className="eyebrow">Telefone</span>
+          <input name="phone" type="tel" inputMode="tel" autoComplete="tel" style={inputStyle} />
+        </label>
+        <label className="flex flex-col gap-1.5 sm:col-span-2">
+          <span className="eyebrow">Mensagem</span>
+          <textarea name="message" rows={4} style={{ ...inputStyle, minHeight: 120, resize: "vertical" }} />
+        </label>
       </div>
 
-      <div className="mt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <p className="text-[0.75rem] text-ink-500 leading-snug max-w-md">
-          O envio abre o seu cliente de e-mail com os dados preenchidos. Sem
-          armazenamento intermediário, sem rastreamento de terceiros.
-        </p>
+      {error && (
+        <p role="alert" className="text-[0.8125rem]" style={{ color: "#A22", marginBottom: 12 }}>{error}</p>
+      )}
+
+      <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
         <button
           type="submit"
-          disabled={submitting}
-          className="btn-primary justify-center disabled:opacity-60"
+          disabled={status === "loading"}
+          className="btn-primary"
+          style={{ touchAction: "manipulation", opacity: status === "loading" ? 0.6 : 1 }}
         >
-          {submitting ? "Abrindo cliente de e-mail…" : "Enviar mensagem"}
+          {status === "loading" ? "Enviando…" : "Enviar mensagem"}
         </button>
+        <a href={site.contact.whatsappUrl} target="_blank" rel="noopener noreferrer" className="link-underline text-[0.9375rem] font-medium inline-flex items-center gap-2 sm:ml-2" style={{ color: "var(--color-blue)", padding: "0.5rem" }}>
+          Ou WhatsApp →
+        </a>
       </div>
+      <p className="text-[0.75rem]" style={{ color: "var(--color-ink-500)", marginTop: 12 }}>
+        Seus dados são tratados conforme a <a href="/politica-privacidade" className="link-underline" style={{ color: "var(--color-blue)" }}>política de privacidade</a>.
+      </p>
     </form>
-  );
-}
-
-function Field({
-  label,
-  name,
-  type = "text",
-  required = false,
-  placeholder,
-  className = "",
-}: {
-  label: string;
-  name: string;
-  type?: string;
-  required?: boolean;
-  placeholder?: string;
-  className?: string;
-}) {
-  return (
-    <div className={`flex flex-col gap-1.5 ${className}`}>
-      <label htmlFor={name} className="eyebrow">
-        {label}
-        {required && <span className="text-accent ml-1">*</span>}
-      </label>
-      <input
-        id={name}
-        name={name}
-        type={type}
-        required={required}
-        placeholder={placeholder}
-        className="bg-transparent border-b border-line py-2.5 text-[0.9375rem] text-ink placeholder:text-ink-400 focus:border-ink focus:outline-none transition-colors"
-      />
-    </div>
-  );
-}
-
-function FieldArea({
-  label,
-  name,
-  required = false,
-  placeholder,
-  className = "",
-}: {
-  label: string;
-  name: string;
-  required?: boolean;
-  placeholder?: string;
-  className?: string;
-}) {
-  return (
-    <div className={`flex flex-col gap-1.5 ${className}`}>
-      <label htmlFor={name} className="eyebrow">
-        {label}
-        {required && <span className="text-accent ml-1">*</span>}
-      </label>
-      <textarea
-        id={name}
-        name={name}
-        rows={5}
-        required={required}
-        placeholder={placeholder}
-        className="bg-transparent border border-line p-3.5 text-[0.9375rem] text-ink placeholder:text-ink-400 focus:border-ink focus:outline-none transition-colors resize-y min-h-[120px]"
-      />
-    </div>
   );
 }

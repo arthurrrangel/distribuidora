@@ -771,3 +771,84 @@ body { -webkit-overflow-scrolling: touch; }
   animation: lead-slide-up 340ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 @keyframes lead-slide-up { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* ============================================================
+   Mobile: safe-area + 100dvh + touch-action + a11y polish
+   mobile-safe-area-and-100dvh marker
+   ============================================================ */
+@supports (padding: env(safe-area-inset-top)) {
+  header.sticky {
+    padding-top: env(safe-area-inset-top, 0);
+  }
+  .container-rp {
+    padding-left: max(env(safe-area-inset-left, 0), var(--container-gutter));
+    padding-right: max(env(safe-area-inset-right, 0), var(--container-gutter));
+  }
+}
+
+/* dvh: viewport height correto em mobile (Safari iOS) */
+@supports (height: 100dvh) {
+  .min-screen { min-height: 100dvh; }
+  .h-screen-d { height: 100dvh; }
+}
+.min-screen { min-height: 100vh; }
+.h-screen-d { height: 100vh; }
+
+/* touch-action: bloqueia double-tap zoom em botões/links */
+button, .btn-primary, .btn-ghost, .btn-green, .btn-link, .link-underline,
+a[role="button"], .footer-link, .vertical-card, .supplier-card,
+.accordion-item button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Inputs: prevent iOS zoom (fonte mínima 16px), border-radius 0 mantém visual */
+input, textarea, select {
+  font-size: 16px;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
+
+/* Hyphens em headings/parágrafos longos pra PT-BR */
+h1, h2, h3, .h-display, .h-section, .h-card, p {
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* iOS Safari elastic bounce: respeitado pelo body, overscroll-behavior pra prevenir refresh acidental */
+@media (max-width: 768px) {
+  html { overscroll-behavior-y: none; }
+}
+
+/* Focus visible mais forte (a11y) */
+:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Sombras menos pesadas em mobile (performance render) */
+@media (max-width: 768px) {
+  .vertical-card, .supplier-card, .card-hairline {
+    box-shadow: none !important;
+  }
+}
+
+/* Print stylesheet básico */
+@media print {
+  .whatsapp-float, .sticky-cta, .lead-modal-overlay, header.sticky, .skip-link { display: none !important; }
+  body { background: white; color: black; }
+  a { color: black; text-decoration: underline; }
+  .container-rp { max-width: 100%; padding: 0; }
+}
+
+/* High-contrast preference */
+@media (prefers-contrast: more) {
+  :root {
+    --color-ink-500: #2A2F45;
+    --color-ink-700: #0B1220;
+  }
+}

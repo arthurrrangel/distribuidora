@@ -64,10 +64,10 @@ export function LeadMagnetModal({ open, onClose, source = "tabela" }: { open: bo
           </div>
         ) : (
           <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <Field label="Nome" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
-            <Field label="E-mail" type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} required />
-            <Field label="CNPJ" value={form.cnpj} onChange={(v) => setForm({ ...form, cnpj: v })} required placeholder="00.000.000/0000-00" />
-            <Field label="Telefone (opcional)" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
+            <Field label="Nome" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required autoComplete="name" />
+            <Field label="E-mail" type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} required inputMode="email" autoComplete="email" />
+            <Field label="CNPJ" value={form.cnpj} onChange={(v) => setForm({ ...form, cnpj: v })} required placeholder="00.000.000/0000-00" inputMode="numeric" autoComplete="off" />
+            <Field label="Telefone (opcional)" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} type="tel" inputMode="tel" autoComplete="tel" />
             {error && <p style={{ fontSize: "0.8125rem", color: "#A22", marginTop: 4 }}>{error}</p>}
             <button type="submit" disabled={status === "loading"} className="btn-primary mt-2" style={{ opacity: status === "loading" ? 0.6 : 1 }}>
               {status === "loading" ? "Enviando…" : "Receber tabela"}
@@ -82,11 +82,23 @@ export function LeadMagnetModal({ open, onClose, source = "tabela" }: { open: bo
   );
 }
 
-function Field({ label, value, onChange, type = "text", required, placeholder }: { label: string; value: string; onChange: (v: string) => void; type?: string; required?: boolean; placeholder?: string }) {
+function Field({ label, value, onChange, type = "text", required, placeholder, inputMode, autoComplete }: { label: string; value: string; onChange: (v: string) => void; type?: string; required?: boolean; placeholder?: string; inputMode?: "text"|"email"|"tel"|"numeric"|"decimal"|"url"; autoComplete?: string }) {
   return (
     <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
       <span className="eyebrow" style={{ color: "var(--color-petrol-60)" }}>{label}{required && " *"}</span>
-      <input type={type} value={value} onChange={(e) => onChange(e.target.value)} required={required} placeholder={placeholder} style={{ background: "var(--color-iced-soft)", border: "1px solid var(--color-line)", padding: "0.625rem 0.875rem", fontSize: "0.9375rem", color: "var(--color-petrol)", fontFamily: "var(--font-sans)" }} />
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        required={required}
+        placeholder={placeholder}
+        inputMode={inputMode}
+        autoComplete={autoComplete}
+        autoCapitalize={type === "email" ? "none" : "sentences"}
+        autoCorrect={type === "email" ? "off" : undefined}
+        spellCheck={type === "email" ? false : undefined}
+        style={{ background: "var(--color-iced-soft)", border: "1px solid var(--color-line)", padding: "0.75rem 1rem", fontSize: "16px", color: "var(--color-petrol)", fontFamily: "var(--font-sans)", borderRadius: 0, WebkitAppearance: "none" as React.CSSProperties["WebkitAppearance"], minHeight: 48 }}
+      />
     </label>
   );
 }

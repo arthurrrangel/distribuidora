@@ -66,12 +66,28 @@ export const metadata: Metadata = {
     shortcut: "/repon-mark-blue.svg",
     apple: "/apple-touch-icon.png",
   },
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "Repon",
+    statusBarStyle: "black-translucent",
+  },
+  formatDetection: {
+    telephone: true,
+    email: true,
+    address: false,
+    date: false,
+  },
 };
 
 export const viewport: Viewport = {
   themeColor: "#01092D",
   width: "device-width",
   initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: "cover",
+  colorScheme: "light",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -182,6 +198,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <html lang="pt-BR">
+      <head>
+        {/* fontPreload — fontes críticas Funnel Display/Sans */}
+        <link rel="preload" href="/fonts/FunnelDisplay-Regular.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/FunnelDisplay-Light.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/FunnelSans-Regular.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="//wa.me" />
+        <link rel="preconnect" href="https://wa.me" crossOrigin="anonymous" />
+      </head>
       <body className="min-h-screen flex flex-col antialiased">
         <a href="#main" className="skip-link">Pular para o conteúdo principal</a>
         <script

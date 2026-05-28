@@ -4,7 +4,7 @@ import { site } from "@/lib/site";
 
 export function Footer() {
   return (
-    <footer className="section-petrol mt-32">
+    <footer className="section-petrol mt-32" style={{ paddingBottom: "env(safe-area-inset-bottom, 0)" }}>
       <div className="container-rp py-24 md:py-28">
         {/* Slogan + logo */}
         <div className="pb-14 mb-14 border-b" style={{ borderColor: "var(--color-petrol-80)" }}>
