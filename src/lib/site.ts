@@ -77,7 +77,8 @@ export const site = {
   contact: {
     phone: "(21) 99594-6491",
     phoneRaw: "5521995946491",
-    whatsappUrl: "https://wa.me/5521995946491",
+    whatsappUrl: "https://wa.me/5521995946491?text=Ol%C3%A1%2C%20vim%20do%20site%20da%20Repon.%20Gostaria%20de%20receber%20a%20tabela%20de%20pre%C3%A7os%20e%20abrir%20cadastro%20PJ.",
+    whatsappUrlPlain: "https://wa.me/5521995946491",
     emails: {
       comercial: "comercial@repondistribuidora.com",
       sac: "sac@repondistribuidora.com",

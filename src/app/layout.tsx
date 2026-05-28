@@ -5,6 +5,8 @@ import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { StickyCTA } from "@/components/StickyCTA";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { CookieBanner } from "@/components/CookieBanner";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -147,6 +149,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     })),
   };
 
+
+  // ─────────── Service ───────────
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Distribuição atacadista B2B",
+    provider: { "@type": "Organization", name: site.brand.legalName, url: site.contact.siteUrl },
+    areaServed: site.coverage.states.map((s) => ({ "@type": "State", name: s })),
+    serviceType: "Wholesale distribution",
+    description: "Distribuição atacadista B2B para revendedores no Sudeste e Sul. Papelaria, higiene, informática e eletro. Despacho em 48h.",
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Verticais ativas",
+      itemListElement: site.verticals.map((v) => ({
+        "@type": "OfferCatalog",
+        name: v.title,
+        description: v.summary,
+      })),
+    },
+  };
+
   // ─────────── WebSite (SearchAction opcional) ───────────
   const websiteJsonLd = {
     "@context": "https://schema.org",
@@ -160,6 +183,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR">
       <body className="min-h-screen flex flex-col antialiased">
+        <a href="#main" className="skip-link">Pular para o conteúdo principal</a>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
@@ -172,6 +196,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
+        />
         {localBusinessesJsonLd.map((lb, i) => (
           <script
             key={i}
@@ -181,11 +209,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         ))}
         <ScrollProgress />
         <Header />
-        <main className="flex-1">{children}</main>
+        <main id="main" className="flex-1" tabIndex={-1}>{children}</main>
         <Footer />
         <WhatsAppFloat />
         <StickyCTA />
         <CookieBanner />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
