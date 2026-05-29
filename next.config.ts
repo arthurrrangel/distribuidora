@@ -52,7 +52,7 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      { source: "/sobre", destination: "/", permanent: true },
+      { source: "/sobre", destination: "/a-repon", permanent: true },
     ];
   },
 };

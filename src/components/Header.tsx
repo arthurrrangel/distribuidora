@@ -6,9 +6,10 @@ import { Logo } from "@/components/Logo";
 import { site } from "@/lib/site";
 
 const navItems = [
-  { href: "/como-comprar", label: "Como comprar" },
+  { href: "/a-repon",      label: "A Repon" },
   { href: "/verticais",    label: "Verticais" },
-  { href: "/fornecedores", label: "Fornecedores" },
+  { href: "/operacao",     label: "Operação" },
+  { href: "/como-comprar", label: "Como comprar" },
   { href: "/contato",      label: "Contato" },
 ];
 

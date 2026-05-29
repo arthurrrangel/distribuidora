@@ -49,19 +49,9 @@ export function Footer() {
 
         {/* Grid 4 colunas — institucional, comercial, jurídico, operação */}
         <div className="grid grid-cols-2 md:grid-cols-12 gap-10 mb-14">
-          <div className="md:col-span-3">
-            <div className="eyebrow mb-5" style={{ color: "var(--color-blue-300)" }}>Institucional</div>
-            <ul className="flex flex-col gap-3 text-[0.9375rem]">
-              <li><Link href="/" className="footer-link">A Repon</Link></li>
-              <li><Link href="/como-comprar" className="footer-link">Como comprar</Link></li>
-              <li><Link href="/verticais" className="footer-link">Verticais</Link></li>
-              <li><Link href="/fornecedores" className="footer-link">Fornecedores</Link></li>
-              <li><Link href="/faq" className="footer-link">Perguntas frequentes</Link></li>
-              <li><Link href="/contato" className="footer-link">Contato</Link></li>
-            </ul>
-          </div>
+          
 
-          <div className="md:col-span-3">
+          <div className="md:col-span-4">
             <div className="eyebrow mb-5" style={{ color: "var(--color-blue-300)" }}>Comercial</div>
             <ul className="flex flex-col gap-3 text-[0.9375rem]">
               <li><a href={`mailto:${site.contact.emails.comercial}`} className="footer-link">{site.contact.emails.comercial}</a></li>
@@ -71,7 +61,7 @@ export function Footer() {
             </ul>
           </div>
 
-          <div className="md:col-span-3">
+          <div className="md:col-span-4">
             <div className="eyebrow mb-5" style={{ color: "var(--color-blue-300)" }}>Jurídico</div>
             <ul className="flex flex-col gap-3 text-[0.9375rem]">
               <li><Link href="/transparencia" className="footer-link">Transparência</Link></li>
@@ -83,7 +73,7 @@ export function Footer() {
             </ul>
           </div>
 
-          <div className="md:col-span-3">
+          <div className="md:col-span-4">
             <div className="eyebrow mb-5" style={{ color: "var(--color-blue-300)" }}>Operação</div>
             <ul className="flex flex-col gap-3 text-[0.9375rem]" style={{ color: "rgba(243,241,237,0.82)" }}>
               {site.locations.map((l) => (
