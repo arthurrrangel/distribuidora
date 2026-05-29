@@ -96,7 +96,7 @@ export const site = {
 
   verticals: [
     {
-      slug: "papelaria-escritorio",
+      slug: "papelaria-escritorio", accent: "#B8935A", pictogram: "M4 5h12a2 2 0 0 1 2 2v12H6a2 2 0 0 1-2-2zM4 5l2-2h10l2 2M9 9h6M9 13h4",
       number: "01",
       title: "Papelaria & Escritório",
       summary:
@@ -111,7 +111,7 @@ export const site = {
       ],
     },
     {
-      slug: "higiene-pessoal",
+      slug: "higiene-pessoal", accent: "#6BA8A0", pictogram: "M12 2v3M8 7h8l-1 11a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2zM10 11v5M14 11v5",
       number: "02",
       title: "Higiene Pessoal",
       summary:
@@ -126,7 +126,7 @@ export const site = {
       ],
     },
     {
-      slug: "informatica",
+      slug: "informatica", accent: "#5F6B9C", pictogram: "M3 4h18v12H3zM3 16l3 4h12l3-4M9 8h6M12 8v4",
       number: "03",
       title: "Informática",
       summary:
@@ -141,7 +141,7 @@ export const site = {
       ],
     },
     {
-      slug: "eletroeletronicos",
+      slug: "eletroeletronicos", accent: "#B86B4A", pictogram: "M7 2h10v6l-3 4v8h-4v-8L7 8zM10 14h4",
       number: "04",
       title: "Eletroeletrônicos",
       summary:

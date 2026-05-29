@@ -1,13 +1,10 @@
+"use client";
+import { useState } from "react";
 import { site } from "@/lib/site";
 
 /**
- * Mapa estilizado da operação Sudeste + Sul.
- * Geografia simplificada (não cartograficamente exata) com:
- *   - 7 estados de cobertura representados
- *   - 2 pinpoints destacados nos centros logísticos
- *   - Hairlines institucionais
- *
- * Renderizado server-side (sem JS).
+ * Mapa de cobertura interativo (client) — hover destaca estados e pins.
+ * SVG simplificado, geografia indicativa.
  */
 export function CoverageMap({
   className = "",
@@ -23,7 +20,9 @@ export function CoverageMap({
   const accent = "#0464D5";
   const accentSoft = isDark ? "#6FA9E8" : "#034FA8";
 
-  // Estados — formas simplificadas em viewBox 600x720.
+  const [hoverState, setHoverState] = useState<string | null>(null);
+  const [hoverPin, setHoverPin] = useState<string | null>(null);
+
   const states = [
     { code: "MG", name: "Minas Gerais",   d: "M 150 90 L 430 80 L 460 130 L 470 200 L 440 260 L 360 280 L 280 280 L 200 270 L 150 230 Z",                 label: { x: 305, y: 195 } },
     { code: "ES", name: "Espírito Santo", d: "M 470 140 L 520 145 L 525 220 L 490 245 L 470 220 Z",                                                       label: { x: 497, y: 195 } },
@@ -34,11 +33,9 @@ export function CoverageMap({
     { code: "RS", name: "Rio Grande do Sul", d: "M 110 600 L 175 595 L 320 600 L 370 615 L 380 670 L 320 715 L 220 720 L 140 695 L 75 650 Z",            label: { x: 230, y: 660 } },
   ];
 
-  // Pinpoints — coordinates normalizadas para o viewBox.
-  // pulse: só no centro principal (SP) — secundário fica estático pra evitar ruído.
   const pinpoints = [
-    { x: 285, y: 355, label: "São Paulo / SP", sublabel: "Centralize Hub", slug: "sp", pulse: true },
-    { x: 305, y: 565, label: "Navegantes / SC", sublabel: "Simplilog",      slug: "sc", pulse: false },
+    { x: 285, y: 355, label: "São Paulo / SP", sublabel: "Centralize Hub", slug: "sp", pulse: true,  detail: "Distribuição Sudeste · OnDemand fulfillment" },
+    { x: 305, y: 565, label: "Navegantes / SC", sublabel: "Simplilog",      slug: "sc", pulse: false, detail: "Matriz operacional · porta Sul" },
   ];
 
   return (
@@ -50,18 +47,28 @@ export function CoverageMap({
         aria-label="Mapa de cobertura Repon: Sudeste e Sul"
         className="w-full h-auto"
       >
-        {/* States */}
         {states.map((s) => {
-          const isActive = s.code === "SP" || s.code === "SC";
+          const isAnchor = s.code === "SP" || s.code === "SC";
+          const isHover = hoverState === s.code;
+          const fill = isHover
+            ? (isDark ? "#0464D5" : "#BFDBFA")
+            : isAnchor
+              ? (isDark ? "#0464D5" : "#DCEAF9")
+              : stateFill;
+          const stroke = isHover || isAnchor ? accent : stateStroke;
           return (
-            <g key={s.code}>
+            <g key={s.code}
+               onMouseEnter={() => setHoverState(s.code)}
+               onMouseLeave={() => setHoverState((c) => (c === s.code ? null : c))}
+               style={{ cursor: "default" }}>
               <path
                 d={s.d}
-                fill={isActive ? (isDark ? "#0464D5" : "#DCEAF9") : stateFill}
-                stroke={isActive ? "#0464D5" : stateStroke}
-                strokeWidth={isActive ? 1.5 : 1}
+                fill={fill}
+                stroke={stroke}
+                strokeWidth={isHover ? 2 : isAnchor ? 1.5 : 1}
                 strokeLinejoin="round"
                 strokeLinecap="round"
+                style={{ transition: "fill 240ms ease, stroke 240ms ease, stroke-width 240ms ease" }}
               />
               <text
                 x={s.label.x}
@@ -69,9 +76,10 @@ export function CoverageMap({
                 textAnchor="middle"
                 fontFamily="Funnel Sans, ui-monospace, monospace"
                 fontSize="11"
-                fontWeight={isActive ? 700 : 600}
+                fontWeight={isAnchor || isHover ? 700 : 600}
                 letterSpacing="0.18em"
-                fill={isActive ? (isDark ? "#FAFAF7" : "#01092D") : stateText}
+                fill={isAnchor || isHover ? (isDark ? "#FAFAF7" : "#01092D") : stateText}
+                pointerEvents="none"
               >
                 {s.code}
               </text>
@@ -79,7 +87,24 @@ export function CoverageMap({
           );
         })}
 
-        {/* Pulses — apenas no centro principal */}
+        {/* Tooltip estado em hover */}
+        {hoverState && (() => {
+          const s = states.find((x) => x.code === hoverState)!;
+          return (
+            <g pointerEvents="none">
+              <rect x={s.label.x - 60} y={s.label.y + 14} width="120" height="22" rx="2"
+                    fill={isDark ? "#0B1220" : "#01092D"}
+                    opacity="0.92" />
+              <text x={s.label.x} y={s.label.y + 29} textAnchor="middle"
+                    fontFamily="Funnel Display, sans-serif" fontSize="11" fontWeight="500"
+                    fill="#FAFAF7" letterSpacing="-0.005em">
+                {s.name}
+              </text>
+            </g>
+          );
+        })()}
+
+        {/* Pulses */}
         {pinpoints.filter((p) => p.pulse).map((p) => (
           <g key={`pulse-${p.slug}`}>
             <circle
@@ -94,50 +119,47 @@ export function CoverageMap({
           </g>
         ))}
 
-        {/* Pinpoints + labels */}
-        {pinpoints.map((p) => (
-          <g key={`pin-${p.slug}`}>
-            {/* outer ring */}
-            <circle cx={p.x} cy={p.y} r="7" fill="none" stroke={accent} strokeWidth="1.5" />
-            <circle cx={p.x} cy={p.y} r="3.5" fill={accent} />
-
-            {/* connector line */}
-            <line
-              x1={p.x + 9}
-              y1={p.y}
-              x2={p.x + 60}
-              y2={p.y}
-              stroke={accentSoft}
-              strokeWidth="0.75"
-              strokeDasharray="2 2"
-            />
-
-            {/* label block */}
-            <g transform={`translate(${p.x + 66}, ${p.y - 14})`}>
-              <text
-                x="0"
-                y="0"
-                fontFamily="Funnel Display, sans-serif"
-                fontSize="13"
-                fontWeight="500"
-                fill={isDark ? "#FAFAF7" : "#0B1220"}
-              >
-                {p.label}
-              </text>
-              <text
-                x="0"
-                y="16"
-                fontFamily="Funnel Sans, ui-monospace, monospace"
-                fontSize="9.5"
-                fontWeight="500"
-                letterSpacing="0.14em"
-                fill={accentSoft}
-              >
-                3PL · {p.sublabel.toUpperCase()}
-              </text>
+        {/* Pinpoints */}
+        {pinpoints.map((p) => {
+          const isHover = hoverPin === p.slug;
+          return (
+            <g key={`pin-${p.slug}`}
+               onMouseEnter={() => setHoverPin(p.slug)}
+               onMouseLeave={() => setHoverPin((c) => (c === p.slug ? null : c))}
+               style={{ cursor: "pointer" }}>
+              <circle cx={p.x} cy={p.y} r={isHover ? 11 : 7} fill="none" stroke={accent} strokeWidth={isHover ? 2 : 1.5}
+                      style={{ transition: "r 280ms cubic-bezier(0.22,1,0.36,1), stroke-width 220ms ease" }} />
+              <circle cx={p.x} cy={p.y} r={isHover ? 4.5 : 3.5} fill={accent}
+                      style={{ transition: "r 280ms cubic-bezier(0.22,1,0.36,1)" }} />
+              <line
+                x1={p.x + 9}
+                y1={p.y}
+                x2={p.x + 60}
+                y2={p.y}
+                stroke={accentSoft}
+                strokeWidth="0.75"
+                strokeDasharray="2 2"
+              />
+              <g transform={`translate(${p.x + 66}, ${p.y - 14})`}>
+                <text x="0" y="0" fontFamily="Funnel Display, sans-serif" fontSize="13" fontWeight="500"
+                      fill={isDark ? "#FAFAF7" : "#0B1220"}>
+                  {p.label}
+                </text>
+                <text x="0" y="16" fontFamily="Funnel Sans, ui-monospace, monospace" fontSize="9.5"
+                      fontWeight="500" letterSpacing="0.14em" fill={accentSoft}>
+                  3PL · {p.sublabel.toUpperCase()}
+                </text>
+                {/* tooltip de detalhe revelado no hover */}
+                <text x="0" y="34" fontFamily="Funnel Sans, sans-serif" fontSize="10" fontWeight="400"
+                      fill={isDark ? "#B8C0D0" : "#4A5070"}
+                      opacity={isHover ? 1 : 0}
+                      style={{ transition: "opacity 320ms ease" }}>
+                  {p.detail}
+                </text>
+              </g>
             </g>
-          </g>
-        ))}
+          );
+        })}
 
         {/* Frame label */}
         <g>
@@ -155,7 +177,6 @@ export function CoverageMap({
           </text>
         </g>
 
-        {/* Coordinate marker */}
         <g>
           <text
             x="40"

@@ -32,6 +32,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  experimental: {
+    viewTransition: true,
+  },
   reactStrictMode: true,
   poweredByHeader: false,
   images: {

@@ -22,6 +22,29 @@ export function Footer() {
           >
             O fluxo que mantém<br />seu negócio ativo.
           </p>
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
+            <div className="md:col-span-1 hidden md:block">
+              <div className="h-px w-12 mt-3" style={{ background: "var(--color-blue-300)", opacity: 0.6 }} aria-hidden />
+            </div>
+            <div className="md:col-span-7">
+              <p
+                className="font-display"
+                style={{
+                  fontSize: "clamp(1rem, 1.4vw, 1.125rem)",
+                  lineHeight: 1.55,
+                  letterSpacing: "-0.005em",
+                  fontWeight: 400,
+                  color: "rgba(243,241,237,0.78)",
+                  fontStyle: "italic",
+                }}
+              >
+                A Repon nasceu pra atender o revendedor pequeno e médio que estava esquecido entre o marketplace genérico e a distribuidora grande. A tese é simples: condição comercial coerente, atendimento humano e política que protege quem vende e quem fabrica.
+              </p>
+              <p className="mt-5 font-mono text-[0.6875rem] tracking-[0.22em] uppercase" style={{ color: "rgba(243,241,237,0.5)" }}>
+                — A equipe Repon · Navegantes/SC + São Paulo/SP
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Grid 4 colunas — institucional, comercial, jurídico, operação */}

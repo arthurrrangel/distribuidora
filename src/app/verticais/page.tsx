@@ -33,21 +33,23 @@ export default function VerticaisPage() {
         <section
           key={v.slug}
           id={v.slug}
+          className="vertical-section group relative overflow-hidden"
           style={{
             background: i % 2 === 0 ? "var(--color-iced)" : "var(--color-iced-warm)",
             borderTop: "1px solid var(--color-line)",
           }}
         >
+          <div className="vertical-rail" aria-hidden style={{ background: v.accent }} />
+          <svg className="vertical-pictogram" aria-hidden viewBox="0 0 24 24" fill="none" stroke={v.accent} strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round"><path d={v.pictogram} /></svg>
           <div className="container-rp py-24 md:py-36">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
               <div className="lg:col-span-4">
                 <div className="flex items-baseline gap-3 mb-6">
-                  <span className="font-mono text-[0.875rem]" style={{ color: "var(--color-blue)" }}>
-                    {v.number}
-                  </span>
+                  <span className="font-mono text-[0.875rem] transition-colors duration-500" style={{ color: v.accent }}>{v.number}</span>
                   <span className="eyebrow">Vertical</span>
                 </div>
                 <h2 className="h-section">{v.title}</h2>
+                <div className="mt-6 h-px w-12 transition-all duration-500 group-hover:w-24" aria-hidden style={{ background: v.accent }} />
               </div>
 
               <div className="lg:col-span-8">

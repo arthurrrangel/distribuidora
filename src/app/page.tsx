@@ -2,7 +2,7 @@ import Link from "next/link";
 import { site } from "@/lib/site";
 import { CoverageMap } from "@/components/CoverageMap";
 import { Reveal } from "@/components/Reveal";
-import { SectionMarker } from "@/components/SectionMarker";
+import { SectionMarker } from "@/components/SectionMarker";import { SectionNav } from "@/components/SectionNav";import { KineticHeadline } from "@/components/KineticHeadline";
 import { SequencedLine } from "@/components/SequencedLine";
 import { MagneticButton } from "@/components/MagneticButton";
 import { ScrollCue } from "@/components/ScrollCue";
@@ -44,9 +44,9 @@ const operatingPrinciples = [
 
 export default function HomePage() {
   return (
-    <>
+    <><SectionNav items={[{id:"hero",number:"00",label:"A Repon"},{id:"fatos",number:"01",label:"Em fatos"},{id:"institucional",number:"02",label:"Institucional"},{id:"operacao",number:"03",label:"Operação"},{id:"principios",number:"04",label:"Princípios"},{id:"cta",number:"05",label:"Próximo passo"}]} />
       {/* ===== HERO ANIMADO ===== */}
-      <section className="section-petrol relative overflow-hidden">
+      <section className="section-petrol relative overflow-hidden" id="hero">
         <GradientMesh opacity={0.62} />
         <div className="hidden md:block">
           <ConstellationNetwork />
@@ -111,7 +111,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== O QUE SOMOS — fatos objetivos ===== */}
-      <section style={{ background: "var(--color-iced)" }}>
+      <section style={{ background: "var(--color-iced)" }} id="fatos">
         <div className="container-rp py-32 md:py-48">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             <Reveal className="lg:col-span-5">
@@ -155,7 +155,7 @@ export default function HomePage() {
       <SectionDivider />
 
       {/* ===== INDÚSTRIAS PARCEIRAS ===== */}
-      <section style={{ background: "var(--color-iced)" }}>
+      <section style={{ background: "var(--color-iced)" }} id="parceiros">
         <div className="container-rp py-28 md:py-36">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-12">
             <Reveal className="lg:col-span-5">
@@ -182,7 +182,7 @@ export default function HomePage() {
           borderTop: "1px solid var(--color-line)",
           borderBottom: "1px solid var(--color-line)",
         }}
-      >
+       id="institucional">
         <div className="container-rp py-32 md:py-48">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
             <Reveal className="lg:col-span-5">
@@ -249,7 +249,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== CAPACIDADE LOGÍSTICA ===== */}
-      <section style={{ background: "var(--color-iced)" }}>
+      <section style={{ background: "var(--color-iced)" }} id="operacao">
         <div className="container-rp py-32 md:py-48">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
             <Reveal className="lg:col-span-5">
@@ -307,15 +307,13 @@ export default function HomePage() {
       </section>
 
       {/* ===== COMO OPERAMOS — 4 princípios ===== */}
-      <section className="section-blue relative overflow-hidden">
+      <section className="section-blue relative overflow-hidden" id="principios">
         <GrainOverlay opacity={0.04} blendMode="overlay" />
         <div className="container-rp py-32 md:py-48 relative z-10">
           <Reveal>
             <SectionMarker number="04" label="Princípios" variant="light" />
             <div className="max-w-3xl mb-16">
-              <h2 className="h-section mt-2" style={{ color: "var(--color-iced)" }}>
-                Quatro princípios<br />que orientam a Repon.
-              </h2>
+              <KineticHeadline className="h-section mt-2" lines={["Quatro princípios", "que orientam a Repon."]} accentLine={1} />
             </div>
           </Reveal>
 
@@ -365,7 +363,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== CTA FINAL ===== */}
-      <section style={{ background: "var(--color-iced)" }}>
+      <section style={{ background: "var(--color-iced)" }} id="cta">
         <div className="container-rp py-32 md:py-48">
           <Reveal>
             <SectionMarker number="05" label="Próximo passo" />
