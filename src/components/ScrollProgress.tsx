@@ -30,8 +30,8 @@ export function ScrollProgress() {
         style={{
           height: "100%",
           width: `${p * 100}%`,
-          background: "var(--color-blue)",
-          opacity: 0.45,
+          background: "linear-gradient(90deg, var(--color-blue) 0%, var(--color-blue-300) 100%)",
+          opacity: 0.7,
           transition: "width 80ms linear",
         }}
       />

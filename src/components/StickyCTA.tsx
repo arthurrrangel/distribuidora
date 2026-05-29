@@ -67,8 +67,8 @@ export function StickyCTA() {
           minWidth: 0,
         }}
       >
-        <span style={{ color: "var(--color-blue-300)" }}>Pronto pra abrir cadastro?</span>{" "}
-        <span style={{ opacity: 0.65 }} className="hidden sm:inline">Resposta em 1 dia útil.</span>
+        <span style={{ color: "var(--color-blue-300)" }}>WhatsApp comercial</span>{" "}
+        <span style={{ opacity: 0.65 }} className="hidden sm:inline">Resposta em 1 dia útil</span>
       </div>
       <a
         href={site.contact.whatsappUrl}
@@ -87,7 +87,7 @@ export function StickyCTA() {
           whiteSpace: "nowrap",
         }}
       >
-        Mandar CNPJ →
+        Falar agora →
       </a>
     </div>
   );

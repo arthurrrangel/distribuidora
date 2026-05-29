@@ -44,13 +44,13 @@ export function Header() {
       <header
         className={`sticky top-0 z-50 transition-[background-color,border-color,backdrop-filter,padding] duration-300 ${
           scrolled
-            ? "bg-iced/85 backdrop-blur-md border-b border-line"
+            ? "bg-iced/92 backdrop-blur-xl border-b border-line shadow-[0_1px_0_0_rgba(11,18,32,0.04)]"
             : "bg-transparent border-b border-transparent"
         }`}
       >
         <div className={`container-rp flex items-center justify-between transition-[height] duration-300 ${scrolled ? "h-14 md:h-16" : "h-16 md:h-20"}`}>
           <Link href="/" className="flex items-center" aria-label="Repon, página inicial" onClick={() => setOpen(false)}>
-            <span className="logo-reveal" aria-hidden={false}><Logo variant="blue" shape="full" priority width={120} height={36} /></span>
+            <span className="logo-reveal logo-shrink" data-scrolled={scrolled || undefined} aria-hidden={false} style={{ display:"inline-block", transformOrigin:"left center", transition:"transform 320ms cubic-bezier(0.22,1,0.36,1)", transform: scrolled ? "scale(0.88)" : "scale(1)" }}><Logo variant="blue" shape="full" priority width={120} height={36} /></span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-10">

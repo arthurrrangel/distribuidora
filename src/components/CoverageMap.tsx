@@ -23,14 +23,16 @@ export function CoverageMap({
   const [hoverState, setHoverState] = useState<string | null>(null);
   const [hoverPin, setHoverPin] = useState<string | null>(null);
 
+  // Paths estilizados aproximando o contorno real de cada estado (viewBox 600x760).
+  // Não cartograficamente exatos, mas dramaticamente mais orgânicos que polígonos.
   const states = [
-    { code: "MG", name: "Minas Gerais",   d: "M 150 90 L 430 80 L 460 130 L 470 200 L 440 260 L 360 280 L 280 280 L 200 270 L 150 230 Z",                 label: { x: 305, y: 195 } },
-    { code: "ES", name: "Espírito Santo", d: "M 470 140 L 520 145 L 525 220 L 490 245 L 470 220 Z",                                                       label: { x: 497, y: 195 } },
-    { code: "RJ", name: "Rio de Janeiro", d: "M 380 285 L 470 280 L 495 310 L 470 335 L 400 330 L 370 310 Z",                                             label: { x: 430, y: 312 } },
-    { code: "SP", name: "São Paulo",      d: "M 140 285 L 350 285 L 380 320 L 410 360 L 380 420 L 290 440 L 200 430 L 145 400 L 125 350 Z",               label: { x: 265, y: 365 } },
-    { code: "PR", name: "Paraná",         d: "M 130 430 L 280 445 L 380 440 L 390 490 L 360 520 L 280 525 L 180 520 L 130 490 Z",                         label: { x: 260, y: 485 } },
-    { code: "SC", name: "Santa Catarina", d: "M 160 530 L 360 530 L 380 565 L 360 595 L 250 600 L 175 590 Z",                                              label: { x: 270, y: 565 } },
-    { code: "RS", name: "Rio Grande do Sul", d: "M 110 600 L 175 595 L 320 600 L 370 615 L 380 670 L 320 715 L 220 720 L 140 695 L 75 650 Z",            label: { x: 230, y: 660 } },
+    { code: "MG", name: "Minas Gerais",   d: "M 180 80 C 230 70, 320 70, 400 78 C 440 82, 470 110, 478 150 C 485 195, 482 230, 470 255 C 450 275, 410 285, 360 282 C 310 280, 260 276, 215 270 C 175 263, 150 245, 145 215 C 140 180, 148 140, 165 110 C 170 96, 175 86, 180 80 Z",                                                                                                                              label: { x: 315, y: 185 } },
+    { code: "ES", name: "Espírito Santo", d: "M 478 150 C 490 152, 510 155, 525 165 C 532 195, 528 225, 510 248 C 495 256, 478 252, 470 235 C 468 215, 472 190, 478 168 C 478 162, 478 156, 478 150 Z",                                                                                                                                                                                   label: { x: 500, y: 200 } },
+    { code: "RJ", name: "Rio de Janeiro", d: "M 380 282 C 410 283, 445 284, 470 285 C 488 290, 500 305, 502 322 C 495 335, 470 340, 440 338 C 410 336, 385 332, 365 322 C 358 312, 362 298, 370 290 C 374 285, 378 283, 380 282 Z",                                                                                                                                                          label: { x: 432, y: 315 } },
+    { code: "SP", name: "São Paulo",      d: "M 145 290 C 200 287, 280 286, 348 287 C 375 295, 395 320, 410 350 C 418 380, 412 405, 395 422 C 360 438, 300 442, 240 437 C 190 432, 155 420, 138 395 C 125 370, 122 340, 128 315 C 132 302, 138 294, 145 290 Z",                                                                                                                                  label: { x: 265, y: 365 } },
+    { code: "PR", name: "Paraná",         d: "M 132 440 C 195 445, 280 450, 360 448 C 385 460, 395 480, 392 500 C 380 518, 340 525, 285 525 C 230 525, 180 522, 145 510 C 125 500, 120 480, 122 462 C 124 452, 127 444, 132 440 Z",                                                                                                                                                            label: { x: 258, y: 488 } },
+    { code: "SC", name: "Santa Catarina", d: "M 160 530 C 220 528, 290 528, 358 530 C 375 540, 382 555, 378 572 C 365 585, 320 592, 265 593 C 215 593, 180 588, 162 578 C 153 568, 154 552, 158 538 C 158 534, 159 532, 160 530 Z",                                                                                                                                                            label: { x: 270, y: 562 } },
+    { code: "RS", name: "Rio Grande do Sul", d: "M 105 600 C 170 596, 260 596, 340 605 C 372 620, 385 650, 378 685 C 358 715, 305 728, 240 725 C 175 720, 115 700, 80 670 C 65 645, 70 625, 88 612 C 94 606, 100 602, 105 600 Z",                                                                                                                                                              label: { x: 228, y: 662 } },
   ];
 
   const pinpoints = [

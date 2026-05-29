@@ -2,7 +2,7 @@ import Link from "next/link";
 import { site } from "@/lib/site";
 import { CoverageMap } from "@/components/CoverageMap";
 import { Reveal } from "@/components/Reveal";
-import { SectionMarker } from "@/components/SectionMarker";import { SectionNav } from "@/components/SectionNav";import { VerticalsPreview } from "@/components/VerticalsPreview";import { Sticker } from "@/components/Sticker";import { FactsGrid } from "@/components/FactsGrid";import { PullQuote } from "@/components/PullQuote";import { KineticHeadline } from "@/components/KineticHeadline";
+import { SectionMarker } from "@/components/SectionMarker";import { SectionNav } from "@/components/SectionNav";import { VerticalsPreview } from "@/components/VerticalsPreview";import { Sticker } from "@/components/Sticker";import { FactsGrid } from "@/components/FactsGrid";import { PullQuote } from "@/components/PullQuote";import { Chapter } from "@/components/Chapter";import { KineticHeadline } from "@/components/KineticHeadline";
 import { SequencedLine } from "@/components/SequencedLine";
 import { MagneticButton } from "@/components/MagneticButton";
 import { ScrollCue } from "@/components/ScrollCue";
@@ -55,9 +55,7 @@ export default function HomePage() {
 
         <div className="container-rp pt-20 md:pt-56 pb-16 md:pb-44 relative z-10">
           <div className="max-w-5xl mx-auto md:mx-0 text-center md:text-left">
-            <div className="flex justify-center md:justify-start">
-              <SectionMarker number="00" label="A Repon em uma página" variant="light" />
-            </div>
+            
 
             <div className="hero-kicker font-mono text-[0.6875rem] tracking-[0.22em] uppercase mt-10 mb-2" style={{ color: "rgba(243,241,237,0.55)" }}>abr/2024 → hoje <span aria-hidden style={{margin:"0 8px",opacity:0.45}}>·</span> 14 cnaes <span aria-hidden style={{margin:"0 8px",opacity:0.45}}>·</span> 2 cds <span aria-hidden style={{margin:"0 8px",opacity:0.45}}>·</span> 4 verticais <span aria-hidden style={{margin:"0 8px",opacity:0.45}}>·</span> sudeste + sul</div><h1 className="h-display mt-3" style={{ color: "var(--color-iced)" }}>
               <SequencedLine delay={40}>Distribuidora atacadista</SequencedLine>
@@ -82,7 +80,7 @@ export default function HomePage() {
                     rel="noopener noreferrer"
                     className="btn-primary"
                   >
-                    Mandar CNPJ pelo WhatsApp
+                    Abrir cadastro de revenda
                     <ArrowRight />
                   </a>
                 </MagneticButton>
@@ -153,7 +151,7 @@ export default function HomePage() {
           borderTop: "1px solid var(--color-line)",
           borderBottom: "1px solid var(--color-line)",
         }}
-       id="institucional" className="relative"><div className="sticker-pin" aria-hidden style={{ position: "absolute", right: "clamp(20px, 6vw, 80px)", top: "clamp(40px, 8vw, 120px)", zIndex: 5 }}><Sticker /></div>
+       id="institucional" className="relative"><div className="sticker-pin" aria-hidden style={{ position: "absolute", right: "clamp(16px, 4vw, 56px)", top: "clamp(32px, 6vw, 88px)", zIndex: 5, opacity: 0.42 }}><Sticker size={88} /></div>
         <div className="container-rp py-32 md:py-48">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
             <Reveal className="lg:col-span-5">
@@ -220,7 +218,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== CAPACIDADE LOGÍSTICA ===== */}
-      <PullQuote attribution="A tese da Repon">Distribuição é fluxo. Quando trava, o varejo morre antes da indústria.</PullQuote><section style={{ background: "var(--color-iced)" }} id="operacao">
+      <Chapter number="02" label="Operação" hint="Como o pedido vira entrega" /><PullQuote attribution="A tese da Repon">Distribuição é fluxo. Quando trava, o varejo morre antes da indústria.</PullQuote><section style={{ background: "var(--color-iced)" }} id="operacao">
         <div className="container-rp py-32 md:py-48">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
             <Reveal className="lg:col-span-5">
@@ -278,7 +276,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== COMO OPERAMOS — 4 princípios ===== */}
-      <section className="section-blue relative overflow-hidden" id="principios">
+      <Chapter number="03" label="Princípios" hint="O que orienta cada decisão" variant="dark" /><section className="section-blue relative overflow-hidden" id="principios">
         <GrainOverlay opacity={0.04} blendMode="overlay" />
         <div className="container-rp py-32 md:py-48 relative z-10">
           <Reveal>
