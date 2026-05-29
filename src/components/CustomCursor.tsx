@@ -2,14 +2,12 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Cursor blob azul translúcido — segue mouse com lerp suave.
- * Desktop only. Aumenta sobre links/botões. Tap ripple no mobile.
+ * Cursor blob translúcido — usa CSS transition em vez de rAF loop
+ * pra evitar bloquear document_idle. Desktop only.
  */
 export function CustomCursor() {
   const [enabled, setEnabled] = useState(false);
   const blobRef = useRef<HTMLDivElement>(null);
-  const pos = useRef({ x: 0, y: 0 });
-  const target = useRef({ x: 0, y: 0 });
   const [hovering, setHovering] = useState(false);
 
   useEffect(() => {
@@ -17,7 +15,6 @@ export function CustomCursor() {
     const fine = window.matchMedia("(pointer: fine)").matches;
     setEnabled(fine);
     if (!fine) {
-      // Mobile: tap ripple
       const handler = (e: TouchEvent) => {
         const t = e.touches[0];
         if (!t) return;
@@ -32,7 +29,9 @@ export function CustomCursor() {
   useEffect(() => {
     if (!enabled) return;
     const onMove = (e: MouseEvent) => {
-      target.current = { x: e.clientX, y: e.clientY };
+      if (blobRef.current) {
+        blobRef.current.style.transform = `translate3d(${e.clientX - 18}px, ${e.clientY - 18}px, 0)`;
+      }
     };
     const onOver = (e: MouseEvent) => {
       const t = e.target as HTMLElement | null;
@@ -40,22 +39,11 @@ export function CustomCursor() {
       const inter = t.closest("a, button, [role=button], input, textarea, select");
       setHovering(!!inter);
     };
-    let raf = 0;
-    const tick = () => {
-      pos.current.x += (target.current.x - pos.current.x) * 0.22;
-      pos.current.y += (target.current.y - pos.current.y) * 0.22;
-      if (blobRef.current) {
-        blobRef.current.style.transform = `translate3d(${pos.current.x - 18}px, ${pos.current.y - 18}px, 0)`;
-      }
-      raf = requestAnimationFrame(tick);
-    };
     window.addEventListener("mousemove", onMove, { passive: true });
-    document.addEventListener("mouseover", onOver);
-    raf = requestAnimationFrame(tick);
+    document.addEventListener("mouseover", onOver, { passive: true });
     return () => {
       window.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseover", onOver);
-      cancelAnimationFrame(raf);
     };
   }, [enabled]);
 
@@ -72,15 +60,12 @@ export function CustomCursor() {
         width: 36,
         height: 36,
         borderRadius: "999px",
-        background: hovering
-          ? "rgba(82,159,237,0.18)"
-          : "rgba(82,159,237,0.10)",
+        background: hovering ? "rgba(82,159,237,0.18)" : "rgba(82,159,237,0.10)",
         border: hovering ? "1px solid rgba(82,159,237,0.55)" : "1px solid rgba(82,159,237,0.32)",
         pointerEvents: "none",
         zIndex: 9999,
-        mixBlendMode: "normal",
-        transition: "width 240ms cubic-bezier(0.22,1,0.36,1), height 240ms cubic-bezier(0.22,1,0.36,1), background 220ms ease, border 220ms ease",
         transform: "translate3d(-100px,-100px,0)",
+        transition: "transform 180ms cubic-bezier(0.22,1,0.36,1), background 220ms ease, border 220ms ease, scale 240ms ease",
         scale: hovering ? "1.5" : "1",
       }}
     />
