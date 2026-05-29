@@ -1218,3 +1218,18 @@ h1, h2, h3, .h-display, .h-section, .h-card, p {
   0%   { transform: scale(1);   opacity: 1; }
   100% { transform: scale(8);   opacity: 0; }
 }
+
+
+/* === PedidoScene + mobile fixes === */
+.pedido-scene { --pedido-h: 320vh; }
+@media (max-width: 768px) {
+  .pedido-scene { --pedido-h: 240vh; }
+  .pedido-scene .container-rp { padding-top: 32px; padding-bottom: 32px; }
+  .sticker-pin { display: none !important; }
+  .gradient-mesh-breathe { animation: none !important; }
+  /* Supply chain visível em mobile como inline compacto */
+  .supply-chain-mobile-wrap { display: block !important; margin-top: 32px; }
+}
+@media (min-width: 769px) {
+  .supply-chain-mobile-wrap { display: none; }
+}

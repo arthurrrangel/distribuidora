@@ -104,7 +104,7 @@ export default function HomePage() {
               </p>
             </Reveal>
             </div>
-            <div className="lg:col-span-5 hidden lg:block"><SupplyChainAnimation /></div>
+            <div className="lg:col-span-5 hidden lg:block"><SupplyChainAnimation /></div><div className="supply-chain-mobile-wrap lg:hidden" aria-hidden style={{display:"none",opacity:0.78}}><SupplyChainAnimation /></div>
           </div>
         </div>
         <ScrollCue />

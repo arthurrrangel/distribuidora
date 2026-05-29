@@ -52,7 +52,7 @@ export function PedidoScene() {
       style={{
         position: "relative",
         background: "var(--color-petrol)",
-        height: "320vh",
+        height: "var(--pedido-h, 320vh)",
         color: "var(--color-iced)",
       }}
       aria-label="Como o pedido vira entrega"

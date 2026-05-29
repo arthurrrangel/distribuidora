@@ -18,12 +18,15 @@ export function Splash() {
     } catch { /* sessionStorage may be blocked */ }
     setVisible(true);
     document.documentElement.style.overflow = "hidden";
-    const t1 = setTimeout(() => setFading(true), 900);
+    const mobile = window.matchMedia("(max-width: 768px)").matches;
+    const fadeAt = mobile ? 500 : 900;
+    const hideAt = mobile ? 900 : 1450;
+    const t1 = setTimeout(() => setFading(true), fadeAt);
     const t2 = setTimeout(() => {
       setVisible(false);
       document.documentElement.style.overflow = "";
       try { sessionStorage.setItem("repon-splash-seen", "1"); } catch {}
-    }, 1450);
+    }, hideAt);
     return () => { clearTimeout(t1); clearTimeout(t2); document.documentElement.style.overflow = ""; };
   }, []);
 
