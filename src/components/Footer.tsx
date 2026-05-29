@@ -48,7 +48,7 @@ export function Footer() {
         </div>
 
         {/* Grid 4 colunas — institucional, comercial, jurídico, operação */}
-        <div className="grid grid-cols-2 md:grid-cols-12 gap-10 mb-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-10 mb-14">
           
 
           <div className="md:col-span-4">

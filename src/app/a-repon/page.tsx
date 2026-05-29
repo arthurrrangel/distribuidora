@@ -44,7 +44,7 @@ export default function ARepon() {
       <section className="section-petrol relative overflow-hidden">
         <GradientMesh opacity={0.5} />
         <GrainOverlay opacity={0.05} blendMode="overlay" />
-        <div className="container-rp pt-24 md:pt-44 pb-20 md:pb-32 relative z-10">
+        <div className="container-rp pt-20 md:pt-44 pb-16 md:pb-32 relative z-10">
           <div className="max-w-4xl">
             <SectionMarker number="01" label="A Repon" variant="light" />
             <h1 className="h-display mt-8" style={{ color: "var(--color-iced)" }}>
@@ -65,7 +65,7 @@ export default function ARepon() {
 
       {/* FACTS */}
       <section style={{ background: "var(--color-iced)", borderTop: "1px solid var(--color-line)" }}>
-        <div className="container-rp py-24 md:py-32">
+        <div className="container-rp py-20 md:py-32">
           <Reveal>
             <SectionMarker number="02" label="Em fatos" />
             <h2 className="h-section mt-2 mb-12 md:mb-16 max-w-3xl">

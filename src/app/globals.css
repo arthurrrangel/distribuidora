@@ -1233,3 +1233,94 @@ h1, h2, h3, .h-display, .h-section, .h-card, p {
 @media (min-width: 769px) {
   .supply-chain-mobile-wrap { display: none; }
 }
+
+
+/* === PedidoScene mobile redesign === */
+@media (max-width: 1023px) {
+  .pedido-scene__sticky .container-rp { padding-top: 16px !important; padding-bottom: 16px !important; }
+  /* sidebar nav vira barra horizontal no topo da scene */
+  .pedido-scene__sticky .lg\:col-span-3 {
+    order: -1;
+    margin-bottom: 24px;
+  }
+  .pedido-scene__sticky .lg\:col-span-3 ul {
+    flex-direction: row !important;
+    overflow-x: auto;
+    gap: 16px !important;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .pedido-scene__sticky .lg\:col-span-3 ul::-webkit-scrollbar { display: none; }
+  .pedido-scene__sticky .lg\:col-span-3 ul li { flex-shrink: 0; }
+  .pedido-scene__sticky .lg\:col-span-9 { min-height: 240px !important; }
+}
+@media (max-width: 768px) {
+  .pedido-scene__sticky .lg\:col-span-9 { min-height: 200px !important; }
+}
+
+
+/* === /operacao mobile === */
+@media (max-width: 768px) {
+  /* CoverageMap menor em mobile */
+  .coverage-map-wrap svg,
+  svg[aria-label*="cobertura"] {
+    max-height: 380px;
+    object-fit: contain;
+  }
+  /* Sidebar locations vira chips horizontais */
+  .operacao-locations { display: flex !important; flex-direction: row !important; gap: 8px !important; overflow-x: auto; padding-bottom: 8px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .operacao-locations::-webkit-scrollbar { display: none; }
+  .operacao-locations > li { flex-shrink: 0; min-width: 240px; padding: 14px 16px; border: 1px solid var(--color-line); }
+}
+
+
+/* === Pillar cards (home explore) === */
+.pillar-card {
+  position: relative;
+  transition: background-color 280ms ease;
+  min-height: 280px;
+}
+.pillar-card:hover, .pillar-card:focus-visible {
+  background: var(--color-iced-warm) !important;
+}
+.pillar-card:active {
+  background: var(--color-iced-warm) !important;
+  transform: scale(0.995);
+}
+@media (max-width: 768px) {
+  .pillar-card { min-height: 240px; padding: 28px !important; }
+}
+
+
+/* === SectionNav mobile bottom dots === */
+.section-nav-mobile {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(env(safe-area-inset-bottom, 0) + 12px);
+  z-index: 70;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  transition: opacity 280ms ease;
+}
+.section-nav-mobile__track {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(243,241,237,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(11,18,32,0.06);
+  border-radius: 999px;
+  box-shadow: 0 6px 24px rgba(11,18,32,0.06);
+  pointer-events: auto;
+}
+.section-nav-mobile__dot {
+  display: inline-block;
+  text-decoration: none;
+}
+/* Esconder quando StickyCTA está visível pra não brigar */
+[data-cookie-active="true"] ~ .section-nav-mobile { bottom: calc(env(safe-area-inset-bottom, 0) + 160px); }

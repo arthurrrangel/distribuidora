@@ -34,7 +34,7 @@ export default function OperacaoPage() {
                 <p className="body-lead max-w-md" style={{ color: "var(--color-ink-700)" }}>
                   Distribuição operada de Navegantes/SC (matriz, parceria Simplilog) e São Paulo/SP (filial, parceria Centralize Hub). Mesma política comercial, faturamento pelo CNPJ do CD mais próximo.
                 </p>
-                <ul className="mt-10 flex flex-col gap-4">
+                <ul className="operacao-locations mt-10 flex flex-col gap-4">
                   {site.locations.map((l) => (
                     <li key={l.slug} className="flex items-baseline gap-4">
                       <span className="font-mono text-[0.6875rem] tracking-[0.22em] uppercase" style={{ color: "var(--color-blue)" }}>
