@@ -2,7 +2,7 @@ import Link from "next/link";
 import { site } from "@/lib/site";
 import { CoverageMap } from "@/components/CoverageMap";
 import { Reveal } from "@/components/Reveal";
-import { SectionMarker } from "@/components/SectionMarker";import { SectionNav } from "@/components/SectionNav";import { KineticHeadline } from "@/components/KineticHeadline";
+import { SectionMarker } from "@/components/SectionMarker";import { SectionNav } from "@/components/SectionNav";import { VerticalsPreview } from "@/components/VerticalsPreview";import { Sticker } from "@/components/Sticker";import { FactsGrid } from "@/components/FactsGrid";import { PullQuote } from "@/components/PullQuote";import { KineticHeadline } from "@/components/KineticHeadline";
 import { SequencedLine } from "@/components/SequencedLine";
 import { MagneticButton } from "@/components/MagneticButton";
 import { ScrollCue } from "@/components/ScrollCue";
@@ -59,13 +59,13 @@ export default function HomePage() {
               <SectionMarker number="00" label="A Repon em uma página" variant="light" />
             </div>
 
-            <h1 className="h-display mt-10" style={{ color: "var(--color-iced)" }}>
-              <SequencedLine delay={80}>Distribuidora atacadista</SequencedLine>
+            <div className="hero-kicker font-mono text-[0.6875rem] tracking-[0.22em] uppercase mt-10 mb-2" style={{ color: "rgba(243,241,237,0.55)" }}>abr/2024 → hoje <span aria-hidden style={{margin:"0 8px",opacity:0.45}}>·</span> 14 cnaes <span aria-hidden style={{margin:"0 8px",opacity:0.45}}>·</span> 2 cds <span aria-hidden style={{margin:"0 8px",opacity:0.45}}>·</span> 4 verticais <span aria-hidden style={{margin:"0 8px",opacity:0.45}}>·</span> sudeste + sul</div><h1 className="h-display mt-3" style={{ color: "var(--color-iced)" }}>
+              <SequencedLine delay={40}>Distribuidora atacadista</SequencedLine>
               <SequencedLine delay={220} accent>conectando indústria</SequencedLine>
-              <SequencedLine delay={360}>ao revendedor real.</SequencedLine>
+              <SequencedLine delay={240}>ao revendedor real.</SequencedLine>
             </h1>
 
-            <Reveal delay={520}>
+            <Reveal delay={260}>
               <p className="body-lead mt-12 max-w-2xl mx-auto md:mx-0" style={{ color: "rgba(243,241,237,0.82)" }}>
                 A Repon Plataforma de Comércio nasceu em abril de 2024 com uma tese específica:
                 atender o revendedor pequeno e médio que está esquecido entre o marketplace genérico
@@ -73,7 +73,7 @@ export default function HomePage() {
               </p>
             </Reveal>
 
-            <Reveal delay={620}>
+            <Reveal delay={320}>
               <div className="mt-14 flex flex-col sm:flex-row gap-3 sm:items-center justify-center md:justify-start">
                 <MagneticButton strength={8}>
                   <a
@@ -96,7 +96,7 @@ export default function HomePage() {
               </div>
             </Reveal>
 
-            <Reveal delay={700}>
+            <Reveal delay={380}>
               <p
                 className="mt-5 text-[0.75rem] font-mono tracking-[0.16em] uppercase"
                 style={{ color: "rgba(243,241,237,0.5)" }}
@@ -118,36 +118,7 @@ export default function HomePage() {
               <SectionMarker number="01" label="Em fatos" />
               <h2 className="h-section mt-2">A operação,<br />sem floreio.</h2>
             </Reveal>
-            <div className="lg:col-span-7">
-              <ul className="divide-y border-y" style={{ borderColor: "var(--color-line)" }}>
-                {FACTS.map((f, i) => (
-                  <Reveal key={f.label} delay={i * 60} as="li">
-                    <div
-                      className="py-5 grid grid-cols-12 gap-4 items-baseline"
-                      style={{ borderColor: "var(--color-line)" }}
-                    >
-                      <div className="col-span-4 md:col-span-3">
-                        <div className="eyebrow">{f.label}</div>
-                      </div>
-                      <div className="col-span-8 md:col-span-9">
-                        <p
-                          className="text-[1.0625rem] font-bold leading-snug"
-                          style={{ color: "var(--color-petrol)" }}
-                        >
-                          {f.value}
-                        </p>
-                        <p
-                          className="mt-1 text-[0.8125rem]"
-                          style={{ color: "var(--color-ink-500)" }}
-                        >
-                          {f.sub}
-                        </p>
-                      </div>
-                    </div>
-                  </Reveal>
-                ))}
-              </ul>
-            </div>
+            <div className="lg:col-span-12"><FactsGrid facts={FACTS} /></div>
           </div>
         </div>
       </section>
@@ -176,13 +147,13 @@ export default function HomePage() {
       </section>
 
       {/* ===== FICHA JURÍDICA ===== */}
-      <section
+      <section className="section-iced relative" style={{ background: "var(--color-iced)", borderTop: "1px solid var(--color-line)" }}>          <div className="container-rp pt-24 md:pt-32 pb-10 md:pb-16">            <div className="flex items-baseline gap-3 mb-10 md:mb-14"><span className="font-mono text-[0.875rem]" style={{ color: "var(--color-blue)" }}>01·8</span><span className="eyebrow">Verticais ativas</span></div>            <h2 className="h-section mb-12 md:mb-16 max-w-3xl">Quatro categorias.<br />Um único comprador.</h2>          </div>          <VerticalsPreview />          <div className="container-rp pt-10 md:pt-12 pb-24 md:pb-32 flex justify-center md:justify-start"><Link href="/verticais" className="link-underline text-[0.9375rem] font-medium" style={{ color: "var(--color-blue)" }}>Ver as 4 verticais em detalhe →</Link></div>        </section><section
         style={{
           background: "var(--color-iced-warm)",
           borderTop: "1px solid var(--color-line)",
           borderBottom: "1px solid var(--color-line)",
         }}
-       id="institucional">
+       id="institucional" className="relative"><div className="sticker-pin" aria-hidden style={{ position: "absolute", right: "clamp(20px, 6vw, 80px)", top: "clamp(40px, 8vw, 120px)", zIndex: 5 }}><Sticker /></div>
         <div className="container-rp py-32 md:py-48">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
             <Reveal className="lg:col-span-5">
@@ -249,7 +220,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== CAPACIDADE LOGÍSTICA ===== */}
-      <section style={{ background: "var(--color-iced)" }} id="operacao">
+      <PullQuote attribution="A tese da Repon">Distribuição é fluxo. Quando trava, o varejo morre antes da indústria.</PullQuote><section style={{ background: "var(--color-iced)" }} id="operacao">
         <div className="container-rp py-32 md:py-48">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
             <Reveal className="lg:col-span-5">

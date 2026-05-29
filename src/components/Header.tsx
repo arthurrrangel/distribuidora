@@ -50,7 +50,7 @@ export function Header() {
       >
         <div className={`container-rp flex items-center justify-between transition-[height] duration-300 ${scrolled ? "h-14 md:h-16" : "h-16 md:h-20"}`}>
           <Link href="/" className="flex items-center" aria-label="Repon, página inicial" onClick={() => setOpen(false)}>
-            <Logo variant="blue" shape="full" priority width={120} height={36} />
+            <span className="logo-reveal" aria-hidden={false}><Logo variant="blue" shape="full" priority width={120} height={36} /></span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-10">
