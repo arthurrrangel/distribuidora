@@ -2,7 +2,7 @@ import Link from "next/link";
 import { site } from "@/lib/site";
 import { CoverageMap } from "@/components/CoverageMap";
 import { Reveal } from "@/components/Reveal";
-import { SectionMarker } from "@/components/SectionMarker";import { SectionNav } from "@/components/SectionNav";import { VerticalsPreview } from "@/components/VerticalsPreview";import { Sticker } from "@/components/Sticker";import { FactsGrid } from "@/components/FactsGrid";import { PullQuote } from "@/components/PullQuote";import { Chapter } from "@/components/Chapter";import { KineticHeadline } from "@/components/KineticHeadline";
+import { SectionMarker } from "@/components/SectionMarker";import { SectionNav } from "@/components/SectionNav";import { VerticalsPreview } from "@/components/VerticalsPreview";import { Sticker } from "@/components/Sticker";import { SupplyChainAnimation } from "@/components/SupplyChainAnimation";import { Scramble } from "@/components/Scramble";import { FactsGrid } from "@/components/FactsGrid";import { PullQuote } from "@/components/PullQuote";import { Chapter } from "@/components/Chapter";import { PedidoScene } from "@/components/PedidoScene";import { KineticHeadline } from "@/components/KineticHeadline";
 import { SequencedLine } from "@/components/SequencedLine";
 import { MagneticButton } from "@/components/MagneticButton";
 import { ScrollCue } from "@/components/ScrollCue";
@@ -54,10 +54,11 @@ export default function HomePage() {
         <GrainOverlay opacity={0.05} blendMode="overlay" />
 
         <div className="container-rp pt-20 md:pt-56 pb-16 md:pb-44 relative z-10">
-          <div className="max-w-5xl mx-auto md:mx-0 text-center md:text-left">
+          <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-12 items-center">
+            <div className="lg:col-span-7 max-w-5xl mx-auto lg:mx-0 text-center lg:text-left">
             
 
-            <div className="hero-kicker font-mono text-[0.6875rem] tracking-[0.22em] uppercase mt-10 mb-2" style={{ color: "rgba(243,241,237,0.55)" }}>abr/2024 → hoje <span aria-hidden style={{margin:"0 8px",opacity:0.45}}>·</span> 14 cnaes <span aria-hidden style={{margin:"0 8px",opacity:0.45}}>·</span> 2 cds <span aria-hidden style={{margin:"0 8px",opacity:0.45}}>·</span> 4 verticais <span aria-hidden style={{margin:"0 8px",opacity:0.45}}>·</span> sudeste + sul</div><h1 className="h-display mt-3" style={{ color: "var(--color-iced)" }}>
+            <div className="hero-kicker font-mono text-[0.6875rem] tracking-[0.22em] uppercase mt-10 mb-2" style={{ color: "rgba(243,241,237,0.55)" }}><Scramble text="abr/2024 → hoje · 14 cnaes · 2 cds · 4 verticais · sudeste + sul" duration={1100} /></div><h1 className="h-display mt-3" style={{ color: "var(--color-iced)" }}>
               <SequencedLine delay={40}>Distribuidora atacadista</SequencedLine>
               <SequencedLine delay={220} accent>conectando indústria</SequencedLine>
               <SequencedLine delay={240}>ao revendedor real.</SequencedLine>
@@ -102,9 +103,10 @@ export default function HomePage() {
                 Resposta em 24h · Sem fidelidade · Tabela em PDF
               </p>
             </Reveal>
+            </div>
+            <div className="lg:col-span-5 hidden lg:block"><SupplyChainAnimation /></div>
           </div>
         </div>
-
         <ScrollCue />
       </section>
 
@@ -218,7 +220,7 @@ export default function HomePage() {
       </section>
 
       {/* ===== CAPACIDADE LOGÍSTICA ===== */}
-      <Chapter number="02" label="Operação" hint="Como o pedido vira entrega" /><PullQuote attribution="A tese da Repon">Distribuição é fluxo. Quando trava, o varejo morre antes da indústria.</PullQuote><section style={{ background: "var(--color-iced)" }} id="operacao">
+      <Chapter number="02" label="Operação" hint="Como o pedido vira entrega" /><PedidoScene /><PullQuote attribution="A tese da Repon">Distribuição é fluxo. Quando trava, o varejo morre antes da indústria.</PullQuote><section style={{ background: "var(--color-iced)" }} id="operacao">
         <div className="container-rp py-32 md:py-48">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
             <Reveal className="lg:col-span-5">

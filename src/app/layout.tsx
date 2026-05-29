@@ -4,6 +4,8 @@ import { Footer } from "@/components/Footer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { StickyCTA } from "@/components/StickyCTA";
 import { ScrollProgress } from "@/components/ScrollProgress";
+import { CustomCursor } from "@/components/CustomCursor";
+import { Splash } from "@/components/Splash";
 import { CookieBanner } from "@/components/CookieBanner";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -207,6 +209,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://wa.me" crossOrigin="anonymous" />
       </head>
       <body className="min-h-screen flex flex-col antialiased">
+        <Splash />
+        <CustomCursor />
         <a href="#main" className="skip-link">Pular para o conteúdo principal</a>
         <script
           type="application/ld+json"

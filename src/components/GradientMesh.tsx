@@ -11,6 +11,7 @@ export function GradientMesh({ opacity = 0.55 }: { opacity?: number }) {
   return (
     <div
       aria-hidden
+      className="gradient-mesh-breathe"
       style={{
         position: "absolute",
         inset: 0,
